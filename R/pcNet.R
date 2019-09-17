@@ -54,8 +54,8 @@ pcNet <- function(X,
     Beta <- coeff %*% (Beta)
     return(Beta)
   }
-  n <- ncol(X)
   X <- (scale(t(X)))
+  n <- ncol(X)
   A <- 1 - diag(n)
   B <- pbapply::pbsapply(seq_len(n), pcCoefficients)
   B <- t(B)
