@@ -32,7 +32,9 @@ pcNet <- function(X,
                   scaleScores = TRUE,
                   symmetric = FALSE,
                   q = 0) {
-  # Input as matrix
+  if (!all(rowSums(X) > 0)) {
+    stop('Each gene have to be present in at least one cell')
+  }
   if (!is.matrix(X)) {
     stop('Input should be a matrix of n x m where n are genes and m are cells')
   }
@@ -43,7 +45,7 @@ pcNet <- function(X,
   pcCoefficients <- function(K) {
     y <- X[, K]
     Xi <- X
-    Xi <- Xi[,-K]
+    Xi <- Xi[, -K]
     coeff <- RSpectra::svds(Xi, nCom)$v
     score <- Xi %*% coeff
     score <-
@@ -60,7 +62,7 @@ pcNet <- function(X,
   B <- pbapply::pbsapply(seq_len(n), pcCoefficients)
   B <- t(B)
   for (K in seq_len(n)) {
-    A[K, A[K,] == 1] = B[K,]
+    A[K, A[K, ] == 1] = B[K, ]
   }
   if (isTRUE(symmetric)) {
     A <- (A + t(A)) / 2
