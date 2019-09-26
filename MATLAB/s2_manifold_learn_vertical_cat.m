@@ -1,8 +1,8 @@
-addpath('ManifoldWarping\')
-addpath('ManifoldWarping\Alignment\')
-addpath('ManifoldWarping\support\')
-addpath('ManifoldWarping\Alignment\dtw\');
-addpath('ManifoldWarping\Alignment\ctw\');
+addpath('thirdparty\ManifoldWarping\')
+addpath('thirdparty\ManifoldWarping\Alignment\')
+addpath('thirdparty\ManifoldWarping\support\')
+addpath('thirdparty\ManifoldWarping\Alignment\dtw\');
+addpath('thirdparty\ManifoldWarping\Alignment\ctw\');
 
 load pipeline_testdata.mat genelist2 A0 A1 X0 X1
 % clearvars -except A0 A1 genelist2
