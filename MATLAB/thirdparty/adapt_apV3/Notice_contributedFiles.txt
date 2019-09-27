@@ -1,0 +1,20 @@
+Copyright Notice of contributed files
+
+Several contributed files (*) included in this package may have their own copyright 
+notices,  to which you should pay attention. Please contact the authors or visit their
+web sites for detail. 
+
+The authors of these contributed files hold the copyrights. 
+
+
+
+
+
+(*): The contributed files are
+(1) the files of Affinity Propagation clustering such as apcluster.m are from
+     Brendan J. Frey and Delbert Dueck ("Clustering by Passing Messages Between Data Points.
+     Science, 2007, 315(5814): 972¨C976").
+
+
+Acknowledgement
+The authors of these contributed files are appreciated much for their contributions to this package.
