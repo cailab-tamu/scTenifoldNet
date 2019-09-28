@@ -12,7 +12,7 @@ nconv = 50;     % convergence condition, default 50
 pstep = 0.01;   % decreasing step of preferences: pstep*pmedian, default 0.01
 lam = 0.5;      % damping factor, default 0.5
 cut = 3;        % after clustering, drop an cluster with number of samples < cut
-%splot = 'plot'; % observing a clustering process when it is on
+% splot = 'plot'; % observing a clustering process when it is on
 splot = 'noplot';
 
 switch id
@@ -78,6 +78,8 @@ if algorithm
       [labels,NCs,labelid,iend,Sp,Slam,NCfixs] = adapt_apcluster(M,type,...
         p,pstep,simatrix,'convits',nconv,'maxits',nrun,'dampfact',lam,splot);
    else
+       disp('hi')
+       return;
       [labels,NCs,labelid,iend,Sp,Slam,NCfixs] = adapt_apcluster(data,type,...
         p,pstep,simatrix,'convits',nconv,'maxits',nrun,'dampfact',lam,splot);
    end
