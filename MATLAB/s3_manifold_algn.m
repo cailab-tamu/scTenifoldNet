@@ -1,55 +1,68 @@
-addpath('C:\Users\jcai\Documents\GitHub\PCrTdMa\MATLAB\thirdparty\ManifoldWarping\Alignment');
-addpath('C:\Users\jcai\Documents\GitHub\PCrTdMa\MATLAB\thirdparty\ManifoldWarping\support');
-addpath('C:\Users\jcai\Documents\GitHub\PCrTdMa\MATLAB\thirdparty\ManifoldWarping\Alignment\dtw');
-addpath('C:\Users\jcai\Documents\GitHub\PCrTdMa\MATLAB\thirdparty\ManifoldWarping\Alignment\ctw');
+% addpath('C:\Users\jcai\Documents\GitHub\PCrTdMa\MATLAB\thirdparty\ManifoldWarping\Alignment');
+% addpath('C:\Users\jcai\Documents\GitHub\PCrTdMa\MATLAB\thirdparty\ManifoldWarping\support');
+% addpath('C:\Users\jcai\Documents\GitHub\PCrTdMa\MATLAB\thirdparty\ManifoldWarping\Alignment\dtw');
+% addpath('C:\Users\jcai\Documents\GitHub\PCrTdMa\MATLAB\thirdparty\ManifoldWarping\Alignment\ctw');
 
-W12=eye(size(A0,1));
-[g1, g2] = manifold_nonlinear(A0, A1, W12, 0.9, 3);
+%[aln0, aln1] = manifold_nonlinear(abs(A0),abs(A1),eye(size(A0,1)), 0.9, 10);
+%return;
 
 %%
-aln=[g1; g2];
+dim=3;
+mu=0.9;
 
-C=kmedoids(aln,700);
-clc
-gg=[genelist;genelist];
-for k=1:max(C)
-    i=C==k;
-    fprintf('%d %d ',k,sum(i));
-    fprintf('%s ',gg(i))
-    fprintf('\n');
-end
+W1=A0;
+W2=A1;
+
+W1=W1-diag(diag(W1));
+W2=W2-diag(diag(W2));
+W1=W1./max(abs(W1(:)));
+W2=W2./max(abs(W2(:)));
+% W1=0.5*(W1+W1');
+% W2=0.5*(W2+W2');
+W12=eye(size(W1,2),size(W2,2));
+
+mu = mu*(sum(W1(:))+sum(W2(:))/(2*sum(W12(:))));
+W = [W1 mu*W12; mu*W12' W2];
+
+[~,L] = sbe_laplacian_matrix(W);
 %%
-P_v=[];
-G0_v=[]; G1_v=[];
-J_v=[];
+% [vecs, vals] = eigs(L,min(dim*2,size(L,1)),'SM');
+[vecs, vals] = eigs(L,2*dim,'sm');
 
-for k=1:max(C)
-    
-idx=find(C==k);
-if length(idx)>20
-    gid=idx;
-    g0id=gid(gid<=n);
-    g1id=gid(gid>n)-n;
-    jacx=length(intersect(g0id,g1id))/length(union(g0id,g1id));
-    if length(g0id)>length(g1id)
-        J_v=[J_v; jacx];
-    else
-        J_v=[J_v; -jacx];
-    end
-    if ~isempty(g0id) && ~isempty(g1id)
-        B0 = reshape(A0(g0id,g0id),[],1);
-        B1 = reshape(A1(g1id,g1id),[],1);    
-        [~,p]=kstest2(full(B0),full(B1));        
-        P_v=[P_v;p];
-    else
-        P_v=[P_v;nan];
-    end
-    G0_v=[G0_v;string(sprintf('%s ',genelist(g0id)))];
-    G1_v=[G1_v;string(sprintf('%s ',genelist(g1id)))];
-end
+vecs2=vecs./vecnorm(vecs);
+
+[vals, idx] = sort(diag(vals));
+vecs = vecs(:,idx);
+for i=1:size(vecs,2)
+    vecs(:,i) = vecs(:,i)/norm(vecs(:,i));
 end
 
-absJ_v=abs(J_v);
-Tres=table(absJ_v,J_v,P_v,G0_v,G1_v);
-writetable(Tres,'res_v','filetype','spreadsheet');
 
+assert(isequal(vecs2,vecs))
+
+
+%%
+epsilon = 1e-8;
+P1 = size(W1,1);
+P2 = size(W2,1);
+
+%% filter out eigenvalues that are ~= 0
+for i=1:size(vals)
+    if vals(i)>epsilon
+        break;
+    end
+end
+start = i;
+
+start2=find(vals>1e-8, 1 );
+
+assert(isequal(start, start2))
+
+
+%% Compute mappings
+assert(dim <= size(vecs,2)-start+1, 'not enough eigenvectors to provide full mapping');
+
+aln0 = vecs(1:P1,start:dim+start-1);
+aln1 = vecs(P1+1:P1+P2,start:dim+start-1);
+
+% clearvars -except aln0 aln1 genelist A0 A1
