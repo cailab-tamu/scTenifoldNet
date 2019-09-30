@@ -2,6 +2,7 @@
 #' @importFrom RSpectra svds
 #' @importFrom Matrix Matrix
 #' @importFrom pbapply pbsapply
+#' @importFrom stats quantile
 #' @title pcNet
 #' @description ...
 #' @param X ...

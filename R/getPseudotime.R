@@ -1,6 +1,9 @@
 #' @importClassesFrom Biobase AnnotatedDataFrame
+#' @importFrom Biobase pData
 #' @importFrom monocle newCellDataSet  reduceDimension orderCells
 #' @importFrom BiocGenerics estimateSizeFactors
+#' @importFrom methods new
+#' @importFrom VGAM negbinomial.size
 
 computePseudoTime <- function(X){
   if(is.null(rownames(X))){
@@ -9,12 +12,12 @@ computePseudoTime <- function(X){
   X <- X[rowSums(X) > 0,]
   fd <- data.frame('gene_short_name' = rownames(X))
   rownames(fd) <- rownames(X)
-  fd <- new("AnnotatedDataFrame", data = fd)
-  cds <- monocle::newCellDataSet(as.matrix(X), featureData = fd, expressionFamily = negbinomial.size())
+  fd <- methods::new("AnnotatedDataFrame", data = fd)
+  cds <- monocle::newCellDataSet(as.matrix(X), featureData = fd, expressionFamily = VGAM::negbinomial.size())
   cds <- BiocGenerics::estimateSizeFactors(cds)
   cds <- monocle::reduceDimension(cds, reduction_method = "DDRTree", verbose = TRUE, max_components = 2)
   cds <- monocle::orderCells(cds)
-  pseudoT <- pData(cds)
+  pseudoT <- Biobase::pData(cds)
   pseudoT <- cbind(pseudoT,t(cds@reducedDimS[,rownames(pseudoT)]))
   colnames(pseudoT) <- c("sizeFactor", "pseudoTime", 'stateC', 'DDRT1','DDRT2')
   return(pseudoT)
