@@ -13,3 +13,10 @@ License: GPL>=2
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
+Imports: reticulate,
+         monocle,
+         pbapply,
+         RSpectra,
+         Matrix,
+         BiocGenerics,
+         Biobase
