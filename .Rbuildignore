@@ -1,1 +1,3 @@
 MATLAB/*
+^.*\.Rproj$
+^\.Rproj\.user$
