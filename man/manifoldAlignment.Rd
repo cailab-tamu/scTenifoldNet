@@ -4,7 +4,7 @@
 \alias{manifoldAlignment}
 \title{manifoldAlignment}
 \usage{
-manifoldAlignment(X, Y, d = 3)
+manifoldAlignment(X, Y, d = 3, method = "nonLinear")
 }
 \arguments{
 \item{X}{...}
@@ -12,6 +12,8 @@ manifoldAlignment(X, Y, d = 3)
 \item{Y}{...}
 
 \item{d}{...}
+
+\item{method}{...}
 }
 \value{
 ...
