@@ -12,7 +12,7 @@
 #' @details ...
 
 manifoldAlignment <- function(X, Y, d=3, method = 'nonLinear'){
-  if(checkPython()){
+  if(checkPyDependencies()){
     file <- system.file('python/', package = 'PCrTdMa')
     d <- as.integer(d)
     sharedGenes <- intersect(rownames(X), rownames(Y))

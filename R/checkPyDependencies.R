@@ -1,4 +1,4 @@
-checkPython <- function() {
+checkPyDependencies <- function() {
   if (reticulate::py_available(initialize = TRUE)) {
     pyPackages <- c('numpy', 'scipy', 'functools')
     pyCheck <- sapply(pyPackages, function(X) {
