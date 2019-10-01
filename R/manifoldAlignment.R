@@ -6,28 +6,27 @@
 #' @param X ...
 #' @param Y ...
 #' @param d ...
+#' @param method ...
 #' @return ...
 #' @references ...
 #' @details ...
 
 manifoldAlignment <- function(X, Y, d=3, method = 'nonLinear'){
-
-  file <- system.file('python/', package = 'PCrTdMa')
-
-  d <- as.integer(d)
-  sharedGenes <- intersect(rownames(X), rownames(Y))
-  X <- X[sharedGenes, sharedGenes]
-  Y <- Y[sharedGenes, sharedGenes]
-  L <- diag(length(sharedGenes))
-
-  if(method == 'nonLinear'){
-    nonLinearManifold <- reticulate::import_from_path('nonLinearManifold', path = file)
-    alignedNet <- nonLinearManifold(X = X, Y = Y, corr = L, num_dims = d, Wx = X, Wy = Y)
+  if(checkPython()){
+    file <- system.file('python/', package = 'PCrTdMa')
+    d <- as.integer(d)
+    sharedGenes <- intersect(rownames(X), rownames(Y))
+    X <- X[sharedGenes, sharedGenes]
+    Y <- Y[sharedGenes, sharedGenes]
+    L <- diag(length(sharedGenes))
+    if(method == 'nonLinear'){
+      nonLinearManifold <- reticulate::import_from_path('nonLinearManifold', path = file)
+      alignedNet <- nonLinearManifold(X = X, Y = Y, corr = L, num_dims = d, Wx = X, Wy = Y)
+    }
+    if(method == 'Linear'){
+      linearManifold <- reticulate::import_from_path('linearManifold', path = file)
+      alignedNet <- linearManifold(X=X, Y=Y, corr = L, num_dims = d, Wx = X, Wy = Y)
+    }
+    return(alignedNet)
   }
-  if(method == 'Linear')
-    linearManifold <- reticulate::import_from_path('linearManifold', path = file)
-    alignedNet <- linearManifold(X=X, Y=Y, corr = L, num_dims = d, Wx = X, Wy = Y)
-  }
-
-  return(aligned)
 }
