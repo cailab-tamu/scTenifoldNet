@@ -30,13 +30,3 @@ manifoldAlignment <- function(X, Y, d=3, method = 'nonLinear'){
     return(alignedNet)
   }
 }
-
-#
-# library(PCrTdMa)
-# X <- read.csv('https://raw.githubusercontent.com/namtk/ManiNetCluster/master/data/dayOrthoExpr.csv', row.names = 1)
-# X <- as.matrix(X)
-# Y <- read.csv('https://raw.githubusercontent.com/namtk/ManiNetCluster/master/data/nightOrthoExpr.csv', row.names = 1)
-# Y <- as.matrix(Y)
-# X <- as.matrix(PCrTdMa::pcNet(X, q = 0.95))
-# Y <- as.matrix(PCrTdMa::pcNet(Y, q = 0.95))
-# PCrTdMa::manifoldAlignment(X, Y, method = 'Linear')
