@@ -1,8 +1,12 @@
 #' @export installPyDependencies
 #' @importFrom reticulate py_install
-#' 
+#' @title installPyDependencies
+#' @description ...
+#' @return ...
+#' @references ...
+#' @details ...
 installPyDependencies <- function(){
   if(!checkPyDependencies()){
-    reticulate::py_install(c('numpy', 'scipy', 'functools')) 
+    reticulate::py_install(c('numpy', 'scipy', 'functools'))
   }
 }
