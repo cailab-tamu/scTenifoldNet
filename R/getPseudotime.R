@@ -9,7 +9,7 @@ computePseudoTime <- function(X){
   if(is.null(rownames(X))){
     rownames(X) <- paste0('gene_',seq_len(nrow(X)))
   }
-  X <- X[rowSums(X) > 0,]
+  X <- X[apply(X!=0, 1, sum) > 0,]
   fd <- data.frame('gene_short_name' = rownames(X))
   rownames(fd) <- rownames(X)
   fd <- methods::new("AnnotatedDataFrame", data = fd)
