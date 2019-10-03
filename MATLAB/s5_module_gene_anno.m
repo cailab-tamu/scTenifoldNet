@@ -1,5 +1,6 @@
 
 gg=[genelist;genelist];
+%{
 for k=1:max(C)
     i=C==k;
     if sum(i)>5
@@ -8,6 +9,7 @@ for k=1:max(C)
         fprintf('\n');
     end
 end
+%}
 %%
 P_v=[];
 G0_v=[]; G1_v=[];
