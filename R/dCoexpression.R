@@ -1,7 +1,7 @@
 #' @export dCoexpression
 #' @importFrom stats dist
 
-dCoexpression <- function(manifoldOutput, nGenes, geneList, q = 0.1){
+dCoexpression <- function(manifoldOutput, nGenes, geneList, q = 0.05){
   dMetric <- sapply(seq_len(nGenes), function(G){
     X <- manifoldOutput[G,]
     Y <- manifoldOutput[(G+nGenes),]
