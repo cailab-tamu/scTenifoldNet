@@ -2,6 +2,7 @@
 
 export(dCoexpression)
 export(installPyDependencies)
+export(makeNetworks)
 export(manifoldAlignment)
 export(pcNet)
 export(tensorDecomposition)

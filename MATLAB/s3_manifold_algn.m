@@ -19,6 +19,13 @@ W1=W1./max(abs(W1(:)));
 W2=W2./max(abs(W2(:)));
 % W1=0.5*(W1+W1');
 % W2=0.5*(W2+W2');
+
+% W1=1+W1;
+% W2=1+W2;
+
+% W1(W1<0)=0;
+% W2(W2<0)=0;
+
 W12=eye(size(W1,2),size(W2,2));
 
 mu = mu*(sum(W1(:))+sum(W2(:))/(2*sum(W12(:))));
@@ -29,17 +36,16 @@ W = [W1 mu*W12; mu*W12' W2];
 % [vecs, vals] = eigs(L,min(dim*2,size(L,1)),'SM');
 [vecs, vals] = eigs(L,2*dim,'sm');
 
-vecs2=vecs./vecnorm(vecs);
+% vecs2=vecs./vecnorm(vecs);
+% [vals, idx] = sort(diag(vals));
+% vecs = vecs(:,idx);
 
-[vals, idx] = sort(diag(vals));
-vecs = vecs(:,idx);
-for i=1:size(vecs,2)
-    vecs(:,i) = vecs(:,i)/norm(vecs(:,i));
-end
+vecs=vecs./vecnorm(vecs);
+% for i=1:size(vecs,2)
+%     vecs(:,i) = vecs(:,i)/norm(vecs(:,i));
+% end
 
-
-assert(isequal(vecs2,vecs))
-
+% assert(isequal(vecs2,vecs))
 
 %%
 epsilon = 1e-8;
@@ -47,16 +53,16 @@ P1 = size(W1,1);
 P2 = size(W2,1);
 
 %% filter out eigenvalues that are ~= 0
-for i=1:size(vals)
-    if vals(i)>epsilon
-        break;
-    end
-end
-start = i;
+% for i=1:size(vals)
+%     if vals(i)>epsilon
+%         break;
+%     end
+% end
+% start = i;
 
-start2=find(vals>1e-8, 1 );
+start=find(vals>1e-8, 1);
 
-assert(isequal(start, start2))
+% assert(isequal(start, start2))
 
 
 %% Compute mappings

@@ -5,10 +5,17 @@
 % addpath('C:\Users\jcai\Documents\GitHub\PCrTdMa\MATLAB\thirdparty\adapt_apV3');
 % rmpath('C:\Users\jcai\Documents\GitHub\PCrTdMa\MATLAB\thirdparty\AffinityPropagation');
 
+[~,i]=sort(vecnorm(aln0-aln1,2,2),'descend');
+g=genelist(i);
+
+
+
+
+%%
 aln=[aln0; aln1];
 
 % s=full(compute_kernel(aln));
-s=-pdist2(aln,aln).^2;
+s=-(pdist2(aln,aln).^2);
 
 %%
 methodid=1;
@@ -27,6 +34,7 @@ C=grp2idx(idx);
 % C=kmedoids(aln,700);
 
 sortrows([unique(C) grpstats(C,C,@numel)],2)
-[length(C) sum(ans(:,2)>0) sum(ans(:,2)>1)]
-
+% [length(C) sum(ans(:,2)>0) sum(ans(:,2)>1)]
+sprintf('#genes=%d #modules=%d #modules (g>=2)=%d',...
+    [length(C) sum(ans(:,2)>0) sum(ans(:,2)>1)]);
 % clearvars -except C genelist A0 A1
