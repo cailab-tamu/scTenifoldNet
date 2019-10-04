@@ -1,14 +1,33 @@
-Elapsed time is 1746.917008 seconds.
-GO Term      p-val  counts  definition
-GO:0044827	0.0000	14 / 17	A process in which a host organism modulates the frequency,...
-GO:0044794	0.0000	14 / 19	A process in which a host organism activates or increases t...
-GO:0044829	0.0000	14 / 43	A process in which a host organism activates or increases t...
-GO:0044788	0.0000	10 / 12	A process in which a host organism modulates the frequency,...
-GO:0044791	0.0000	10 / 22	A process in which a host organism activates or increases t...
-GO:0044793	0.0000	9 / 14	A process in which a host organism stops, prevents or reduc...
-GO:0048524	0.0000	9 / 52	Any process that activates or increases the frequency, rate...
-GO:0045070	0.0000	8 / 43	Any process that activates or increases the frequency, rate...
-GO:1902188	0.0000	7 / 24	Any process that activates or increases the frequency, rate...
-GO:0044828	0.0000	8 / 48	A process in which a host organism stops, prevents or reduc...
+%\vspace{0.2in} 
+%\section{\centerline{ COMPUTING SKILLS }}
+%\vspace{15pt}
+%	\begin{itemize}   
+%		\item Languages: C, \textsc{Matlab}, \textsc{Maple}, Perl, Python, Java, SQL, ASP/HTML, R, and \LaTeX
+%		\item Operating Systems: Windows, Solaris, Linux, and MacOS X
+%		\item Applications: Oracle, MySQL, Access, Apache, SPSS, LAM/MPI, NetLogo, PAUP*, and PAML
+%  \end{itemize}
 
->> 1746/60
+%\vspace{0.2in} 
+\section{\centerline{SOFTWARE}} 
+\vspace{15pt}
+\begin{enumerate}   
+
+\item	MBEToolbox, \textsc{Matlab} toolbox for \textbf{m}olecular \textbf{b}iology and \textbf{e}volution \\
+-- \texttt{www.bioinformatics.org/mbetoolbox} \textbf{---over 4,500 downloads since May 2006}
+
+\item	PGEToolbox, \textsc{Matlab} toolbox for \textbf{p}opulation \textbf{g}enetics and \textbf{e}volution \\
+-- \texttt{www.bioinformatics.org/pgetoolbox} \textbf{---over 2,200 downloads since March 2007}
+
+\item	SBEToolbox, \textsc{Matlab} toolbox for \textbf{s}ystems \textbf{b}iology and \textbf{e}volution \\
+-- \texttt{www.bioinformatics.org/sbetoolbox}
+
+\item	Stickleback transcriptome database \\ %(access required) \\
+-- \texttt{stickleback.genomezoo.net}
+
+\item	\textit{Penicillium marneffei} genome and transcriptome database \\ %(access required) \\
+-- \texttt{pmarneffei.genomezoo.net}
+
+%\item	MySeqLab, a biosequence analysis tool in C++ \\
+%-- \texttt{http://www.hku.hk/jamescai/myseqlab/}
+
+   \end{enumerate}

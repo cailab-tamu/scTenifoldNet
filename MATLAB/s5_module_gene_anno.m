@@ -47,3 +47,20 @@ end
 absJ_v=abs(J_v);
 Tres=table(absJ_v,J_v,P_v,G0_v,G1_v);
 writetable(Tres,'res_v','filetype','spreadsheet');
+
+
+%%
+
+addpath('C:\Users\jcai\Documents\GitHub\PCrTdMa\MATLAB\thirdparty\goanalysis')
+n=size(A0,1);
+for k=1:max(C)
+idx=find(C==k);
+if length(idx)>20
+    gid=idx;
+    g0id=gid(gid<=n);
+    g1id=gid(gid>n)-n;
+    targetg=upper(unique([genelist(g0id); genelist(g1id)]));
+    disp('------------------------------');
+    run_goanalysis2
+end
+end

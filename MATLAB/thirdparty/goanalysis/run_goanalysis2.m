@@ -1,11 +1,20 @@
 %GO_MODULATION_BY_HOST_OF_VIRAL_PROCESS
 %> A process in which a host organism modulates the frequency, rate or extent of any of a process being mediated by a virus with which it is infected. [GOC:jl]
 
-targetg={'ANXA2','ANXA2P2','APCS','APOE','CAV2','CCL8','CCNK','CFL1','EIF2AK4','FBXL2','FMR1','IFI27','LTF','MIR155','MIR221','MIR222','NUCKS1','PC','PPIB','PRKN','PTX3','SMC3','STOM','TBC1D20','VAPA','YTHDC2','ZC3H12A','ZNF502'};
+if ~exist('targetg','var')
+    error('Requires TARGETG.');
+end
+
+if ~(exist('goid','var') && exist('GO','var') && exist('SGDmap','var') && exist('genes','var'))
+    disp('loading pre-data...');
+    load GOpredate.mat
+    disp('loading pre-data...done.');
+end
+
+% targetg={'ANXA2','ANXA2P2','APCS','APOE','CAV2','CCL8','CCNK','CFL1','EIF2AK4','FBXL2','FMR1','IFI27','LTF','MIR155','MIR221','MIR222','NUCKS1','PC','PPIB','PRKN','PTX3','SMC3','STOM','TBC1D20','VAPA','YTHDC2','ZC3H12A','ZNF502'};
 [y,clusterIdx]=ismember(targetg,genes);
 clusterIdx=clusterIdx(y);
 
-tic
 m = GO.Terms(end).id;           % gets the last term id
 geneschipcount = zeros(m,1);    % a vector of GO term counts for the entire chip.
 genesclustercount = zeros(m,1); % a vector of GO term counts for interesting genes.
@@ -21,7 +30,7 @@ for i = 1:numel(genes)
     end
 end
 if numel(unique(geneschipcount))==2, error('something wrong'); end
-toc
+
 
 pvalues = hygepdf(genesclustercount,max(geneschipcount),...
                   max(genesclustercount),geneschipcount);
@@ -31,11 +40,12 @@ pvalues = hygepdf(genesclustercount,max(geneschipcount),...
 report = sprintf('GO Term      p-val  counts  definition\n');
 for i = 1:10
     term = idx(i);
-    if numel(GO(term).Terms)>0
+    if numel(GO(term).Terms)>0 && geneschipcount(term)<5000
+        
     report = sprintf('%s%s\t%-1.4f\t%-d / %-d\t%s...\n', report, ...
                     char(num2goid(term)), pvalues(term),...
                     genesclustercount(term),geneschipcount(term),...
-                    GO(term).Term.definition(2:min(end,60)));
+                    GO(term).Term.definition(2:min(end,160)));
     end
 end
 disp(report);
