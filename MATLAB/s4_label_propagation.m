@@ -6,8 +6,10 @@
 % rmpath('C:\Users\jcai\Documents\GitHub\PCrTdMa\MATLAB\thirdparty\AffinityPropagation');
 
 [~,i]=sort(vecnorm(aln0-aln1,2,2),'descend');
-g=genelist(i);
+gx=upper(genelist(i));
 
+[Tpbp,Tnbp]=run_fgsea(gx,[],'bp');
+[Tpmf,Tnmf]=run_fgsea(gx,[],'mf');
 
 
 
