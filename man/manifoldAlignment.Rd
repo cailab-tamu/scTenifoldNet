@@ -4,12 +4,16 @@
 \alias{manifoldAlignment}
 \title{manifoldAlignment}
 \usage{
-manifoldAlignment(X, Y, d = 3, method = "nonLinear")
+manifoldAlignment(X, Y, wX, wY, d = 3, method = "nonLinear")
 }
 \arguments{
 \item{X}{...}
 
 \item{Y}{...}
+
+\item{wX}{...}
+
+\item{wY}{...}
 
 \item{d}{...}
 
