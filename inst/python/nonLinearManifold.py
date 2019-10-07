@@ -11,8 +11,6 @@ def nonLinearManifold(X,Y,corr,num_dims,Wx,Wy,mu=0.9,eps=1e-8):
   # put the degrees on the diagonal
   lap.flat[::n_nodes + 1] = d
   L = lap
-  d1 = X.shape[0]
-  d2 = Y.shape[0]
   vals,vecs = np.linalg.eig(L)
   idx = np.argsort(vals)
   for i in range(len(idx)):
