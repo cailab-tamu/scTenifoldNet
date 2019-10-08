@@ -9,8 +9,8 @@ writeLines(gName, 'geneList.txt')
 
 
 
-sapply(0:11, function(X){
+sapply(1:11, function(X){
   sCells <- c(((3000 * X)+1):(3000 * (X+1)))
   sCells <- Matrix(as.matrix(SERGIO[,sCells]))
-  writeMM(sCells, file = paste0('simulation_', X+1))
+  writeMM(sCells, file = paste0('data/simulation_', X+1))
 })
