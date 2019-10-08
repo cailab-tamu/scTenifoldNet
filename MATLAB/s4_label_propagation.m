@@ -35,7 +35,7 @@ end
 C=grp2idx(idx);
 % C=kmedoids(aln,700);
 
-sortrows([unique(C) grpstats(C,C,@numel)],2)
+sortrows([unique(C) grpstats(C,C,@numel)],2);
 % [length(C) sum(ans(:,2)>0) sum(ans(:,2)>1)]
 sprintf('#genes=%d #modules=%d #modules (g>=2)=%d',...
     [length(C) sum(ans(:,2)>0) sum(ans(:,2)>1)]);
