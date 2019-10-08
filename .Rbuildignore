@@ -1,3 +1,4 @@
 MATLAB/*
 ^.*\.Rproj$
 ^\.Rproj\.user$
+inst/benchmarking/*
