@@ -13,8 +13,8 @@ mu=0.9;
 W1=A0;
 W2=A1;
 
-W1=W1-diag(diag(W1));
-W2=W2-diag(diag(W2));
+% W1=W1-diag(diag(W1));
+% W2=W2-diag(diag(W2));
 W1=W1./max(abs(W1(:)));
 W2=W2./max(abs(W2(:)));
 
