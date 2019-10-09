@@ -2,7 +2,7 @@
 #' @importFrom Matrix Matrix
 makeNetworks <- function(X, nNet = 10, nCells = 1000, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0.95){
   sapply(seq_len(nNet), function(W){
-    Z <- sample(x = colnames(X), size = nCells, replace = TRUE)
+    Z <- sample(x = seq_len(ncol(X)), size = nCells, replace = TRUE)
     Z <- as.matrix(X[,Z])
     Z <- Z[apply(Z,1,sum) > 0,]
     Z <- pcNet(Z, nCom = nComp, scaleScores = scaleScores, symmetric = symmetric, q = q)
