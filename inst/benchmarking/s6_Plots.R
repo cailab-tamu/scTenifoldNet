@@ -11,7 +11,7 @@ MI <- MI[MI$q == 0,]
 GENIE3 <- GENIE3[GENIE3$q == 0,]
 
 library(RColorBrewer)
-pColors <- RColorBrewer::brewer.pal(4,'RdBu')
+pColors <- RColorBrewer::brewer.pal(4,'Dark2')
 #par(xpd = T, mar = par()$mar + c(0,0,0,1))
 
 png('figures/methodSelection.png', width = 900*2, height = 900, res = 300)
@@ -56,11 +56,14 @@ MI <- read.csv('metrics/MI.csv')
 GENIE3 <- read.csv('metrics/GENIE3.csv')
 
 png('figures/PR.png', width = 900*2,height = 900*2, res = 300)
-layout(matrix(c(1,1,1,1,2,2,2,2,1,1,1,1,2,2,2,2,1,1,1,1,2,2,2,2,1,1,1,1,2,2,2,2,1,1,1,1,2,2,2,2,1,1,1,1,2,2,2,2,1,1,1,1,2,2,2,2,1,1,1,1,2,2,2,2,
-                3,3,3,3,4,4,4,4,3,3,3,3,4,4,4,4,3,3,3,3,4,4,4,4,3,3,3,3,4,4,4,4,3,3,3,3,4,4,4,4,3,3,3,3,4,4,4,4,3,3,3,3,4,4,4,4,3,3,3,3,4,4,4,4,
-                5,5,5,5,5,5,5,5), 17, 8, byrow = TRUE))
+layout(matrix(c(1,1,1,1,2,2,2,2,1,1,1,1,2,2,2,2,1,1,1,1,2,2,2,2,
+                1,1,1,1,2,2,2,2,1,1,1,1,2,2,2,2,1,1,1,1,2,2,2,2,
+                1,1,1,1,2,2,2,2,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,
+                3,3,3,3,4,4,4,4,3,3,3,3,4,4,4,4,3,3,3,3,4,4,4,4,
+                3,3,3,3,4,4,4,4,3,3,3,3,4,4,4,4,3,3,3,3,4,4,4,4,
+                3,3,3,3,4,4,4,4,5,5,5,5,5,5,5,5), 17, 8, byrow = TRUE))
 par(mar=c(3,3,2,1), mgp=c(1.8,0.5,0))
-pColors <- RColorBrewer::brewer.pal(7,'RdBu')
+pColors <- RColorBrewer::brewer.pal(7,'Dark2')
 nCells <- unique(PCR$nCells)
 tPCR <- PCR[PCR$nCells == nCells[1],]
 plot(tPCR$recall,tPCR$acc, ylim=c(0.5,1), xlim = c(0,1), col=pColors[1], type = 'b',
@@ -74,7 +77,7 @@ for(X in seq_along(nCells)[-1]){
 #        cex = 0.8, pch=15:22, col=pColors)
 
 tSCC <- SCC[SCC$nCells == nCells[1],]
-plot(tSCC$recall,tSCC$acc, ylim=c(0.5,1), xlim = c(0,0.8), col=pColors[1], type = 'b',
+plot(tSCC$recall,tSCC$acc, ylim=c(0.5,1), xlim = c(0,1), col=pColors[1], type = 'b',
      xlab = 'Recall', ylab = 'Accuracy', pch=15, main = 'SCC')
 
 for(X in seq_along(nCells)[-1]){
@@ -85,7 +88,7 @@ for(X in seq_along(nCells)[-1]){
 #        cex = 0.8, pch=15:22, col=pColors)
 
 tMI <- MI[MI$nCells == nCells[1],]
-plot(tMI$recall,tMI$acc, ylim=c(0.5,1), xlim = c(0,0.5), col=pColors[1], type = 'b',
+plot(tMI$recall,tMI$acc, ylim=c(0.5,1), xlim = c(0,1), col=pColors[1], type = 'b',
      xlab = 'Recall', ylab = 'Accuracy', pch=15, main = 'MI')
 
 for(X in seq_along(nCells)[-1]){
@@ -96,7 +99,7 @@ for(X in seq_along(nCells)[-1]){
 #       cex = 0.8, pch=15:22, col=pColors)
 
 tGENIE3 <- GENIE3[GENIE3$nCells == nCells[1],]
-plot(tGENIE3$recall,tGENIE3$acc, ylim=c(0.5,1), xlim = c(0,0.7), col=pColors[1], type = 'b',
+plot(tGENIE3$recall,tGENIE3$acc, ylim=c(0.5,1), xlim = c(0,1), col=pColors[1], type = 'b',
      xlab = 'Recall', ylab = 'Accuracy', pch=15, main = 'GENIE3')
 
 for(X in seq_along(nCells)[-1]){
