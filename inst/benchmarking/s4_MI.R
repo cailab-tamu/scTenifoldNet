@@ -1,5 +1,5 @@
 library(Matrix)
-library(infotheo)
+library(minet)
 
 method <- 'MI'
 nRun <- 10
@@ -14,29 +14,25 @@ dir.create(paste0('networks/',method))
 inputData <- readMM('data/CTL.mtx')
 rownames(inputData) <- readLines('data/geneList.txt')
 
-# set.seed(1)
-# apply(experimentDesign,1,function(X){
-#   newFile <- paste0('networks/', method, '/', X[1], '_run', as.character(X[2]), '_',as.character(X[3]), 'cells', collapse = '')
-#   newFile <- gsub('[[:space:]]+','',newFile)
-#   sCells <- sample(seq_len(ncol(inputData)), size = as.numeric(X[3]), replace = TRUE)
-#   tData <- inputData[,sCells]
-#   gList <- rownames(tData)
-#   nGenes <- length(gList)
-#   outM <- matrix(0, nrow = nGenes, ncol = nGenes)
-#   rownames(outM) <- colnames(outM) <- gList
-#   tData <- tData[apply(tData!=0,1,sum) > 0,]
-#   tData <- as.matrix(tData)
-#   tData <- apply(tData,1,function(X){
-#     apply(tData,1,function(Y){
-#       infotheo::mutinformation(X,Y)
-#     })
-#   })
-#   tData <- tData/max(abs(tData))
-#   tData <- round(tData,2)
-#   outM[rownames(tData),colnames(tData)] <- as.matrix(tData)
-#   outM <- as(outM, 'dgCMatrix')
-#   writeMM(outM, newFile)
-# })
+set.seed(1)
+pbapply::pbapply(experimentDesign,1,function(X){
+  newFile <- paste0('networks/', method, '/', X[1], '_run', as.character(X[2]), '_',as.character(X[3]), 'cells', collapse = '')
+  newFile <- gsub('[[:space:]]+','',newFile)
+  sCells <- sample(seq_len(ncol(inputData)), size = as.numeric(X[3]), replace = TRUE)
+  tData <- inputData[,sCells]
+  gList <- rownames(tData)
+  nGenes <- length(gList)
+  outM <- matrix(0, nrow = nGenes, ncol = nGenes)
+  rownames(outM) <- colnames(outM) <- gList
+  tData <- tData[apply(tData!=0,1,sum) > 0,]
+  tData <- as.matrix(tData)
+  tData <- minet(t(tData))
+  tData <- tData/max(abs(tData))
+  tData <- round(tData,2)
+  outM[rownames(tData),colnames(tData)] <- as.matrix(tData)
+  outM <- as(outM, 'dgCMatrix')
+  writeMM(outM, newFile)
+})
 
 
 q <- seq(0,1,0.05)
@@ -47,6 +43,7 @@ metricOutput <- lapply(q, function(Q){
     fileList <- fileList[grepl(paste0(X,'cells'), fileList)]
     fileContent <- lapply(fileList, readMM)
     fileContent <- lapply(fileContent, function(X){
+      diag(X) <- 0
       X <- as.matrix(X)
       X <- X/max(abs(X))
       X <- (X - median(X))
@@ -66,6 +63,7 @@ metricOutput <- lapply(q, function(Q){
     fileList <- fileList[grepl(paste0(X,'cells'), fileList)]
     fileContent <- lapply(fileList, readMM)
     fileContent <- lapply(fileContent, function(X){
+      diag(X) <- 0
       X <- as.matrix(X)
       X <- X/max(abs(X))
       X <- (X - median(X))
@@ -73,8 +71,8 @@ metricOutput <- lapply(q, function(Q){
       diag(X) <- 1
       c1p <- sum(X[1:40,1:40] > 0)
       c2p <- sum(X[41:98,41:98] > 0)
-      R <- (c1p+c2p)/((40*40)+(60*60))
-      return(R)
+      AC <- (c1p+c2p)/((40*40)+(58*58))
+      return(AC)
     })
     unlist(fileContent)
   })
@@ -95,10 +93,12 @@ metricOutput <- lapply(q, function(Q){
   outputMetric$recallUB <- recallMean + recallSD
 
   outputMetric <- as.data.frame(outputMetric)
-  outputMetric
+  outputMetric[outputMetric <= 0] <- 0
+  return(outputMetric)
 })
 
 metricOutput <- do.call(rbind.data.frame, metricOutput)
 metricOutput <- round(metricOutput,3)
+
 write.csv(metricOutput, row.names = FALSE, file = 'metrics/MI.csv')
 

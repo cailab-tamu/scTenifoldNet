@@ -43,9 +43,10 @@ metricOutput <- lapply(q, function(Q){
     fileList <- fileList[grepl(paste0(X,'cells'), fileList)]
     fileContent <- lapply(fileList, readMM)
     fileContent <- lapply(fileContent, function(X){
+      diag(X) <- 0
       X <- as.matrix(X)
       X <- X/max(abs(X))
-      X <- (X - 0.5)
+      X <- (X - median(X))
       X[abs(X) < quantile(abs(X), Q)] <-  0
       diag(X) <- 1
       c1p <- sum(X[1:40,1:40] > 0)
@@ -62,15 +63,16 @@ metricOutput <- lapply(q, function(Q){
     fileList <- fileList[grepl(paste0(X,'cells'), fileList)]
     fileContent <- lapply(fileList, readMM)
     fileContent <- lapply(fileContent, function(X){
+      diag(X) <- 0
       X <- as.matrix(X)
       X <- X/max(abs(X))
-      X <- (X - 0.5)
+      X <- (X - median(X))
       X[abs(X) < quantile(abs(X), Q)] <-  0
       diag(X) <- 1
       c1p <- sum(X[1:40,1:40] > 0)
       c2p <- sum(X[41:98,41:98] > 0)
-      R <- (c1p+c2p)/((40*40)+(60*60))
-      return(R)
+      AC <- (c1p+c2p)/((40*40)+(58*58))
+      return(AC)
     })
     unlist(fileContent)
   })
@@ -91,10 +93,12 @@ metricOutput <- lapply(q, function(Q){
   outputMetric$recallUB <- recallMean + recallSD
 
   outputMetric <- as.data.frame(outputMetric)
-  outputMetric
+  outputMetric[outputMetric <= 0] <- 0
+  return(outputMetric)
 })
 
 metricOutput <- do.call(rbind.data.frame, metricOutput)
 metricOutput <- round(metricOutput,3)
+
 write.csv(metricOutput, row.names = FALSE, file = 'metrics/GENIE3.csv')
 
