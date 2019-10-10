@@ -16,7 +16,7 @@ reCall <- function(X){
 
 nCells <- c(500, 1000, 2000, 3000)
 for(c in seq_along(nCells)){
-  png(paste0('figures/tsrPR_',nCells[c],'cells.png'), width = 900*4, height = 900*3, res = 300)
+  png(paste0('figures/tsrPR_',nCells[c],'cells.png'), width = 900*4, height = 900*2, res = 300)
   layout(matrix(c(1,2,3,4,1,2,3,4,1,2,3,4,5,6,7,8,5,6,7,8,5,6,7,8,9,9,9,9),byrow = TRUE, ncol = 4))
   par(mar=c(3,3,1,1), mgp=c(1.5,0.5,0))
   netColors <- RColorBrewer::brewer.pal(6, 'Paired')
