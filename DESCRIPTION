@@ -1,11 +1,11 @@
-Package: PCrTdMa
+Package: scTenifoldNet
 Type: Package
 Title: Construct and Compare Gene Regulatory Networks (GRN) from Single-Cell Transcriptomic Data
 Version: 0.0.1
 Authors@R: c(person("Daniel","Osorio",email="dcosorioh@tamu.edu",role=c("aut","cre")),
              person("Yan","Zhong",role=c("aut","ctb")),
              person("Guanxun","Li",role=c("aut","ctb")),
-             person("Jianhua","Huang",role=c("aut","ths")),
+             person("Jianhua","Huang",role=c("aut","ctb")),
              person("James","Cai",role=c("aut", "ths"))
              )
 Description: PCrTdMa is a tool to construct single-cell gene regulatory networks (scGRNs) from scRNA-seq data sets collected from different conditions and compare them. PCrTdMa uses principal component regression, tensor decomposition, and manifold alignment, to accurately identify even subtly shifted gene expression programs.
@@ -15,13 +15,9 @@ LazyData: true
 RoxygenNote: 6.1.1
 biocViews:
 Imports: reticulate,
-         monocle,
          pbapply,
          RSpectra,
          Matrix,
-         BiocGenerics,
-         Biobase,
          rTensor,
          methods,
-         stats,
-         VGAM
+         stats
