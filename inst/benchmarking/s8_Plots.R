@@ -58,15 +58,16 @@ for(c in seq_along(nCells)){
 
 library(Matrix)
 library(ComplexHeatmap)
-AVG <- readMM('networks/TENSOR/avg_1000cells_10nets_0.85q.mtx')
-TSR <- readMM('networks/TENSOR/tsr_1000cells_10nets_0.85q.mtx')
+AVG <- readMM('networks/TENSOR/avg_500cells_10nets_0.85q.mtx')
+TSR <- readMM('networks/TENSOR/tsr_500cells_10nets_0.85q.mtx')
 
-AVG <- as.matrix(AVG)
+AVG <- as.matrix(AVG[1:98,1:98])
 AVG <- AVG/max(abs(AVG))
-TSR <- as.matrix(TSR)
-AVG[AVG < 0.1] <- -1
-TSR[TSR < 0.1] <- -1
+TSR <- as.matrix(TSR[1:98,1:98])
+AVG[AVG < -0.01] <- -1
+TSR[TSR < -0.01] <- -1
 library(circlize)
-Heatmap(AVG, column_order=1:100, row_order = 1:100, show_heatmap_legend = FALSE, col = colorRamp2(c(-0.1, 0, 1), c("blue", "white", "red")))+
-  Heatmap(TSR, column_order=1:100, row_order = 1:100, name = 'PCr', col=colorRamp2(c(-1, 0, 1), c("blue", "white", "red")))
-
+png('figures/TENSOR.png', width = 900*2, height = 900, res = 300)
+Heatmap(AVG, column_order=1:98, row_order = 1:98, show_heatmap_legend = FALSE, col = colorRamp2(c(-0.75, 0, 0.75), c("blue", "white", "red")), border = TRUE, column_title = 'Average')+
+  Heatmap(TSR, column_order=1:98, row_order = 1:98, name = 'PCr', col=colorRamp2(c(-0.75, 0, 0.75), c("blue", "white", "red")), border = TRUE, column_title = 'CP Tensor')
+dev.off()
