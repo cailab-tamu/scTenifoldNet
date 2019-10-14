@@ -18,5 +18,14 @@ dCoexpression <- function(manifoldOutput, nGenes, geneList, q = 0.05){
     O <- as.numeric(O)
     return(O)
   })
-  geneList[dMetric > quantile(dMetric, (1-q))]
+  
+  pValues <- pchisq(abs(scale(dMetric)), df = 1, lower.tail = FALSE)
+  pAdjusted <- p.adjust(pValues, method = 'fdr')
+  dOut <- data.frame(
+    gene = geneList, 
+    distance = dMetric,
+    p.value = pValues,
+    p.adj = pAdjusted
+  )
+  return(dOut)
 }
