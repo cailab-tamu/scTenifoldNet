@@ -1,6 +1,5 @@
 #' @export manifoldAlignment
 #' @importFrom reticulate py_available py_module_available import_from_path
-#'
 #' @title manifoldAlignment
 #' @description ...
 #' @param X ...
@@ -15,7 +14,7 @@
 
 manifoldAlignment <- function(X, Y, wX, wY, d=3, method = 'nonLinear'){
   if(checkPyDependencies()){
-    file <- system.file('python/', package = 'PCrTdMa')
+    file <- system.file('python/', package = 'scTenifoldNet')
     d <- as.integer(d)
     sharedGenes <- intersect(rownames(X), rownames(Y))
     X <- X[sharedGenes, sharedGenes]
