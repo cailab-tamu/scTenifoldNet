@@ -3,3 +3,5 @@ MATLAB/thirdparty/tensor_toolbox/
 .Rproj*
 manuscript/datasets/dermalFibroblasts/unstimulated/matrix.mtx
 manuscript/datasets/dermalFibroblasts/stimulated/matrix.mtx
+manuscript/datasets/neurons/mock/control.mtx
+manuscript/datasets/neurons/morphine/morphine.mtx
