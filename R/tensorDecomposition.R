@@ -41,6 +41,7 @@ tensorDecomposition <- function(xList, yList, d = 5){
   }
   
   Tensor <- rTensor::as.tensor(Tensor)
+  set.seed(1)
   Tensor <- rTensor::cp(tnsr = Tensor, num_components = d, max_iter = 1e3)
   
   tX <- Tensor$est@data[,,1,1]
