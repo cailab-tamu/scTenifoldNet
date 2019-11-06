@@ -7,12 +7,12 @@
 #' @param wX ...
 #' @param wY ...
 #' @param d ...
-#' @param method ...
+#' @param type ...
 #' @return ...
 #' @references ...
 #' @details ...
 
-manifoldAlignment <- function(X, Y, wX, wY, d=3, method = 'nonLinear'){
+manifoldAlignment <- function(X, Y, d=3, type = 'O'){
   if(checkPyDependencies()){
     file <- system.file('python/', package = 'scTenifoldNet')
     d <- as.integer(d)
@@ -20,14 +20,22 @@ manifoldAlignment <- function(X, Y, wX, wY, d=3, method = 'nonLinear'){
     X <- X[sharedGenes, sharedGenes]
     Y <- Y[sharedGenes, sharedGenes]
     L <- diag(length(sharedGenes))
-    if(method == 'nonLinear'){
-      netManifold <- reticulate::import_from_path(module = 'nonLinearManifold', path = file, convert = TRUE)
-      alignedNet <- netManifold$nonLinearManifold(X = X, Y = Y, corr = L, num_dims = d, Wx = wX, Wy = wY)
+    if(type == 'O'){
+      wX <- X
+      wY <- Y
     }
-    if(method == 'Linear'){
-      netManifold <- reticulate::import_from_path(module = 'linearManifold', path = file, convert = TRUE)
-      alignedNet <- netManifold$LinearManifold(X=X, Y=Y, corr = L, num_dims = d, Wx = wX, Wy = wY)
+    if(type == 'D'){
+      wX <- X+1
+      wY <- Y+1
     }
+    if(type == 'P'){
+      wX <- X
+      wY <- Y
+      wX[wX != 0] <- wX[wX != 0]+1
+      wY[wY != 0] <- wY[wY != 0]+1
+    }
+    netManifold <- reticulate::import_from_path(module = 'nonLinearManifold', path = file, convert = TRUE)
+    alignedNet <- netManifold$nonLinearManifold(X = X, Y = Y, corr = L, num_dims = d, Wx = wX, Wy = wY)
     return(alignedNet)
   }
 }
