@@ -1,5 +1,7 @@
 #' @export scTenifoldNet
 #' @title scTenifoldNet
+#' @importFrom methods as
+#' @importFrom rTensor as.tensor cp
 #' @description ...
 #' @param X ...
 #' @param Y ...
@@ -11,66 +13,61 @@
 #' @param q ...
 #' @return ...
 #' @references ...
-#'
+#devtools::install_github('cailab-tamu/scTenifoldNet')
+# library(scTenifoldNet)
 # library(Matrix)
-# X <- readMM('../inst/benchmarking/data/CTL.mtx')
-# Y <- readMM('../inst/benchmarking/data/TF_1.0.mtx')
-# rownames(X) <- rownames(Y) <- readLines('../inst/benchmarking/data/geneList.txt')
+# 
+# X <- readMM('../manuscript/datasets/neurons/mock/control.mtx')
+# rownames(X) <- readLines('../manuscript/datasets/neurons/mock/controlGenes.tsv')
+# X <- X[!grepl('Rik$',rownames(X)),]
+# X <- X[1:500,]
+# Y <- readMM('../manuscript/datasets/neurons/morphine/morphine.mtx')
+# rownames(Y) <- readLines('../manuscript/datasets/neurons/morphine/morphineGenes.tsv')
+# Y <- Y[!grepl('Rik$',rownames(Y)),]
+# Y <- Y[1:500,]
 
-scTenifoldNet <- function(X, Y, nNet = 10, nCells = 500, nComp = 3, symmetric = FALSE, scaleScores = TRUE, q = 0.05){
-
+scTenifoldNet <- function(X, Y, id, nNet = 10, nCells = 500, nComp = 3, symmetric = FALSE, scaleScores = TRUE, q = 0.05){
+  
+  X <- scTenifoldNet:::scQC(X)
+  X <- scTenifoldNet:::CPM(X)
+  X <- X[apply(X!=0,1,mean) > 0.05,]
+  
+  Y <- scTenifoldNet:::scQC(Y)
+  Y <- scTenifoldNet:::CPM(Y)
+  Y <- Y[apply(Y!=0,1,mean) > 0.05,]
+  
   xNames <- rownames(X)
   yNames <- rownames(Y)
-
+  
   sharedGenes <- intersect(xNames, yNames)
   nGenes <- length(sharedGenes)
-
+  
   X <- X[sharedGenes,]
   Y <- Y[sharedGenes,]
-
-  # X <- as.matrix(X)
-  # Y <- as.matrix(Y)
-
+  
   set.seed(1)
   xList <- makeNetworks(X = X, nCells = nCells, nNet = nNet, nComp = nComp, scaleScores = scaleScores, symmetric = symmetric, q = (1-q))
+  set.seed(1)
   yList <- makeNetworks(X = Y, nCells = nCells, nNet = nNet, nComp = nComp, scaleScores = scaleScores, symmetric = symmetric, q = (1-q))
-
-  Tensor <- array(data = 0, dim = c(nGenes, nGenes, 2, nNet))
-
-  for(i in seq_len(nNet)){
-    Tensor[,,1,i] <- as.matrix(xList[[i]])
-    Tensor[,,2,i] <- as.matrix(yList[[i]])
+  
+  for(M in c('I','3d','4d')){
+    set.seed(1)
+    tensorOut <- tensorDecomposition(xList, yList, d = 3, type = M)
+    Matrix::writeMM(tensorOut$X,paste0('X_',id,'_',M,'tensor.mtx'))
+    Matrix::writeMM(tensorOut$Y,paste0('Y_',id,'_',M,'tensor.mtx'))
+    writeLines(sharedGenes, paste0('genes_',id,'_',M,'tensor.mtx'))
+    tX <- as.matrix(tensorOut$X)
+    tY <- as.matrix(tensorOut$Y)
+    for(A in c('O','D','P')){
+      set.seed(1)
+      mA <- manifoldAlignment(tX , tY, d = 100, type = A)
+      rownames(mA) <- c(paste0('X_', sharedGenes),paste0('y_', sharedGenes))
+      outFile <-paste0(id,'_',M,'tensor_',A,'alignment.csv')
+      write.csv(mA, outFile)
+      dC <- dCoexpression(mA, length(sharedGenes), sharedGenes)
+      write.csv(dC, paste0('dCoex_',id,'_',M,'tensor_',A,'alignment.csv'))
+    }
   }
-
-  Tensor <- rTensor::as.tensor(Tensor)
-  Tensor <- rTensor::cp(tnsr = Tensor, num_components = nComp, max_iter = 1000)
-
-  tX <- Tensor$est@data[,,1,1]
-  tY <- Tensor$est@data[,,2,1]
-
-  for(i in seq_len(nNet)[-1]){
-    tX <- tX +  Tensor$est@data[,,1,i]
-    tY <- tY +  Tensor$est@data[,,2,i]
-  }
-
-  tX <- tX/nNet
-  tY <- tY/nNet
-
-  tX <- tX/max(abs(tX))
-  tY <- tY/max(abs(tY))
-
-  tX[abs(tX) < quantile(abs(tX), (1-q))] <- 0
-  tY[abs(tY) < quantile(abs(tY), (1-q))] <- 0
-
-  rownames(tX) <- rownames(tY) <- colnames(tX) <- colnames(tY) <- sharedGenes
-
-  mA <- manifoldAlignment(tX, tY, tX+1, tY+1, d = nComp)
-
-  output <- NULL
-  output$X <- mA[seq_len(nGenes),]
-  rownames(output$X) <- xNames
-  output$Y <- mA[-seq_len(nGenes),]
-  rownames(output$Y) <- yNames
-
-  return(output)
 }
+
+#scTenifoldNet(X = X, Y = Y, id = '500morphineNeuron', nNet = 5, nCells = 1000)
