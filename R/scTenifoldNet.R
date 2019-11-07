@@ -13,18 +13,6 @@
 #' @param q ...
 #' @return ...
 #' @references ...
-#devtools::install_github('cailab-tamu/scTenifoldNet')
-# library(scTenifoldNet)
-# library(Matrix)
-# 
-# X <- readMM('../manuscript/datasets/neurons/mock/control.mtx')
-# rownames(X) <- readLines('../manuscript/datasets/neurons/mock/controlGenes.tsv')
-# X <- X[!grepl('Rik$',rownames(X)),]
-# X <- X[1:500,]
-# Y <- readMM('../manuscript/datasets/neurons/morphine/morphine.mtx')
-# rownames(Y) <- readLines('../manuscript/datasets/neurons/morphine/morphineGenes.tsv')
-# Y <- Y[!grepl('Rik$',rownames(Y)),]
-# Y <- Y[1:500,]
 
 scTenifoldNet <- function(X, Y, id, nNet = 10, nCells = 500, nComp = 3, symmetric = FALSE, scaleScores = TRUE, q = 0.05){
   
@@ -69,5 +57,3 @@ scTenifoldNet <- function(X, Y, id, nNet = 10, nCells = 500, nComp = 3, symmetri
     }
   }
 }
-
-#scTenifoldNet(X = X, Y = Y, id = '500morphineNeuron', nNet = 5, nCells = 1000)
