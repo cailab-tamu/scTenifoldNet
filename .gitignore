@@ -7,3 +7,5 @@ manuscript/datasets/neurons/mock/control.mtx
 manuscript/datasets/neurons/morphine/morphine.mtx
 manuscript/datasets/agingNeurons/O/oMatrix.mtx
 manuscript/datasets/agingNeurons/Y/yMatrix.mtx
+manuscript/datasets/morphineNeurons/morphine/morphine.mtx
+manuscript/datasets/morphineNeurons/mock/control.mtx
