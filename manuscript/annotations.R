@@ -2,7 +2,7 @@ library(enrichR)
 library(scTenifoldNet)
 
 nDim <- 30
-fileList <- list.files(path = 'results/',pattern = 'AN', full.names = TRUE)
+fileList <- list.files(path = 'results/',pattern = 'DF', full.names = TRUE)
 
 sapply(fileList, function(X){
   fileContent <- read.csv(X, row.names = 1, stringsAsFactors = FALSE)
