@@ -4,7 +4,7 @@
 \alias{makeNetworks}
 \title{makeNetworks}
 \usage{
-makeNetworks(X, nNet = 10, nCells = 1000, nComp = 3,
+makeNetworks(X, nNet = 10, nCells = 500, nComp = 3,
   scaleScores = TRUE, symmetric = FALSE, q = 0.95)
 }
 \arguments{
