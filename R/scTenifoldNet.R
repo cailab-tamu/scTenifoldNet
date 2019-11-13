@@ -14,13 +14,13 @@
 #' @return ...
 #' @references ...
 
-scTenifoldNet <- function(X, Y, id, nNet = 10, nCells = 500, nComp = 3, symmetric = FALSE, scaleScores = TRUE, q = 0.05){
+scTenifoldNet <- function(X, Y, nNet = 10, nCells = 500, nComp = 3, symmetric = FALSE, scaleScores = TRUE, q = 0.05){
   
-  X <- scTenifoldNet:::scQC(X)
-  X <- scTenifoldNet:::CPM(X)
+  X <- scQC(X)
+  X <- cpmNormalization(X)
   
-  Y <- scTenifoldNet:::scQC(Y)
-  Y <- scTenifoldNet:::CPM(Y)
+  Y <- scQC(Y)
+  Y <- cpmNormalization(Y)
   
   xNames <- rownames(X)
   yNames <- rownames(Y)
@@ -38,7 +38,7 @@ scTenifoldNet <- function(X, Y, id, nNet = 10, nCells = 500, nComp = 3, symmetri
   
   # for(M in c('I','3d','4d')){
   set.seed(1)
-  tensorOut <- tensorDecomposition(xList, yList, d = 3, type = M)
+  tensorOut <- tensorDecomposition(xList, yList, d = 3)
   # Matrix::writeMM(tensorOut$X,paste0('X_',id,'_',M,'tensor.mtx'))
   # Matrix::writeMM(tensorOut$Y,paste0('Y_',id,'_',M,'tensor.mtx'))
   # writeLines(sharedGenes, paste0('genes_',id,'_',M,'tensor.mtx'))
