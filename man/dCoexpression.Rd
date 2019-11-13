@@ -4,7 +4,7 @@
 \alias{dCoexpression}
 \title{dCoexpression}
 \usage{
-dCoexpression(manifoldOutput, nGenes, geneList, q = 0.05)
+dCoexpression(manifoldOutput, nGenes, geneList)
 }
 \arguments{
 \item{manifoldOutput}{...}
@@ -12,8 +12,6 @@ dCoexpression(manifoldOutput, nGenes, geneList, q = 0.05)
 \item{nGenes}{...}
 
 \item{geneList}{...}
-
-\item{q}{...}
 }
 \value{
 ...
