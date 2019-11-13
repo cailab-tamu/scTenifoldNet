@@ -4,13 +4,22 @@
 \alias{scTenifoldNet}
 \title{scTenifoldNet}
 \usage{
-scTenifoldNet(X, Y, nNet = 10, nCells = 500, nComp = 3,
-  symmetric = FALSE, scaleScores = TRUE, q = 0.05)
+scTenifoldNet(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TRUE,
+  qc_minPCT = 0.05, qc_maxMTratio = 0.1, nNet = 10, nCells = 500,
+  nComp = 3, symmetric = FALSE, scaleScores = TRUE, q = 0.05)
 }
 \arguments{
 \item{X}{...}
 
 \item{Y}{...}
+
+\item{qc_minLibSize}{...}
+
+\item{qc_removeOutlierCells}{...}
+
+\item{qc_minPCT}{...}
+
+\item{qc_maxMTratio}{...}
 
 \item{nNet}{...}
 
