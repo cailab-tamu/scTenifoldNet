@@ -12,7 +12,7 @@
 #' @return ...
 #' @references ...
 #'
-makeNetworks <- function(X, nNet = 10, nCells = 1000, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0.95){
+makeNetworks <- function(X, nNet = 10, nCells = 500, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0.95){
   sapply(seq_len(nNet), function(W){
     Z <- sample(x = seq_len(ncol(X)), size = nCells, replace = TRUE)
     Z <- as.matrix(X[,Z])
