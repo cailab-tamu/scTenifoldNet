@@ -7,6 +7,7 @@ scQC <- function(X){
   mtRate <- X[grepl('MT-',toupper(rownames(X))),]
   mtRate <- apply(mtRate,2,sum)/apply(X,2,sum)
   X <- X[,mtRate < 0.1]
+  X <- X[apply(X!=0,1,mean) > 0.05,]
   X <- as(X, 'dgCMatrix')
   return(X)
 }
