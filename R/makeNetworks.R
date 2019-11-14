@@ -14,15 +14,14 @@
 #'
 makeNetworks <- function(X, nNet = 10, nCells = 500, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0.95){
   geneList <- rownames(X)
-  nGenes <-length(geneList)
+  nGenes <- length(geneList)
   nCol <- ncol(X)
-  nRow <- nrow(X)
   if(nGenes > 0){
     sapply(seq_len(nNet), function(W){
       Z <- sample(x = seq_len(nCol), size = nCells, replace = TRUE)
       Z <- as.matrix(X[,Z])
       Z <- Z[apply(Z,1,sum) > 0,]
-      if(nComp > 2 & nComp < nRow){
+      if(nComp > 2 & nComp < nGenes){
         Z <- pcNet(Z, nComp = nComp, scaleScores = scaleScores, symmetric = symmetric, q = q)  
       } else {
         stop('nComp should be greater than 2 and lower than the total number of genes')
