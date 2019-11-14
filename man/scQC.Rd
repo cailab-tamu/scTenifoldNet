@@ -2,28 +2,25 @@
 % Please edit documentation in R/scQC.R
 \name{scQC}
 \alias{scQC}
-\title{scQC}
+\title{Perform single-cell quality control}
 \usage{
 scQC(X, minLibSize = 1000, removeOutlierCells = TRUE, minPCT = 0.05,
   maxMTratio = 0.1)
 }
 \arguments{
-\item{X}{...}
+\item{X}{Raw counts matrix with cells as columns and genes (symbols) as rows.}
 
-\item{minLibSize}{...}
+\item{minLibSize}{An integer value. Represents the minimum library size required for a cell to be included in the analysis.}
 
-\item{removeOutlierCells}{...}
+\item{removeOutlierCells}{A boolean value (TRUE/FALSE), if TRUE, the identified cells with library size greater than 1.58 IQR/sqrt(n) computed from the sample, are removed. For further details see: ?boxplot.stats}
 
-\item{minPCT}{...}
+\item{minPCT}{A decimal value between 0 and 1. Represents the minimum fraction of cells where the gene needs to be expressed to be included in the analysis.}
 
-\item{maxMTratio}{...}
+\item{maxMTratio}{A decimal value between 0 and 1. Represents the maximum ratio of mitochondrial reads (mithocondrial reads / library size) present in a cell to be included in the analysis. It's computed using the symbol genes starting with 'MT-'}
 }
 \value{
-...
+A dgCMatrix object with the cells and the genes that pass the quality control filters.
 }
 \description{
-...
-}
-\references{
-...
+This function performs quality control filters over the provided input matrices, the function checks for minimum cell library size, mitochondrial ratio, outlier cells, and the fraction of cells where the gene is expressed.
 }
