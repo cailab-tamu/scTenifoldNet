@@ -2,7 +2,7 @@
 #' @title scTenifoldNet
 #' @importFrom methods as
 #' @importFrom rTensor as.tensor cp
-#' @description ...
+#' @description Generate gene regulatory networks based on principal component regression, tensor decomposition, and manifold alignment.
 #' @param X Raw counts matrix with cells as columns and genes (symbols) as rows.
 #' @param Y Raw counts matrix with cells as columns and genes (symbols) as rows.
 #' @param qc_minLibSize An integer value. Represents the minimum library size required for a cell to be included in the analysis.

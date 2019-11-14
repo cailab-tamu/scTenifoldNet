@@ -1,7 +1,7 @@
 #' @export makeNetworks
 #' @importFrom Matrix Matrix
 #' @title makeNetworks
-#' @description ...
+#' @description Generate principal components gene regulatory networks for a list of subsampled cells.
 #' @param X Normlized gene expression matrix with cells as columns and genes (symbols) as rows.
 #' @param nNet The number of principal components regression based networks to generate.
 #' @param nCells The number of cells to subsample each time.
@@ -9,7 +9,7 @@
 #' @param scaleScores A boolean value (TRUE/FALSE), if TRUE, the weights will be normalized such that the maximum absolute value is 1.
 #' @param symmetric A boolean value (TRUE/FALSE), if TRUE, the weights matrix returned will be symmetric.
 #' @param q The threshold that only remaining the relationships with the top q% absolute value in the weights matrix.
-#' @return ...
+#' @return A list of gene regulatory networks. Each one corresponding to one group of subsampled cells.
 #' @references ...
 #'
 makeNetworks <- function(X, nNet = 10, nCells = 500, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0.95){

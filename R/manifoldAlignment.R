@@ -2,10 +2,10 @@
 #' @importFrom reticulate py_available py_module_available import_from_path
 #' @title manifoldAlignment
 #' @description Build comparable low-dimensional features for the genes from two conditions.
-#' @param X A gene relationship matrix.
-#' @param Y A gene relationship matrix.
+#' @param X A gene regulatory matrix.
+#' @param Y A gene regulatory matrix.
 #' @param d The dimension of the low-dimensional feature space.
-#' @return A low-dimensional projection for two relationship matrices
+#' @return A low-dimensional projection for two gene regulatory matrices.
 #' @references ...
 #' @details ...
 

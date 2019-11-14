@@ -3,12 +3,12 @@
 #'
 #' @title tensorDecomposition
 #' @description Generate weight-averaged denoised networks by Candecomp/Parafac (CP) Tensor Decomposition.
-#' @param xList A list of gene relationship matrix.
-#' @param yList A list of gene relationship matrix.
+#' @param xList A list of gene regulatory matrix.
+#' @param yList A list of gene regulatory matrix.
 #' @param d The number of rank-one tensors used to approximate the data
-#' @return A weight-averaged denoised gene relationship networks.
+#' @return A weight-averaged denoised gene regulatory networks.
 #' @references ...
-#' @details For two lists of gene relationship matrix, assembling them as a 4-d tendor and then do Candecomp/Parafac (CP) Tensor Decomposition. Then do weight-average to generate denoised networks.
+#' @details For two lists of gene regulatory matrix, assembling them as a 4-d tendor and then do Candecomp/Parafac (CP) Tensor Decomposition. Then do weight-average to generate denoised networks.
 
 tensorDecomposition <- function(xList, yList, d = 5){
   xNets <- length(xList)

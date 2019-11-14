@@ -4,13 +4,13 @@
 #' @importFrom pbapply pbsapply
 #' @importFrom stats quantile
 #' @title pcNet
-#' @description Gnerate gene network based on principal components regression.
+#' @description Generate gene regulatory network based on principal components regression.
 #' @param X Normlized gene expression matrix with cells as columns and genes (symbols) as rows.
 #' @param nCom The number of principal components in PCA.
 #' @param scaleScores A boolean value (TRUE/FALSE), if TRUE, the weights will be normalized such that the maximum absolute value is 1.
 #' @param symmetric A boolean value (TRUE/FALSE), if TRUE, the weights matrix returned will be symmetric.
 #' @param q The threshold that only remaining the relationships with the top q% absolute value in the weights matrix.
-#' @return
+#' @return A gene regulatory network.
 #' @references ...
 #' @details ...
 #' @examples
