@@ -25,10 +25,10 @@ scTenifoldNet <- function(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TR
                           nc_nCells = 500, nc_nComp = 3, nc_symmetric = FALSE, nc_scaleScores = TRUE,
                           nc_q = 0.05, td_nDim = 3, ma_nDim = 30){
 
-  X <- scQC(X,minLibSize = qc_minLibSize, removeOutlierCells = qc_removeOutlierCells, minPCT = qc_minPCT, maxMTratio = qc_maxMTratio)
+  X <- scQC(X, minLibSize = qc_minLibSize, removeOutlierCells = qc_removeOutlierCells, minPCT = qc_minPCT, maxMTratio = qc_maxMTratio)
   X <- cpmNormalization(X)
 
-  Y <- scQC(Y)
+  Y <- scQC(Y, minLibSize = qc_minLibSize, removeOutlierCells = qc_removeOutlierCells, minPCT = qc_minPCT, maxMTratio = qc_maxMTratio)
   Y <- cpmNormalization(Y)
 
   xNames <- rownames(X)
