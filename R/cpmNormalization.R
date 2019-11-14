@@ -1,8 +1,8 @@
 #' @export cpmNormalization
-#' @title cpmNormalization
-#' @description Perfrom counts per million (CPM) normalization
-#' @param X ...
-#' @return ...
+#' @title Perform counts per million (CPM) normalization
+#' @description Each gene count for each cell are divided by the total counts for that cell and multiplied by 1e6. No log-transformation is applied.
+#' @param X Raw counts matrix with cells as columns and genes (symbols) as rows
+#' @return A dgCMatrix object with the count per million (CPM) normalized values.
 
 cpmNormalization <- function(X){
   X <- as.matrix(X)

@@ -2,16 +2,16 @@
 % Please edit documentation in R/cpmNormalization.R
 \name{cpmNormalization}
 \alias{cpmNormalization}
-\title{cpmNormalization}
+\title{Perform counts per million (CPM) normalization}
 \usage{
 cpmNormalization(X)
 }
 \arguments{
-\item{X}{...}
+\item{X}{Raw counts matrix with cells as columns and genes (symbols) as rows}
 }
 \value{
-...
+A dgCMatrix object with the count per million (CPM) normalized values.
 }
 \description{
-Perfrom counts per million (CPM) normalization
+Each gene count for each cell are divided by the total counts for that cell and multiplied by 1e6. No log-transformation is applied.
 }
