@@ -28,8 +28,14 @@ scQC <- function(X, minLibSize = 1000, removeOutlierCells = TRUE, minPCT = 0.05,
   X <- X[,mtRate < maxMTratio]
   # Filtering out by minPCT
   X <- X[apply(X!=0,1,mean) > minPCT,]
+  # Extracting gene and cell ids
+  gNames <- rownames(X)
+  cNames <- colnames(X)
   # Setting the output structure
   X <- as(X, 'dgCMatrix')
+  # Assigning ids
+  rownames(X) <- gNames
+  colnames(X) <- cNames
   # Return
   return(X)
 }
