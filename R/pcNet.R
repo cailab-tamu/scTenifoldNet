@@ -4,50 +4,36 @@
 #' @importFrom pbapply pbsapply
 #' @importFrom stats quantile
 #' @title pcNet
-#' @description Generate gene regulatory network based on principal components regression.
-#' @param X Normlized gene expression matrix with cells as columns and genes (symbols) as rows.
-#' @param nCom The number of principal components in PCA.
+#' @description Generate a gene regulatory network based on principal components regression.
+#' @param X A filtered and normlized gene expression matrix with cells as columns and genes as rows.
+#' @param nComp An integer value. The number of principal components in PCA to generate the networks. Should be greater than 2 and lower than the total number of genes.
 #' @param scaleScores A boolean value (TRUE/FALSE), if TRUE, the weights will be normalized such that the maximum absolute value is 1.
 #' @param symmetric A boolean value (TRUE/FALSE), if TRUE, the weights matrix returned will be symmetric.
-#' @param q The threshold that only remaining the relationships with the top q% absolute value in the weights matrix.
-#' @return A gene regulatory network.
+#' @param q A decimal value between 0 and 1. Represent the cut-off threshold of top q\% relationships to be returned.
+#' @return A gene regulatory network in dgCMatrix format.
 #' @references ...
 #' @details ...
-#' @examples
-#' # Generating input matrix
-#' set.seed(1)
-#' inputMatrix <- matrix(data = rnbinom(n = 1000, size = 10, prob = .9), nrow = 20)
-#' rownames(inputMatrix) <- paste0('Gene_', seq_len(nrow(inputMatrix)))
-#'
-#' # Getting the adjacency matrix
-#' pcNet(inputMatrix)
-#' # Getting the adjacency matrix filtered to the top 1%
-#' pcNet(inputMatrix, q = 0.99)
-#' # Getting the adjacency matrix filtered to the top 5%
-#' pcNet(inputMatrix, q = 0.95)
-#' # Getting the adjacency matrix filtered to the top 10%
-#' pcNet(inputMatrix, q = 0.90)
 
 pcNet <- function(X,
-                  nCom = 3,
+                  nComp = 3,
                   scaleScores = TRUE,
                   symmetric = FALSE,
                   q = 0) {
   if (!all(rowSums(X) > 0)) {
-    stop('Each gene have to be present in at least one cell')
+    stop('Quality control has not been applied over the matrix.')
   }
   if (!is.matrix(X)) {
-    stop('Input should be a matrix of n x m where n are genes and m are cells')
+    stop('Input should be a matrix with cells as columns and genes as rows')
   }
-  if (nCom < 2 | nCom >= nrow(X)) {
-    stop('nCom should be greater than 2 and lower than the number of genes')
+  if (nComp < 2 | nComp >= nrow(X)) {
+    stop('nCom should be greater than 2 and lower than the total number of genes')
   }
   gNames <- rownames(X)
   pcCoefficients <- function(K) {
     y <- X[, K]
     Xi <- X
     Xi <- Xi[, -K]
-    coeff <- RSpectra::svds(Xi, nCom)$v
+    coeff <- RSpectra::svds(Xi, nComp)$v
     score <- Xi %*% coeff
     score <-
       t(t(score) / (apply(score, 2, function(X) {
@@ -75,6 +61,6 @@ pcNet <- function(X,
   A[absA < quantile(absA, q)] <- 0
   diag(A) <- 0
   colnames(A) <- rownames(A) <- gNames
-  A <- Matrix::Matrix(A, sparse = TRUE)
+  A <- as(A, 'dgCMatrix')
   return(A)
 }

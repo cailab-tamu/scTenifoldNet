@@ -5,39 +5,44 @@
 \title{scTenifoldNet}
 \usage{
 scTenifoldNet(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TRUE,
-  qc_minPCT = 0.05, qc_maxMTratio = 0.1, nNet = 10, nCells = 500,
-  nComp = 3, symmetric = FALSE, scaleScores = TRUE, q = 0.05)
+  qc_minPCT = 0.05, qc_maxMTratio = 0.1, nc_nNet = 10,
+  nc_nCells = 500, nc_nComp = 3, nc_symmetric = FALSE,
+  nc_scaleScores = TRUE, nc_q = 0.05, td_nDim = 3, ma_nDim = 30)
 }
 \arguments{
-\item{X}{...}
+\item{X}{Raw counts matrix with cells as columns and genes (symbols) as rows.}
 
-\item{Y}{...}
+\item{Y}{Raw counts matrix with cells as columns and genes (symbols) as rows.}
 
-\item{qc_minLibSize}{...}
+\item{qc_minLibSize}{An integer value. Defines the minimum library size required for a cell to be included in the analysis.}
 
-\item{qc_removeOutlierCells}{...}
+\item{qc_removeOutlierCells}{A boolean value (TRUE/FALSE), if TRUE, the identified cells with library size greater than 1.58 IQR/sqrt(n) computed from the sample, are removed. For further details see: ?boxplot.stats}
 
-\item{qc_minPCT}{...}
+\item{qc_minPCT}{A decimal value between 0 and 1. Defines the minimum fraction of cells where the gene needs to be expressed to be included in the analysis.}
 
-\item{qc_maxMTratio}{...}
+\item{qc_maxMTratio}{A decimal value between 0 and 1. Defines the maximum ratio of mitochondrial reads (mithocondrial reads / library size) present in a cell to be included in the analysis. It's computed using the symbol genes starting with 'MT-'}
 
-\item{nNet}{...}
+\item{nc_nNet}{An integer value. The number of networks based on principal components regression to generate.}
 
-\item{nCells}{...}
+\item{nc_nCells}{An integer value. The number of cells to subsample each time to generate a network.}
 
-\item{nComp}{...}
+\item{nc_nComp}{An integer value. The number of principal components in PCA to generate the networks. Should be greater than 2 and lower than the total number of genes.}
 
-\item{symmetric}{...}
+\item{nc_symmetric}{A boolean value (TRUE/FALSE), if TRUE, the weights matrix returned will be symmetric.}
 
-\item{scaleScores}{...}
+\item{nc_scaleScores}{A boolean value (TRUE/FALSE), if TRUE, the weights will be normalized such that the maximum absolute value is 1.}
 
-\item{q}{...}
+\item{nc_q}{A decimal value between 0 and 1. Defines the cut-off threshold of top q\% relationships to be returned.}
+
+\item{td_nDim}{An integer value. Defines the number of rank-one tensors used to approximate the data using CANDECOMP/PARAFAC (CP) Tensor Decomposition.}
+
+\item{ma_nDim}{An integer value. Defines the number of dimensions of the low-dimensional feature space to be returned from the non-linear manifold alignment.}
 }
 \value{
 ...
 }
 \description{
-...
+Generate gene regulatory networks based on principal component regression, tensor decomposition, and manifold alignment.
 }
 \references{
 ...

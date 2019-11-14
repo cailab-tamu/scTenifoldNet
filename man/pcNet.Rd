@@ -4,42 +4,27 @@
 \alias{pcNet}
 \title{pcNet}
 \usage{
-pcNet(X, nCom = 3, scaleScores = TRUE, symmetric = FALSE, q = 0)
+pcNet(X, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0)
 }
 \arguments{
-\item{X}{...}
+\item{X}{A filtered and normlized gene expression matrix with cells as columns and genes as rows.}
 
-\item{nCom}{...}
+\item{nComp}{An integer value. The number of principal components in PCA to generate the networks. Should be greater than 2 and lower than the total number of genes.}
 
-\item{scaleScores}{...}
+\item{scaleScores}{A boolean value (TRUE/FALSE), if TRUE, the weights will be normalized such that the maximum absolute value is 1.}
 
-\item{symmetric}{...}
+\item{symmetric}{A boolean value (TRUE/FALSE), if TRUE, the weights matrix returned will be symmetric.}
 
-\item{q}{...}
+\item{q}{A decimal value between 0 and 1. Represent the cut-off threshold of top q\% relationships to be returned.}
 }
 \value{
-...
+A gene regulatory network in dgCMatrix format.
 }
 \description{
-...
+Generate a gene regulatory network based on principal components regression.
 }
 \details{
 ...
-}
-\examples{
-# Generating input matrix
-set.seed(1)
-inputMatrix <- matrix(data = rnbinom(n = 1000, size = 10, prob = .9), nrow = 20)
-rownames(inputMatrix) <- paste0('Gene_', seq_len(nrow(inputMatrix)))
-
-# Getting the adjacency matrix
-pcNet(inputMatrix)
-# Getting the adjacency matrix filtered to the top 1\%
-pcNet(inputMatrix, q = 0.99)
-# Getting the adjacency matrix filtered to the top 5\%
-pcNet(inputMatrix, q = 0.95)
-# Getting the adjacency matrix filtered to the top 10\%
-pcNet(inputMatrix, q = 0.90)
 }
 \references{
 ...

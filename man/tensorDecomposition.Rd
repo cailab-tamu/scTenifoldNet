@@ -2,25 +2,25 @@
 % Please edit documentation in R/tensorDecomposition.R
 \name{tensorDecomposition}
 \alias{tensorDecomposition}
-\title{tensorDecomposition}
+\title{CANDECOMP/PARAFAC (CP) Tensor Decomposition of Gene Regulatory Networks.}
 \usage{
 tensorDecomposition(xList, yList, d = 5)
 }
 \arguments{
-\item{xList}{...}
+\item{xList}{A list of gene regulatory networks.}
 
-\item{yList}{...}
+\item{yList}{A list of gene regulatory networks.}
 
-\item{d}{...}
+\item{d}{The number of rank-one tensors used to approximate the data using CANDECOMP/PARAFAC (CP) Tensor Decomposition,}
 }
 \value{
-...
+A weight-averaged denoised gene regulatory networks.
 }
 \description{
-...
+Generate weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition.
 }
 \details{
-...
+For two lists of gene regulatory matrix, assembling them as a 4-d tendor and then do Candecomp/Parafac (CP) Tensor Decomposition. Then do weight-average to generate denoised networks.
 }
 \references{
 ...

@@ -7,17 +7,17 @@
 manifoldAlignment(X, Y, d = 30)
 }
 \arguments{
-\item{X}{...}
+\item{X}{A gene regulatory matrix.}
 
-\item{Y}{...}
+\item{Y}{A gene regulatory matrix.}
 
-\item{d}{...}
+\item{d}{The dimension of the low-dimensional feature space.}
 }
 \value{
-...
+A low-dimensional projection for two gene regulatory matrices.
 }
 \description{
-...
+Build comparable low-dimensional features for the genes from two conditions.
 }
 \details{
 ...

@@ -8,25 +8,25 @@ makeNetworks(X, nNet = 10, nCells = 500, nComp = 3,
   scaleScores = TRUE, symmetric = FALSE, q = 0.95)
 }
 \arguments{
-\item{X}{...}
+\item{X}{A filtered and normlized gene expression matrix with cells as columns and genes as rows.}
 
-\item{nNet}{...}
+\item{nNet}{An integer value. The number of networks based on principal components regression to generate.}
 
-\item{nCells}{...}
+\item{nCells}{An integer value. The number of cells to subsample each time to generate a network.}
 
-\item{nComp}{...}
+\item{nComp}{An integer value. The number of principal components in PCA to generate the networks. Should be greater than 2 and lower than the total number of genes.}
 
-\item{scaleScores}{...}
+\item{scaleScores}{A boolean value (TRUE/FALSE), if TRUE, the weights will be normalized such that the maximum absolute value is 1.}
 
-\item{symmetric}{...}
+\item{symmetric}{A boolean value (TRUE/FALSE), if TRUE, the weights matrix returned will be symmetric.}
 
-\item{q}{...}
+\item{q}{A decimal value between 0 and 1. Represent the cut-off threshold of top q\% relationships to be returned.}
 }
 \value{
-...
+A list of gene regulatory networks in dgCMatrix format. Each one corresponding to one group of subsampled cells.
 }
 \description{
-...
+Generates gene regulatory networks based on principal components regression for a set of subsampled cells.
 }
 \references{
 ...
