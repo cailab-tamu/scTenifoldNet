@@ -7,7 +7,8 @@
 scTenifoldNet(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TRUE,
   qc_minPCT = 0.05, qc_maxMTratio = 0.1, nc_nNet = 10,
   nc_nCells = 500, nc_nComp = 3, nc_symmetric = FALSE,
-  nc_scaleScores = TRUE, nc_q = 0.05, td_nDim = 3, ma_nDim = 30)
+  nc_scaleScores = TRUE, nc_q = 0.05, td_nDim = 3,
+  td_maxIter = 1e+06, td_Tol = 1e-05, ma_nDim = 30)
 }
 \arguments{
 \item{X}{Raw counts matrix with cells as columns and genes (symbols) as rows.}
@@ -16,11 +17,11 @@ scTenifoldNet(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TRUE,
 
 \item{qc_minLibSize}{An integer value. Defines the minimum library size required for a cell to be included in the analysis.}
 
-\item{qc_removeOutlierCells}{A boolean value (TRUE/FALSE), if TRUE, the identified cells with library size greater than 1.58 IQR/sqrt(n) computed from the sample, are removed. For further details see: ?boxplot.stats}
+\item{qc_removeOutlierCells}{A boolean value (TRUE/FALSE), if TRUE, the identified cells with library size greater than 1.58 IQR/sqrt(n) computed from the sample, are removed. For further details see: \code{?boxplot.stats}}
 
 \item{qc_minPCT}{A decimal value between 0 and 1. Defines the minimum fraction of cells where the gene needs to be expressed to be included in the analysis.}
 
-\item{qc_maxMTratio}{A decimal value between 0 and 1. Defines the maximum ratio of mitochondrial reads (mithocondrial reads / library size) present in a cell to be included in the analysis. It's computed using the symbol genes starting with 'MT-'}
+\item{qc_maxMTratio}{A decimal value between 0 and 1. Defines the maximum ratio of mitochondrial reads (mithocondrial reads / library size) present in a cell to be included in the analysis. It's computed using the symbol genes starting with 'MT-' non-case sensitive.}
 
 \item{nc_nNet}{An integer value. The number of networks based on principal components regression to generate.}
 
@@ -36,10 +37,19 @@ scTenifoldNet(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TRUE,
 
 \item{td_nDim}{An integer value. Defines the number of rank-one tensors used to approximate the data using CANDECOMP/PARAFAC (CP) Tensor Decomposition.}
 
+\item{td_maxIter}{An integer value. Defines the maximum number of iterations if error stay above td_Tol.}
+
+\item{td_Tol}{A decimal value between 0 and 1. Defines the relative Frobenius norm error tolerance.}
+
 \item{ma_nDim}{An integer value. Defines the number of dimensions of the low-dimensional feature space to be returned from the non-linear manifold alignment.}
 }
 \value{
-...
+A list with 3 slots as follows: 
+\itemize{
+\item{tensorNetworks:} The generated weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition.
+\item{manifoldAlignment:} The generated low-dimensional features result of the non-linear manifold alignment.
+\item{diffCoexpression:} The results of the differential coexpression analysis.
+}
 }
 \description{
 Generate gene regulatory networks based on principal component regression, tensor decomposition, and manifold alignment.

@@ -2,30 +2,39 @@
 % Please edit documentation in R/pcNet.R
 \name{pcNet}
 \alias{pcNet}
-\title{pcNet}
+\title{Computes a gene regulatory network based on principal component regression}
 \usage{
-pcNet(X, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0)
+pcNet(X, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0,
+  verbose = TRUE)
 }
 \arguments{
-\item{X}{A filtered and normlized gene expression matrix with cells as columns and genes as rows.}
+\item{X}{A filtered and normalized gene expression matrix with cells as columns and genes as rows.}
 
 \item{nComp}{An integer value. The number of principal components in PCA to generate the networks. Should be greater than 2 and lower than the total number of genes.}
 
-\item{scaleScores}{A boolean value (TRUE/FALSE), if TRUE, the weights will be normalized such that the maximum absolute value is 1.}
+\item{scaleScores}{A boolean value (\code{TRUE/FALSE}), if TRUE, the weights will be normalized such that the maximum absolute value is 1.}
 
 \item{symmetric}{A boolean value (TRUE/FALSE), if TRUE, the weights matrix returned will be symmetric.}
 
-\item{q}{A decimal value between 0 and 1. Represent the cut-off threshold of top q\% relationships to be returned.}
+\item{q}{A decimal value between 0 and 1. Defines the cut-off threshold of top q\% relationships to be returned.}
+
+\item{verbose}{A boolean value (TRUE/FALSE), if TRUE, a progress bar is shown.}
 }
 \value{
 A gene regulatory network in dgCMatrix format.
 }
 \description{
-Generate a gene regulatory network based on principal components regression.
+This function computes a gene regulatory network based on principal component regression (PCR), a technique based on principal component analysis. In PCR, the outcome variable is regressed over a \code{nComp} number of for principal components computed from a set of covariates to estimate the unknown regression coefficients in the model. \code{pcNet} function computes the PCR coefficients for each gene one at a time using all the others as covariates, to construct an all by all gene regulatory network.
 }
 \details{
-...
+Principal component regression may be broadly divided into three major steps: \enumerate{
+\item Perform PCA on the observed covariates data matrix to obtain \code{nComp} number of the principal components.
+\item Regress the observed vector of outcomes on the selected principal components as covariates, using ordinary least squares regression to get a vector of estimated regression coefficients
+\item Transform this vector back to the scale of the actual covariates, using the eigenvectors corresponding to the selected principal components to get the final PCR estimator for estimating the regression coefficients characterizing the original model.
+}
 }
 \references{
-...
+\itemize{
+\item Jolliffe, Ian T. "A note on the use of principal components in regression." Journal of the Royal Statistical Society: Series C (Applied Statistics) 31.3 (1982): 300-303.
+}
 }
