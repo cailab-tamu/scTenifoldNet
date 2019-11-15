@@ -2,4 +2,5 @@ MATLAB/*
 ^.*\.Rproj$
 ^\.Rproj\.user$
 inst/benchmarking/*
-manuscript/*
+inst/manuscript/*
+README.md
