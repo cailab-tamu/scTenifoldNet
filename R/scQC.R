@@ -5,7 +5,7 @@
 #' @description This function performs quality control filters over the provided input matrix, the function checks for minimum cell library size, mitochondrial ratio, outlier cells, and the fraction of cells where a gene is expressed.
 #' @param X Raw counts matrix with cells as columns and genes (symbols) as rows.
 #' @param minLibSize An integer value. Defines the minimum library size required for a cell to be included in the analysis.
-#' @param removeOutlierCells A boolean value (TRUE/FALSE), if TRUE, the identified cells with library size greater than 1.58 IQR/sqrt(n) computed from the sample, are removed. For further details see: \code{?boxplot.stats}
+#' @param removeOutlierCells A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, the identified cells with library size greater than 1.58 IQR/sqrt(n) computed from the sample, are removed. For further details see: \code{?boxplot.stats}
 #' @param minPCT A decimal value between 0 and 1. Defines the minimum fraction of cells where the gene needs to be expressed to be included in the analysis.
 #' @param maxMTratio A decimal value between 0 and 1. Defines the maximum ratio of mitochondrial reads (mithocondrial reads / library size) present in a cell to be included in the analysis. It's computed using the symbol genes starting with 'MT-' non-case sensitive. 
 #' @return A dgCMatrix object with the cells and the genes that pass the quality control filters.

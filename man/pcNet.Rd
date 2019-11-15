@@ -12,13 +12,13 @@ pcNet(X, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0,
 
 \item{nComp}{An integer value. The number of principal components in PCA to generate the networks. Should be greater than 2 and lower than the total number of genes.}
 
-\item{scaleScores}{A boolean value (\code{TRUE/FALSE}), if TRUE, the weights will be normalized such that the maximum absolute value is 1.}
+\item{scaleScores}{A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, the weights will be normalized such that the maximum absolute value is 1.}
 
-\item{symmetric}{A boolean value (TRUE/FALSE), if TRUE, the weights matrix returned will be symmetric.}
+\item{symmetric}{A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, the weights matrix returned will be symmetric.}
 
 \item{q}{A decimal value between 0 and 1. Defines the cut-off threshold of top q\% relationships to be returned.}
 
-\item{verbose}{A boolean value (TRUE/FALSE), if TRUE, a progress bar is shown.}
+\item{verbose}{A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, a progress bar is shown.}
 }
 \value{
 A gene regulatory network in dgCMatrix format.
@@ -33,8 +33,48 @@ Principal component regression may be broadly divided into three major steps: \e
 \item Transform this vector back to the scale of the actual covariates, using the eigenvectors corresponding to the selected principal components to get the final PCR estimator for estimating the regression coefficients characterizing the original model.
 }
 }
+\examples{
+library(scTenifoldNet)
+
+# Simulating of a dataset following a negative binomial distribution with high sparcity (~67\%)
+nCells = 2000
+nGenes = 100
+set.seed(1)
+X <- rnbinom(n = nGenes * nCells, size = 20, prob = 0.98)
+X <- round(X)
+X <- matrix(X, ncol = nCells)
+rownames(X) <- c(paste0('ng', 1:90), paste0('mt-', 1:10))
+
+# Performing Single cell quality control
+qcOutput <- scQC(
+  X = X,
+  minLibSize = 30,
+  removeOutlierCells = TRUE,
+  minPCT = 0.05,
+  maxMTratio = 0.1
+)
+
+# Computing a single-cell gene regulatory network using principal component regression
+# Non-symmetric
+pcnetOutput <- pcNet(X = qcOutput, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0)
+pcnetOutput[1:10,1:10]
+
+# Symmetric
+pcnetOutput <- pcNet(X = qcOutput, nComp = 3, scaleScores = TRUE, symmetric = TRUE, q = 0)
+pcnetOutput[1:5,1:5]
+
+#' # Filtering to get top 10\%
+pcnetOutput <- pcNet(X = qcOutput, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0.9)
+pcnetOutput[1:10,1:10]
+
+# Filtering to get top 5\%
+pcnetOutput <- pcNet(X = qcOutput, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0.95)
+pcnetOutput[1:10,1:10]
+}
 \references{
 \itemize{
+\item Gill, Ryan, Somnath Datta, and Susmita Datta. "dna: An R package for differential network analysis." Bioinformation 10.4 (2014): 233.
 \item Jolliffe, Ian T. "A note on the use of principal components in regression." Journal of the Royal Statistical Society: Series C (Applied Statistics) 31.3 (1982): 300-303.
+\item Massy, William F. "Principal components regression in exploratory statistical research." Journal of the American Statistical Association 60.309 (1965): 234-256.
 }
 }

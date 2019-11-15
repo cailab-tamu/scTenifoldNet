@@ -4,24 +4,30 @@
 #' @title CANDECOMP/PARAFAC (CP) Tensor Decomposition of Gene Regulatory Networks.
 #' @description Generate weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition.
 #' @param xList A list of gene regulatory networks.
-#' @param yList A list of gene regulatory networks.
+#' @param yList Optional. A list of gene regulatory networks.
 #' @param d The number of rank-one tensors used to approximate the data using CANDECOMP/PARAFAC (CP) Tensor Decomposition,
-#' @return A weight-averaged denoised gene regulatory networks.
+#' @return A weight-averaged denoised gene regulatory network. If two lists are provided then the shared genes are identified and the result is filtered.
 #' @references ...
 #' @details For two lists of gene regulatory matrix, assembling them as a 4-d tendor and then do Candecomp/Parafac (CP) Tensor Decomposition. Then do weight-average to generate denoised networks.
 
-tensorDecomposition <- function(xList, yList, d = 5){
+tensorDecomposition <- function(xList, yList = NULL, d = 5){
   xNets <- length(xList)
-  yNets <- length(yList)
-  if(xNets != yNets){
-    stop('Same number of networks are required in both cases')
+  if(!is.null(yList)){
+    yNets <- length(yList)
+    if(xNets != yNets){
+      stop('Same number of networks are required in both cases')
+    }
+    nNet <- unique(c(xNets, yNets))
+    xGenes <- unique(unlist(lapply(xList, rownames)))
+    yGenes <- unique(unlist(lapply(yList, rownames)))
+    sGenes <- intersect(xGenes, yGenes)
+    nGenes <- length(sGenes)  
+  } else {
+    xGenes <- unique(unlist(lapply(xList, rownames)))
+    sGenes <- xGenes
   }
-  nNet <- unique(c(xNets, yNets))
-  xGenes <- unique(unlist(lapply(xList, rownames)))
-  yGenes <- unique(unlist(lapply(yList, rownames)))
-  sGenes <- intersect(xGenes, yGenes)
-  nGenes <- length(sGenes)
-
+  
+  
   # if(type == '4d'){
   #   Tensor <- array(data = 0, dim = c(nGenes, nGenes, 2, nNet))
   #
@@ -88,8 +94,10 @@ tensorDecomposition <- function(xList, yList, d = 5){
   #
   # if(type == 'I'){
   tensorX <- array(data = 0, dim = c(nGenes,nGenes,1,nNet))
-  tensorY <- array(data = 0, dim = c(nGenes,nGenes,1,nNet))
-
+  if(!is.null(yList)){
+    tensorY <- array(data = 0, dim = c(nGenes,nGenes,1,nNet))
+  }
+  
   for(i in seq_len(nNet)){
     tempX <- matrix(0, nGenes, nGenes)
     rownames(tempX) <- colnames(tempX) <- sGenes
@@ -97,49 +105,51 @@ tensorDecomposition <- function(xList, yList, d = 5){
     tGenes <- sGenes[sGenes %in% rownames(temp)]
     tempX[tGenes,tGenes] <- temp[tGenes,tGenes]
     tensorX[,,,i] <- tempX
-
-    tempY <- matrix(0, nGenes, nGenes)
-    rownames(tempY) <- colnames(tempY) <- sGenes
-    temp <- as.matrix(yList[[i]])
-    tGenes <- sGenes[sGenes %in% rownames(temp)]
-    tempY[tGenes,tGenes] <- temp[tGenes,tGenes]
-    tensorY[,,,i] <- tempY
+    
+    if(!is.null(yList)){
+      tempY <- matrix(0, nGenes, nGenes)
+      rownames(tempY) <- colnames(tempY) <- sGenes
+      temp <- as.matrix(yList[[i]])
+      tGenes <- sGenes[sGenes %in% rownames(temp)]
+      tempY[tGenes,tGenes] <- temp[tGenes,tGenes]
+      tensorY[,,,i] <- tempY
+    }
+    
   }
-
+  
   tensorX <- rTensor::as.tensor(tensorX)
-  tensorY <- rTensor::as.tensor(tensorY)
   set.seed(1)
   tensorX <- rTensor::cp(tnsr = tensorX, num_components = d, max_iter = 1e3)
-  set.seed(1)
-  tensorY <- rTensor::cp(tnsr = tensorY, num_components = d, max_iter = 1e3)
-
   tX <- tensorX$est@data[,,,1]
-  tY <- tensorY$est@data[,,,1]
-
   for(i in seq_len(nNet)[-1]){
     tX <- tX +  tensorX$est@data[,,,i]
-    tY <- tY +  tensorY$est@data[,,,i]
   }
-  # }
-
   tX <- tX/nNet
-  tY <- tY/nNet
-
   tX <- tX/max(abs(tX))
-  tY <- tY/max(abs(tY))
-
   tX <- round(tX,1)
-  tY <- round(tY,1)
-
   tX <- as(tX, 'dgCMatrix')
-  tY <- as(tY, 'dgCMatrix')
-
-  rownames(tX) <- rownames(tY) <- colnames(tX) <- colnames(tY) <- sGenes
-
+  rownames(tX) <- colnames(tX) <- sGenes
+  
+  if(!is.null(yList)){
+    tensorY <- rTensor::as.tensor(tensorY)
+    set.seed(1)
+    tensorY <- rTensor::cp(tnsr = tensorY, num_components = d, max_iter = 1e3)
+    tY <- tensorY$est@data[,,,1]
+    for(i in seq_len(nNet)[-1]){
+      tY <- tY +  tensorY$est@data[,,,i]
+    }
+    tY <- tY/nNet
+    tY <- tY/max(abs(tY))
+    tY <- round(tY,1)
+    tY <- as(tY, 'dgCMatrix')  
+    rownames(tY) <- colnames(tY) <- sGenes
+  }
+  
   tensorOutput <- list()
   tensorOutput$X <- tX
-  tensorOutput$Y <- tY
-
+  if(!is.null(yList)){
+    tensorOutput$Y <- tY
+  }
   return(tensorOutput)
 }
 

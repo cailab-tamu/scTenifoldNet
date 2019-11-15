@@ -12,7 +12,7 @@ scQC(X, minLibSize = 1000, removeOutlierCells = TRUE, minPCT = 0.05,
 
 \item{minLibSize}{An integer value. Defines the minimum library size required for a cell to be included in the analysis.}
 
-\item{removeOutlierCells}{A boolean value (TRUE/FALSE), if TRUE, the identified cells with library size greater than 1.58 IQR/sqrt(n) computed from the sample, are removed. For further details see: \code{?boxplot.stats}}
+\item{removeOutlierCells}{A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, the identified cells with library size greater than 1.58 IQR/sqrt(n) computed from the sample, are removed. For further details see: \code{?boxplot.stats}}
 
 \item{minPCT}{A decimal value between 0 and 1. Defines the minimum fraction of cells where the gene needs to be expressed to be included in the analysis.}
 
