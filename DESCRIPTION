@@ -8,7 +8,7 @@ Authors@R: c(person("Daniel","Osorio",email="dcosorioh@tamu.edu",role=c("aut","c
              person("Jianhua","Huang",role=c("aut","ctb")),
              person("James","Cai",role=c("aut", "ths"))
              )
-Description: scTenifoldNet is a tool to construct and compare single-cell gene regulatory networks (scGRNs) using scRNA-seq data sets collected from different conditions. scTenifoldNet uses principal component regression, tensor decomposition, and manifold alignment, to accurately identify even subtly shifted gene expression programs.
+Description: scTenifoldNet is a tool based on machine learning methods to construct and compare single-cell gene regulatory networks (scGRNs) using single-cell RNA-seq (scRNA-seq) data sets collected from different conditions. scTenifoldNet uses principal component regression, tensor decomposition, and manifold alignment, to accurately identify even subtly shifted gene expression programs.
 License: GPL (>=2)
 Encoding: UTF-8
 LazyData: true
