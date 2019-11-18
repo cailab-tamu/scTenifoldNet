@@ -4,24 +4,32 @@
 \alias{tensorDecomposition}
 \title{CANDECOMP/PARAFAC (CP) Tensor Decomposition of Gene Regulatory Networks.}
 \usage{
-tensorDecomposition(xList, yList, d = 5)
+tensorDecomposition(xList, yList = NULL, K = 5, maxError = 1e-05,
+  maxIter = 1000)
 }
 \arguments{
 \item{xList}{A list of gene regulatory networks.}
 
-\item{yList}{A list of gene regulatory networks.}
+\item{yList}{Optional. A list of gene regulatory networks.}
 
-\item{d}{The number of rank-one tensors used to approximate the data using CANDECOMP/PARAFAC (CP) Tensor Decomposition,}
+\item{K}{The number of rank-one tensors used to approximate the data using CANDECOMP/PARAFAC (CP) Tensor Decomposition,}
+
+\item{maxError}{A decimal value between 0 and 1. Defines the relative Frobenius norm error tolerance}
+
+\item{maxIter}{An integer value. Defines the maximum number of iterations if error stay above \code{maxError}.}
 }
 \value{
-A weight-averaged denoised gene regulatory networks.
+A list of weight-averaged denoised gene regulatory networks.
 }
 \description{
-Generate weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition.
+Generate weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition.The \code{tensorDecomposition} function takes one or two lists of gene regulatory matrices, if two list are provided, the shared genes are selected and the CP tensor decomposition is performed independently for each list (3d-tensor). The tensor decomposed matrices are then averaged to generate weight-averaged denoised networks.
 }
 \details{
-For two lists of gene regulatory matrix, assembling them as a 4-d tendor and then do Candecomp/Parafac (CP) Tensor Decomposition. Then do weight-average to generate denoised networks.
+CANDECOMP/PARAFRAC (CP) tensor decomposition approximate a K-Tensor using a sum of \code{d} rank-1 K-Tensors. A rank-1 K-Tensor can be written as an outer product of K vectors. This is an iterative algorithm, with two possible stopping conditions: either relative error in Frobenius norm has gotten below \code{maxError}, or the \code{maxIter} number of iterations has been reached. For more details on CP decomposition, consult Kolda and Bader (2009) and Morup (2011).
 }
 \references{
-...
+\itemize{
+\item Kolda, Tamara G., and Brett W. Bader. "Tensor decompositions and applications." SIAM review 51.3 (2009): 455-500.
+\item Morup, Morten. "Applications of tensor (multiway array) factorizations and decompositions in data mining." Wiley Interdisciplinary Reviews: Data Mining and Knowledge Discovery 1.1 (2011): 24-40.
+}
 }
