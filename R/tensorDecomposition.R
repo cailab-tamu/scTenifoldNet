@@ -1,8 +1,8 @@
 #' @export tensorDecomposition
 #' @importFrom rTensor cp
 #'
-#' @title CANDECOMP/PARAFAC (CP) Tensor Decomposition of Gene Regulatory Networks.
-#' @description Generate weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition.The \code{tensorDecomposition} function takes one or two lists of gene regulatory matrices, if two list are provided, the shared genes are selected and the CP tensor decomposition is performed independently for each list (3d-tensor). The tensor decomposed matrices are then averaged to generate weight-averaged denoised networks.
+#' @title Performs CANDECOMP/PARAFAC (CP) Tensor Decomposition.
+#' @description Generate weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition. The \code{tensorDecomposition} function takes one or two lists of gene regulatory matrices, if two list are provided, the shared genes are selected and the CP tensor decomposition is performed independently for each list (3d-tensor). The tensor decomposed matrices are then averaged to generate weight-averaged denoised networks.
 #' @param xList A list of gene regulatory networks.
 #' @param yList Optional. A list of gene regulatory networks.
 #' @param K The number of rank-one tensors used to approximate the data using CANDECOMP/PARAFAC (CP) Tensor Decomposition,
@@ -14,8 +14,51 @@
 #' \item Kolda, Tamara G., and Brett W. Bader. "Tensor decompositions and applications." SIAM review 51.3 (2009): 455-500.
 #' \item Morup, Morten. "Applications of tensor (multiway array) factorizations and decompositions in data mining." Wiley Interdisciplinary Reviews: Data Mining and Knowledge Discovery 1.1 (2011): 24-40.
 #' }
-#' @details CANDECOMP/PARAFRAC (CP) tensor decomposition approximate a K-Tensor using a sum of \code{d} rank-1 K-Tensors. A rank-1 K-Tensor can be written as an outer product of K vectors. This is an iterative algorithm, with two possible stopping conditions: either relative error in Frobenius norm has gotten below \code{maxError}, or the \code{maxIter} number of iterations has been reached. For more details on CP decomposition, consult Kolda and Bader (2009) and Morup (2011).
+#' @details CANDECOMP/PARAFRAC (CP) tensor decomposition approximate a K-Tensor using a sum of \code{K} rank-1 K-Tensors. A rank-1 K-Tensor can be written as an outer product of K vectors. This is an iterative algorithm, with two possible stopping conditions: either relative error in Frobenius norm has gotten below \code{maxError}, or the \code{maxIter} number of iterations has been reached. For more details on CP decomposition, consult Kolda and Bader (2009) and Morup (2011).
+#' @examples 
+#' library(scTenifoldNet)
 #' 
+#' # Simulating of a dataset following a negative binomial distribution with high sparcity (~67%)
+#' nCells = 2000
+#' nGenes = 100
+#' set.seed(1)
+#' X <- rnbinom(n = nGenes * nCells, size = 20, prob = 0.98)
+#' X <- round(X)
+#' X <- matrix(X, ncol = nCells)
+#' rownames(X) <- c(paste0('ng', 1:90), paste0('mt-', 1:10))
+#' 
+#' # Performing Single cell quality control
+#' qcOutput <- scQC(
+#'   X = X,
+#'   minLibSize = 30,
+#'   removeOutlierCells = TRUE,
+#'   minPCT = 0.05,
+#'   maxMTratio = 0.1
+#' )
+#' 
+#' # Computing 3 single-cell gene regulatory networks each one from a subsample of 500 cells
+#' mnOutput <- makeNetworks(X = X,
+#'                          nNet = 3, 
+#'                          nCells = 500, 
+#'                          nComp = 3, 
+#'                          scaleScores = TRUE, 
+#'                          symmetric = FALSE, 
+#'                          q = 0.95
+#'                          )
+#' 
+#' # Computing a K = 3 CANDECOMP/PARAFAC (CP) Tensor Decomposition
+#' tdOutput <- tensorDecomposition(mnOutput, K = 3, maxError = 1e5, maxIter = 1e3)
+#' 
+#' # Verifying the number of networks
+#' length(tdOutput)
+#' 
+#' # Veryfying the dimention of the networks
+#' lapply(tdOutput,dim)
+#' 
+#' # Weight-averaged denoised single-cell gene regulatory networks
+#' tdOutput[[1]][1:10,1:10]
+
+
 tensorDecomposition <- function(xList, yList = NULL, K = 5, maxError = 1e-5, maxIter = 1e3){
   xNets <- length(xList)
   if(!is.null(yList)){
