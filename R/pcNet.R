@@ -70,7 +70,7 @@ pcNet <- function(X,
   if (!all(Matrix::rowSums(X) > 0)) {
     stop('Quality control has not been applied over the matrix.')
   }
-  if (!class(qcOutput) %in% c('matrix', 'dgCMatrix')) {
+  if (!class(X) %in% c('matrix', 'dgCMatrix')) {
     stop('Input should be a matrix with cells as columns and genes as rows')
   }
   if (nComp < 2 | nComp >= nrow(X)) {
