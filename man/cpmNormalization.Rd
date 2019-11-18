@@ -2,7 +2,7 @@
 % Please edit documentation in R/cpmNormalization.R
 \name{cpmNormalization}
 \alias{cpmNormalization}
-\title{Counts per million (CPM) data normalization}
+\title{Performs counts per million (CPM) data normalization}
 \usage{
 cpmNormalization(X)
 }

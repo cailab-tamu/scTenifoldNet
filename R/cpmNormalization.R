@@ -1,5 +1,5 @@
 #' @export cpmNormalization
-#' @title Counts per million (CPM) data normalization
+#' @title Performs counts per million (CPM) data normalization
 #' @description This function normalizes the count data present in a given matrix using counts per million normalization (CPM). Each gene count for each cell is divided by the total counts for that cell and multiplied by 1e6. No log-transformation is applied.
 #' @param X Raw counts matrix with cells as columns and genes (symbols) as rows
 #' @return A dgCMatrix object with the count per million (CPM) normalized values.
