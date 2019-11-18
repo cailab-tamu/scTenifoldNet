@@ -2,9 +2,9 @@
 % Please edit documentation in R/dCoexpression.R
 \name{dCoexpression}
 \alias{dCoexpression}
-\title{dCoexpression}
+\title{Evaluates gene differential coexpression based on manifold alignment distances.}
 \usage{
-dCoexpression(manifoldOutput, nGenes, geneList)
+dCoexpression(manifoldOutput, nGenes, geneList, minDist = 1e-05)
 }
 \arguments{
 \item{manifoldOutput}{...}
@@ -12,12 +12,14 @@ dCoexpression(manifoldOutput, nGenes, geneList)
 \item{nGenes}{...}
 
 \item{geneList}{...}
+
+\item{minDist}{...}
 }
 \value{
 ...
 }
 \description{
-...
+Using the output of the non-linear manifold alignment, this function computes the Euclidean distance between the coordinates for the same gene in both conditions. Calculated distances are then transformed using Box-Cox power transformation, and standardized to ensure normality. P-values are assigned following the standard normal distribution.
 }
 \references{
 ...
