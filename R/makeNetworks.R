@@ -1,6 +1,6 @@
 #' @export makeNetworks
 #' @importFrom Matrix Matrix
-#' @title Computes gene regulatory networks for subsamples of cells based on principal component regression
+#' @title Computes gene regulatory networks for subsamples of cells based on principal component regression.
 #' @description This function computes \code{nNet} gene regulatory networks for a randomly selected subsample of \code{nCells} cells based on principal component regression (PCR), a technique based on principal component analysis. In PCR, the outcome variable is regressed over a \code{nComp} number of for principal components computed from a set of covariates to estimate the unknown regression coefficients in the model. \code{pcNet} function computes the PCR coefficients for each gene one at a time using all the others as covariates, to construct an all by all gene regulatory network.
 #' @param X A filtered and normlized gene expression matrix with cells as columns and genes as rows.
 #' @param nNet An integer value. The number of networks based on principal components regression to generate.

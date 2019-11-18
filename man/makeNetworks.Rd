@@ -2,7 +2,7 @@
 % Please edit documentation in R/makeNetworks.R
 \name{makeNetworks}
 \alias{makeNetworks}
-\title{Computes gene regulatory networks for subsamples of cells based on principal component regression}
+\title{Computes gene regulatory networks for subsamples of cells based on principal component regression.}
 \usage{
 makeNetworks(X, nNet = 10, nCells = 500, nComp = 3,
   scaleScores = TRUE, symmetric = FALSE, q = 0.95)
