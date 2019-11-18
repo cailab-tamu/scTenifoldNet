@@ -1,5 +1,5 @@
 #' @export scQC
-#' @title Single-cell quality control
+#' @title Performs single-cell data quality control
 #' @importFrom grDevices boxplot.stats
 #' @importFrom Matrix colSums rowMeans
 #' @description This function performs quality control filters over the provided input matrix, the function checks for minimum cell library size, mitochondrial ratio, outlier cells, and the fraction of cells where a gene is expressed.

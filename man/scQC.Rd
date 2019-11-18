@@ -2,7 +2,7 @@
 % Please edit documentation in R/scQC.R
 \name{scQC}
 \alias{scQC}
-\title{Single-cell quality control}
+\title{Performs single-cell data quality control}
 \usage{
 scQC(X, minLibSize = 1000, removeOutlierCells = TRUE, minPCT = 0.05,
   maxMTratio = 0.1)
