@@ -20,4 +20,5 @@ Imports: reticulate,
          Matrix,
          rTensor,
          methods,
-         stats
+         stats,
+         MASS
