@@ -4,23 +4,27 @@
 \alias{dCoexpression}
 \title{Evaluates gene differential coexpression based on manifold alignment distances.}
 \usage{
-dCoexpression(manifoldOutput, nGenes, geneList, minDist = 1e-05)
+dCoexpression(manifoldOutput, minDist = 1e-05)
 }
 \arguments{
-\item{manifoldOutput}{...}
+\item{manifoldOutput}{A matrix. The output of the non-linear manifold alignment,  a labeled matrix with two times the number of shared genes as rows (X_ genes followed by Y_ genes in the same order) and \code{d} number of columns.}
 
-\item{nGenes}{...}
-
-\item{geneList}{...}
-
-\item{minDist}{...}
+\item{minDist}{A decimal value. Defines the cut-off threshold of distance to limit the testing to genes that show, at least \code{minDist} deviation.}
 }
 \value{
-...
+A data frame with 5 columns as follows: \itemize{
+\item \code{gene} A character vector with the gene id identified from the \code{manifoldAlignment} output.
+\item \code{distance} A numeric vector of the Euclidean distance computed between the coordinates of the same gene in both conditions.
+\item \code{Z} A numeric vector of the Z-scores computed after Box-Cox power transformation.
+\item \code{p.value} A numeric vector of the p-values associated to the Z-scores, probabilities are \eqn{P[X > x]}
+\item \code{p.adj} A numeric vector of corrected p-values using Benjamini & Hochberg (1995) FDR.
+}
 }
 \description{
 Using the output of the non-linear manifold alignment, this function computes the Euclidean distance between the coordinates for the same gene in both conditions. Calculated distances are then transformed using Box-Cox power transformation, and standardized to ensure normality. P-values are assigned following the standard normal distribution.
 }
 \references{
-...
+\itemize{
+\item Benjamini, Y., and Yekutieli, D. (2001). The control of the false discovery rate in multiple testing under dependency. Annals of Statistics, 29, 1165-1188. doi: 10.1214/aos/1013699998.
+}
 }

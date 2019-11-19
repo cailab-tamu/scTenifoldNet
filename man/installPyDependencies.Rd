@@ -2,19 +2,10 @@
 % Please edit documentation in R/installPyDependencies.R
 \name{installPyDependencies}
 \alias{installPyDependencies}
-\title{installPyDependencies}
+\title{Install \code{Phyton} dependencies}
 \usage{
 installPyDependencies()
 }
-\value{
-...
-}
 \description{
-...
-}
-\details{
-...
-}
-\references{
-...
+Install the \code{numpy} and \code{scipy} \code{Phyton} packages using \code{reticulate}.
 }

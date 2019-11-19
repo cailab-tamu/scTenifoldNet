@@ -14,7 +14,7 @@ manifoldAlignment(X, Y, d = 30)
 \item{d}{The dimension of the low-dimensional feature space.}
 }
 \value{
-A low-dimensional projection for two the two gene regulatory networks used as input. The output is a labeled matrix with two times the number of shared genes as rows and \code{d} number of columns.
+A low-dimensional projection for two the two gene regulatory networks used as input. The output is a labeled matrix with two times the number of shared genes as rows ( X_ genes followed by Y_ genes in the same order) and \code{d} number of columns.
 }
 \description{
 Build comparable low-dimensional features for two weight-averaged denoised single-cell gene regulatory networks. Using a non-linear network embedding method \code{manifoldAlignment } aligns two gene regulatory networks and finds the structural similarities between them. This function is a wrapper of the \code{Python} code provided by Vu et al., (2012) at https://github.com/all-umass/ManifoldWarping.

@@ -5,7 +5,7 @@
 #' @param X A gene regulatory network.
 #' @param Y A gene regulatory network.
 #' @param d The dimension of the low-dimensional feature space.
-#' @return A low-dimensional projection for two the two gene regulatory networks used as input. The output is a labeled matrix with two times the number of shared genes as rows and \code{d} number of columns.
+#' @return A low-dimensional projection for two the two gene regulatory networks used as input. The output is a labeled matrix with two times the number of shared genes as rows ( X_ genes followed by Y_ genes in the same order) and \code{d} number of columns.
 #' @references \itemize{
 #' \item Vu, Hoa Trong, Clifton Carey, and Sridhar Mahadevan. "Manifold warping: Manifold alignment over time." Twenty-Sixth AAAI Conference on Artificial Intelligence. 2012.
 #' \item Wang, Chang, and Sridhar Mahadevan. "A general framework for manifold alignment." 2009 AAAI Fall Symposium Series. 2009.
