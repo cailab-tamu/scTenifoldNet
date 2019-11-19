@@ -100,8 +100,9 @@ head(outputHA$diffCoexpression, n = 10)
 # 59 ng59 0.01063989 1.173978 0.120201927 0.92871127
 ```
 
-#### Plotting
+#### Plotting the results
 Results can be easly displayed using quantile-quantile plots. Here we labeled in red the identified perturbed genes with FDR < 0.1.
+![Example](https://raw.githubusercontent.com/cailab-tamu/scTenifoldNet/master/inst/readmeExample.png)
 ```{r}
 par(mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(1.5,0.5,0))
 geneColor <- ifelse(outputH0$diffCoexpression$p.adj < 0.1, 'red', 'black')
