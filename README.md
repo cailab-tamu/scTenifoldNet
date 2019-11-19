@@ -33,12 +33,13 @@ Available functions:
 Example:
 --------
 #### Loading scTenifoldNet
+Once installed, **scTenifoldNet** can be loaded typing:
 ```{r}
 library(scTenifoldNet)
 ```
 
 #### Simulating of a dataset 
-Here we are going to simulate a dataset of 2000 cells (columns) and 100 genes (rows) following the negative binomial distribution with high sparcity (~67%). We are going to label the last 10 genes as mitochondrial genes ('mt-') to perform single-cell quality control.
+Here we simulate a dataset of 2000 cells (columns) and 100 genes (rows) following the negative binomial distribution with high sparcity (~67%). We label the last 10 genes as mitochondrial genes ('mt-') to perform single-cell quality control.
 ```{r}
 nCells = 2000
 nGenes = 100
@@ -50,7 +51,7 @@ rownames(X) <- c(paste0('ng', 1:90), paste0('mt-', 1:10))
 ```
 
 #### Generating a perturbed network 
-We are going to generate a perturbed network modifying the expression of genes 10, 2 and 3 and replacing them with the expression of genes 50, 11, and 5.
+We generate a perturbed network modifying the expression of genes 10, 2 and 3 and replacing them with the expression of genes 50, 11, and 5.
 ```{r}
 Y <- X
 Y[10,] <- Y[50,]
@@ -58,7 +59,7 @@ Y[2,] <- Y[11,]
 Y[3,] <- Y[5,]
 ```
 #### scTenifoldNet
-Here we are going to run **scTenifoldNet** under the H0 (there is not change in the coexpression profiles) using the same matrix as input and under the HA (there is change in the coexpression profiles) using the control and the perturbed network.
+Here we run **scTenifoldNet** under the H0 (there is not change in the coexpression profiles) using the same matrix as input and under the HA (there is change in the coexpression profiles) using the control and the perturbed network.
 ```{r}
 outputH0 <- scTenifoldNet(X = X, Y = X,
                           nc_nNet = 10, nc_nCells = 500,
