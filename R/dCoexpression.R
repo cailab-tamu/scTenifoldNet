@@ -1,5 +1,5 @@
 #' @export dCoexpression
-#' @importFrom stats dist pnorm p.adjust
+#' @importFrom stats dist pnorm p.adjust qqnorm
 #' @importFrom MASS boxcox
 #' @title Evaluates gene differential coexpression based on manifold alignment distances. 
 #' @description Using the output of the non-linear manifold alignment, this function computes the Euclidean distance between the coordinates for the same gene in both conditions. Calculated distances are then transformed using Box-Cox power transformation, and standardized to ensure normality. P-values are assigned following the standard normal distribution. 
@@ -16,6 +16,56 @@
 #' \item Benjamini, Y., and Yekutieli, D. (2001). The control of the false discovery rate in multiple testing under dependency. Annals of Statistics, 29, 1165-1188. doi: 10.1214/aos/1013699998.
 #' }
 #' 
+#' @examples 
+#' library(scTenifoldNet)
+#' 
+#' # Simulating of a dataset following a negative binomial distribution with high sparcity (~67%)
+#' nCells = 2000
+#' nGenes = 100
+#' set.seed(1)
+#' X <- rnbinom(n = nGenes * nCells, size = 20, prob = 0.98)
+#' X <- round(X)
+#' X <- matrix(X, ncol = nCells)
+#' rownames(X) <- c(paste0('ng', 1:90), paste0('mt-', 1:10))
+#' 
+#' # Performing Single cell quality control
+#' qcOutput <- scQC(
+#'   X = X,
+#'   minLibSize = 30,
+#'   removeOutlierCells = TRUE,
+#'   minPCT = 0.05,
+#'   maxMTratio = 0.1
+#' )
+#' 
+#' # Computing 3 single-cell gene regulatory networks each one from a subsample of 500 cells
+#' xNetworks <- makeNetworks(X = X,
+#'                          nNet = 3, 
+#'                          nCells = 500, 
+#'                          nComp = 3, 
+#'                          scaleScores = TRUE, 
+#'                          symmetric = FALSE, 
+#'                          q = 0.95
+#'                          )
+#' 
+#' # Computing a K = 3 CANDECOMP/PARAFAC (CP) Tensor Decomposition 
+#' tdOutput <- tensorDecomposition(xNetworks, K = 3, maxError = 1e5, maxIter = 1e3)
+#' 
+#' \dontrun{
+#' # Computing the alignment
+#' # For this example, we are using the same input, the match should be perfect. 
+#' maOutput <- manifoldAlignment(tdOutput$X, tdOutput$X)
+#'
+#' # Evaluating the difference in coexpression
+#' dcOutput <- dCoexpression(maOutput, minDist = 0)
+#' head(dcOutput)
+#' 
+#' # Plotting
+#' # If FDR < 0.1, the gene will be colored in red.
+#' geneColor <- ifelse(dcOutput$p.adj < 0.1, 'red', 'black')
+#' qqnorm(dcOutput$Z, main = 'Standardized Distance', pch = 16, col = geneColor)
+#' qqline(dcOutput$Z)
+#' }
+
 dCoexpression <- function(manifoldOutput, minDist = 1e-5){
   
   geneList <- rownames(manifoldOutput)

@@ -33,7 +33,7 @@
 #' )
 #' 
 #' # Computing 3 single-cell gene regulatory networks each one from a subsample of 500 cells
-#' X <- makeNetworks(X = X,
+#' xNetworks <- makeNetworks(X = X,
 #'                          nNet = 3, 
 #'                          nCells = 500, 
 #'                          nComp = 3, 
@@ -42,6 +42,30 @@
 #'                          q = 0.95
 #'                          )
 #' 
+#' # Computing a K = 3 CANDECOMP/PARAFAC (CP) Tensor Decomposition 
+#' tdOutput <- tensorDecomposition(xNetworks, K = 3, maxError = 1e5, maxIter = 1e3)
+#'
+#' \dontrun{
+#' # Computing the alignment
+#' # For this example, we are using the same input, the match should be perfect. 
+#' maOutput <- manifoldAlignment(tdOutput$X, tdOutput$X)
+#' 
+#' # Separating the coordinates for each gene
+#' X <- maOutput[grepl('X_', rownames(maOutput)),]
+#' Y <- maOutput[grepl('Y_', rownames(maOutput)),]
+#' 
+#' # Plotting
+#' # X Points
+#' plot(X, pch = 16)
+#' 
+#' # Y Points
+#' points(Y, col = 'red')
+#' 
+#' # Legend
+#' legend('topright', legend = c('X', 'Y'), 
+#'        col = c('black', 'red'), bty = 'n', 
+#'        pch = c(16,1), cex = 0.7)
+#' }
 
 
 manifoldAlignment <- function(X, Y, d = 30){

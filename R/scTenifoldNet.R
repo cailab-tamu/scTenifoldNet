@@ -26,12 +26,46 @@
 #' \item{manifoldAlignment:} The generated low-dimensional features result of the non-linear manifold alignment.
 #' \item{diffCoexpression:} The results of the differential coexpression analysis.
 #' }
-#' @references ...
+#' @examples 
+library(scTenifoldNet)
+
+# Simulating of a dataset following a negative binomial distribution with high sparcity (~67%)
+nCells = 2000
+nGenes = 100
+set.seed(1)
+X <- rnbinom(n = nGenes * nCells, size = 20, prob = 0.98)
+X <- round(X)
+X <- matrix(X, ncol = nCells)
+rownames(X) <- c(paste0('ng', 1:90), paste0('mt-', 1:10))
+
+# Generating a perturbed network modifying the expression of genes 10, 2 and 3
+Y <- X
+Y[10,] <- Y[50,]
+Y[2,] <- Y[11,]
+Y[3,] <- Y[5,]
+
+# scTenifoldNet
+Output <- scTenifoldNet(X = X, Y = Y,
+                       nc_nNet = 10, nc_nCells = 500,
+                       td_K = 3, qc_minLibSize = 30,
+                       dc_minDist = 0)
+
+# Structure of the output
+str(Output)
+
+# Differential coexpression
+head(Output$diffCoexpression,n = 10)
+
+# Plotting
+# Genes with FDR < 0.1 are labeled as red
+geneColor <- ifelse(Output$diffCoexpression$p.adj < 0.1, 'red', 'black')
+qqnorm(Output$diffCoexpression$Z, pch = 16, main = 'Standardized distance', col = geneColor)
+qqline(Output$diffCoexpression$Z)
 
 scTenifoldNet <- function(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TRUE,
                           qc_minPCT = 0.05, qc_maxMTratio = 0.1, nc_nNet = 10,
                           nc_nCells = 500, nc_nComp = 3, nc_symmetric = FALSE, nc_scaleScores = TRUE,
-                          nc_q = 0.05, td_K = 3, td_maxIter = 1e3, td_maxError = 1e-5, ma_nDim = 30, dc_minDist){
+                          nc_q = 0.05, td_K = 3, td_maxIter = 1e3, td_maxError = 1e-5, ma_nDim = 30, dc_minDist = 1e-5){
   # Single-cell Quality Control
   X <- scQC(X, minLibSize = qc_minLibSize, removeOutlierCells = qc_removeOutlierCells, minPCT = qc_minPCT, maxMTratio = qc_maxMTratio)
   Y <- scQC(Y, minLibSize = qc_minLibSize, removeOutlierCells = qc_removeOutlierCells, minPCT = qc_minPCT, maxMTratio = qc_maxMTratio)

@@ -3,4 +3,5 @@ MATLAB/*
 ^\.Rproj\.user$
 inst/benchmarking/*
 inst/manuscript/*
+inst/readmeExample.png
 README.md
