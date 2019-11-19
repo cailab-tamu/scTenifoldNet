@@ -61,9 +61,9 @@ Y[3,] <- Y[5,]
 Here we are going to run **scTenifoldNet** under the H0 (there is not change in the coexpression profiles) using the same matrix as input and under the HA (there is change in the coexpression profiles) using the control and the perturbed network.
 ```{r}
 outputH0 <- scTenifoldNet(X = X, Y = X,
-                        nc_nNet = 10, nc_nCells = 500,
-                        td_K = 3, qc_minLibSize = 30,
-                        dc_minDist = 0)
+                          nc_nNet = 10, nc_nCells = 500,
+                          td_K = 3, qc_minLibSize = 30,
+                          dc_minDist = 0)
 
 outputHA <- scTenifoldNet(X = X, Y = Y,
                           nc_nNet = 10, nc_nCells = 500,
