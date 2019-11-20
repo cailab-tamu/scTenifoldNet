@@ -2,7 +2,7 @@
 #' @title scTenifoldNet
 #' @importFrom methods as
 #' @importFrom rTensor as.tensor cp
-#' @description Gonstruct and compare single-cell gene regulatory networks (scGRNs) using single-cell RNA-seq (scRNA-seq) data sets collected from different conditions based on principal component regression, tensor decomposition, and manifold alignment.
+#' @description Construct and compare single-cell gene regulatory networks (scGRNs) using single-cell RNA-seq (scRNA-seq) data sets collected from different conditions based on principal component regression, tensor decomposition, and manifold alignment.
 #' @param X Raw counts matrix with cells as columns and genes (symbols) as rows.
 #' @param Y Raw counts matrix with cells as columns and genes (symbols) as rows.
 #' @param qc_minLibSize An integer value. Defines the minimum library size required for a cell to be included in the analysis.

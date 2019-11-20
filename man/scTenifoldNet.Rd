@@ -54,7 +54,7 @@ A list with 3 slots as follows:
 }
 }
 \description{
-Gonstruct and compare single-cell gene regulatory networks (scGRNs) using single-cell RNA-seq (scRNA-seq) data sets collected from different conditions based on principal component regression, tensor decomposition, and manifold alignment.
+Construct and compare single-cell gene regulatory networks (scGRNs) using single-cell RNA-seq (scRNA-seq) data sets collected from different conditions based on principal component regression, tensor decomposition, and manifold alignment.
 }
 \examples{
 library(scTenifoldNet)

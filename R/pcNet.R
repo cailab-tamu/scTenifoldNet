@@ -52,15 +52,6 @@
 #' # Symmetric
 #' pcnetOutput <- pcNet(X = qcOutput, nComp = 3, scaleScores = TRUE, symmetric = TRUE, q = 0)
 #' pcnetOutput[1:5,1:5]
-#' 
-#' #' # Filtering to get top 10%
-#' pcnetOutput <- pcNet(X = qcOutput, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0.9)
-#' pcnetOutput[1:10,1:10]
-#' 
-#' # Filtering to get top 5%
-#' pcnetOutput <- pcNet(X = qcOutput, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0.95)
-#' pcnetOutput[1:10,1:10]
-
 
 pcNet <- function(X,
                   nComp = 3,
