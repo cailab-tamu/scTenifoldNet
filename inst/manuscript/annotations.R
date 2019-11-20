@@ -11,17 +11,12 @@ sapply(fileList, function(X){
   gList <- gList[grepl('X_', gList)]
   gList <- gsub('X_', '', gList)
   nGenes <- length(gList)
-  dC <- dCoexpression(fileContent, nGenes, gList)
-  Z <- as.vector(scale(dC$distance))
-  P <- pnorm(Z, lower.tail = FALSE)
-  table(P < 0.05)
-  Q <- p.adjust(P, 'fdr')
-  table(Q < 0.05)
-  sGenes <- as.vector(dC$gene[Q < 0.05])
+  dC <- dCoexpression(fileContent)
+  sGenes <- dC$gene[(dC$p.adj < 0.1)]
   sGenes <- toupper(sGenes)
   sGenes <- gsub('^MT-','',sGenes)
   writeLines(sGenes, paste0('geneLists/G_',basename(X)))
-  plot(Z, col=ifelse(Q < 0.05,'red','black'), pch = 16)
+  plot(dC$Z, col=ifelse(dC$p.adj < 0.05,'red','black'), pch = 16)
   A <- enrichr(sGenes, c('KEGG_2019_Mouse', 'BioPlanet_2019', 'Reactome_2016'))
   A <- do.call(rbind.data.frame, A)
   A <- A[A$P.value < 0.05,]
