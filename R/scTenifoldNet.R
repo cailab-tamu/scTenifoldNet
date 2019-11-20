@@ -2,7 +2,7 @@
 #' @title scTenifoldNet
 #' @importFrom methods as
 #' @importFrom rTensor as.tensor cp
-#' @description Generate gene regulatory networks based on principal component regression, tensor decomposition, and manifold alignment.
+#' @description Gonstruct and compare single-cell gene regulatory networks (scGRNs) using single-cell RNA-seq (scRNA-seq) data sets collected from different conditions based on principal component regression, tensor decomposition, and manifold alignment.
 #' @param X Raw counts matrix with cells as columns and genes (symbols) as rows.
 #' @param Y Raw counts matrix with cells as columns and genes (symbols) as rows.
 #' @param qc_minLibSize An integer value. Defines the minimum library size required for a cell to be included in the analysis.
@@ -44,6 +44,7 @@
 #' Y[2,] <- Y[11,]
 #' Y[3,] <- Y[5,]
 #' 
+#' \dontrun{
 #' # scTenifoldNet
 #' Output <- scTenifoldNet(X = X, Y = Y,
 #'                        nc_nNet = 10, nc_nCells = 500,
@@ -60,7 +61,7 @@
 #' # Genes with FDR < 0.1 are labeled as red
 #' geneColor <- ifelse(Output$diffCoexpression$p.adj < 0.1, 'red', 'black')
 #' qqnorm(Output$diffCoexpression$Z, pch = 16, main = 'Standardized distance', col = geneColor)
-#' qqline(Output$diffCoexpression$Z)
+#' qqline(Output$diffCoexpression$Z)}
 
 scTenifoldNet <- function(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TRUE,
                           qc_minPCT = 0.05, qc_maxMTratio = 0.1, nc_nNet = 10,

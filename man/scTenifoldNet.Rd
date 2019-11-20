@@ -54,7 +54,7 @@ A list with 3 slots as follows:
 }
 }
 \description{
-Generate gene regulatory networks based on principal component regression, tensor decomposition, and manifold alignment.
+Gonstruct and compare single-cell gene regulatory networks (scGRNs) using single-cell RNA-seq (scRNA-seq) data sets collected from different conditions based on principal component regression, tensor decomposition, and manifold alignment.
 }
 \examples{
 library(scTenifoldNet)
@@ -74,6 +74,7 @@ Y[10,] <- Y[50,]
 Y[2,] <- Y[11,]
 Y[3,] <- Y[5,]
 
+\dontrun{
 # scTenifoldNet
 Output <- scTenifoldNet(X = X, Y = Y,
                        nc_nNet = 10, nc_nCells = 500,
@@ -90,5 +91,5 @@ head(Output$diffCoexpression,n = 10)
 # Genes with FDR < 0.1 are labeled as red
 geneColor <- ifelse(Output$diffCoexpression$p.adj < 0.1, 'red', 'black')
 qqnorm(Output$diffCoexpression$Z, pch = 16, main = 'Standardized distance', col = geneColor)
-qqline(Output$diffCoexpression$Z)
+qqline(Output$diffCoexpression$Z)}
 }
