@@ -24,3 +24,5 @@ Imports: reticulate,
          methods,
          stats,
          MASS
+Suggests: 
+    testthat
