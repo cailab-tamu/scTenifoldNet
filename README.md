@@ -20,7 +20,6 @@ Available functions:
 
 |Code| Function |
 |:-|:-|
-|installPyDependencies|Install the *Phyton* dependencies using the *reticulate* package|
 |scQC|Performs single-cell data quality control|
 |cpmNormalization|Performs counts per million (CPM) data normalization|
 |pcNet|Computes a gene regulatory network based on principal component regression|
