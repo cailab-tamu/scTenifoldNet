@@ -75,9 +75,9 @@ Y[2,] <- Y[11,]
 Y[3,] <- Y[5,]
 
 # scTenifoldNet
-Output <- scTenifoldNet(X = X, Y = Y, 
-                       nc_nNet = 10, nc_nCells = 500, 
-                       td_K = 3, qc_minLibSize = 30, 
+Output <- scTenifoldNet(X = X, Y = Y,
+                       nc_nNet = 10, nc_nCells = 500,
+                       td_K = 3, qc_minLibSize = 30,
                        dc_minDist = 0)
 
 # Structure of the output
