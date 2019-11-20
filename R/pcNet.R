@@ -74,7 +74,7 @@ pcNet <- function(X,
     stop('Input should be a matrix with cells as columns and genes as rows')
   }
   if (nComp < 2 | nComp >= nrow(X)) {
-    stop('nCom should be greater than 2 and lower than the total number of genes')
+    stop('nCom should be greater or equal than 2 and lower than the total number of genes')
   }
   gNames <- rownames(X)
   pcCoefficients <- function(K) {
