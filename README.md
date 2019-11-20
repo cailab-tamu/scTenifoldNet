@@ -27,7 +27,7 @@ Available functions:
 |tensorDecomposition|Performs CANDECOMP/PARAFAC (CP) Tensor Decomposition|
 |manifoldAlignment|Performs non-linear manifold alignment of two gene regulatory networks|
 |dCoexpression|Evaluates gene differential coexpression based on manifold alignment distances|
-|scTenifoldNet|Gonstruct and compare single-cell gene regulatory networks (scGRNs) using single-cell RNA-seq (scRNA-seq) data sets collected from different conditions based on principal component regression, tensor decomposition, and manifold alignment.|
+|scTenifoldNet|Construct and compare single-cell gene regulatory networks (scGRNs) using single-cell RNA-seq (scRNA-seq) data sets collected from different conditions based on principal component regression, tensor decomposition, and manifold alignment.|
 
 Example:
 --------
