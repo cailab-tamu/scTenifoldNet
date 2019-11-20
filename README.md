@@ -33,12 +33,13 @@ Available functions:
 Example:
 --------
 #### Loading scTenifoldNet
+Once installed, **scTenifoldNet** can be loaded typing:
 ```{r}
 library(scTenifoldNet)
 ```
 
 #### Simulating of a dataset 
-Here we are going to simulate a dataset of 2000 cells (columns) and 100 genes (rows) following the negative binomial distribution with high sparcity (~67%). We are going to label the last 10 genes as mitochondrial genes ('mt-') to perform single-cell quality control.
+Here we simulate a dataset of 2000 cells (columns) and 100 genes (rows) following the negative binomial distribution with high sparsity (~67%). We label the last ten genes as mitochondrial genes ('mt-') to perform single-cell quality control.
 ```{r}
 nCells = 2000
 nGenes = 100
@@ -50,7 +51,7 @@ rownames(X) <- c(paste0('ng', 1:90), paste0('mt-', 1:10))
 ```
 
 #### Generating a perturbed network 
-We are going to generate a perturbed network modifying the expression of genes 10, 2 and 3 and replacing them with the expression of genes 50, 11, and 5.
+We generate a perturbed network modifying the expression of genes 10, 2, and 3 and replacing them with the expression of genes 50, 11, and 5.
 ```{r}
 Y <- X
 Y[10,] <- Y[50,]
@@ -58,12 +59,12 @@ Y[2,] <- Y[11,]
 Y[3,] <- Y[5,]
 ```
 #### scTenifoldNet
-Here we are going to run **scTenifoldNet** under the H0 (there is not change in the coexpression profiles) using the same matrix as input and under the HA (there is change in the coexpression profiles) using the control and the perturbed network.
+Here we run **scTenifoldNet** under the H0 (there is no change in the coexpression profiles) using the same matrix as input and under the HA (there is a change in the coexpression profiles of some genes) using the control and the perturbed network.
 ```{r}
 outputH0 <- scTenifoldNet(X = X, Y = X,
-                        nc_nNet = 10, nc_nCells = 500,
-                        td_K = 3, qc_minLibSize = 30,
-                        dc_minDist = 0)
+                          nc_nNet = 10, nc_nCells = 500,
+                          td_K = 3, qc_minLibSize = 30,
+                          dc_minDist = 0)
 
 outputHA <- scTenifoldNet(X = X, Y = Y,
                           nc_nNet = 10, nc_nCells = 500,
@@ -71,7 +72,7 @@ outputHA <- scTenifoldNet(X = X, Y = Y,
                           dc_minDist = 0)
 ```
 #### Differential coexpression based on manifold alignment distances
-As is shown below, under the H0, none of the genes shown a significative difference in coexpression profiles using a FDR cut-off of 0.1, but under the HA, the 6 genes involved in the perturbation (50, 11, 2, 10, 5, and 3) are identified as perturbed.
+As is shown below, under the H0, none of the genes shown a significative difference in coexpression profiles using an FDR cut-off of 0.1, but under the HA, the 6 genes involved in the perturbation (50, 11, 2, 10, 5, and 3) are identified as perturbed.
 ```
 head(outputH0$diffCoexpression, n = 10)
 #    gene     distance        Z    p.value     p.adj
@@ -101,7 +102,7 @@ head(outputHA$diffCoexpression, n = 10)
 ```
 
 #### Plotting the results
-Results can be easly displayed using quantile-quantile plots. Here we labeled in red the identified perturbed genes with FDR < 0.1.
+Results can be easily displayed using quantile-quantile plots. Here we labeled in red the identified perturbed genes with FDR < 0.1.
 ![Example](https://raw.githubusercontent.com/cailab-tamu/scTenifoldNet/master/inst/readmeExample.png)
 ```{r}
 par(mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(1.5,0.5,0))
