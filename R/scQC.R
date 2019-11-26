@@ -32,6 +32,7 @@
 #' )
 #' 
 #' # Visualizing the Differences
+#' oldPar <- par(no.readonly = TRUE)
 #' par(
 #'   mfrow = c(2, 2),
 #'   mar = c(3, 3, 1, 1),
@@ -76,6 +77,7 @@
 #'   main = 'Mitochondrial Ratio - Before QC'
 #' )
 #' abline(h = c(0.1), lty = 2, col = 'red')
+#' par(oldPar)
 
 scQC <- function(X, minLibSize = 1000, removeOutlierCells = TRUE, minPCT = 0.05, maxMTratio = 0.1){
   # Removing values lower than 0

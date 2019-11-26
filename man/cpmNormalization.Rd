@@ -39,6 +39,7 @@ qcOutput <- scQC(
 normalizationOutput <- cpmNormalization(qcOutput)
 
 # Visualizing the differences
+oldPar <- par(no.readonly = TRUE)
 par(
   mfrow = c(1, 2),
   mar = c(3, 3, 1, 1),
@@ -56,6 +57,7 @@ plot(
   xlab = 'Cell',
   main = 'After CPM Normalization'
 )
+par(oldPar)
 }
 \references{
 Vallejos, Catalina A., et al. "Normalizing single-cell RNA sequencing data: challenges and opportunities." Nature methods 14.6 (2017): 565.

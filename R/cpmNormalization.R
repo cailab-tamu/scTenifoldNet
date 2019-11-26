@@ -28,6 +28,7 @@
 #' normalizationOutput <- cpmNormalization(qcOutput)
 #' 
 #' # Visualizing the differences
+#' oldPar <- par(no.readonly = TRUE)
 #' par(
 #'   mfrow = c(1, 2),
 #'   mar = c(3, 3, 1, 1),
@@ -45,6 +46,7 @@
 #'   xlab = 'Cell',
 #'   main = 'After CPM Normalization'
 #' )
+#' par(oldPar)
 
 cpmNormalization <- function(X){
   X <- Matrix::t(Matrix::t(X)/Matrix::colSums(X))*1e6
