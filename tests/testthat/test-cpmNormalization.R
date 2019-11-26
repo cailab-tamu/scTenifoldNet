@@ -7,6 +7,7 @@ test_that("cpmNormalization works", {
   X <- round(X)
   X <- matrix(X, ncol = nCells)
   rownames(X) <- c(paste0('ng', 1:90), paste0('mt-', 1:10))
+  X <- as.matrix(X)
   
   # Input test 1
   expect_equal(class(X), 'matrix')

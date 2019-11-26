@@ -91,5 +91,6 @@ head(Output$diffCoexpression,n = 10)
 # Genes with FDR < 0.1 are labeled as red
 geneColor <- ifelse(Output$diffCoexpression$p.adj < 0.1, 'red', 'black')
 qqnorm(Output$diffCoexpression$Z, pch = 16, main = 'Standardized distance', col = geneColor)
-qqline(Output$diffCoexpression$Z)}
+qqline(Output$diffCoexpression$Z)
+}
 }

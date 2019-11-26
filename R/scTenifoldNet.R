@@ -61,7 +61,8 @@
 #' # Genes with FDR < 0.1 are labeled as red
 #' geneColor <- ifelse(Output$diffCoexpression$p.adj < 0.1, 'red', 'black')
 #' qqnorm(Output$diffCoexpression$Z, pch = 16, main = 'Standardized distance', col = geneColor)
-#' qqline(Output$diffCoexpression$Z)}
+#' qqline(Output$diffCoexpression$Z)
+#' }
 
 scTenifoldNet <- function(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TRUE,
                           qc_minPCT = 0.05, qc_maxMTratio = 0.1, nc_nNet = 10,
