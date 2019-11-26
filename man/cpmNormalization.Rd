@@ -40,6 +40,7 @@ normalizationOutput <- cpmNormalization(qcOutput)
 
 # Visualizing the differences
 oldPar <- par(no.readonly = TRUE)
+
 par(
   mfrow = c(1, 2),
   mar = c(3, 3, 1, 1),
@@ -57,6 +58,7 @@ plot(
   xlab = 'Cell',
   main = 'After CPM Normalization'
 )
+
 par(oldPar)
 }
 \references{

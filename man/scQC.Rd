@@ -47,6 +47,7 @@ qcOutput <- scQC(
 
 # Visualizing the Differences
 oldPar <- par(no.readonly = TRUE)
+
 par(
   mfrow = c(2, 2),
   mar = c(3, 3, 1, 1),
@@ -91,6 +92,7 @@ plot(
   main = 'Mitochondrial Ratio - Before QC'
 )
 abline(h = c(0.1), lty = 2, col = 'red')
+
 par(oldPar)
 }
 \references{
