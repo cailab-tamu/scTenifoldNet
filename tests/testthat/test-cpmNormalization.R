@@ -14,7 +14,8 @@ test_that("cpmNormalization works", {
   X1 <- cpmNormalization(X)
   
   # Output test 1
-  expect_equal(as.vector(class(X1)), 'dgCMatrix')
+  isValid <- any(class(X1) %in% 'dgCMatrix')
+  expect_true(isValid)
   
   # Output test 2
   expect_equal(dim(X1), c(nGenes, nCells))
@@ -24,11 +25,13 @@ test_that("cpmNormalization works", {
   
   # Input test 2
   X <- as(X, 'dgCMatrix')
-  expect_equal(as.vector(class(X)), 'dgCMatrix')
+  isValid <- any(class(X) %in% 'dgCMatrix')
+  expect_true(isValid)
   X2 <- cpmNormalization(X)
   
   # Output test 4
-  expect_equal(as.vector(class(X2)), 'dgCMatrix')
+  isValid <- any(class(X2) %in% 'dgCMatrix')
+  expect_true(isValid)
   
   # Output test 5
   expect_equal(dim(X2), c(nGenes, nCells))

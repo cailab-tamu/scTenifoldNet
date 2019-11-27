@@ -14,16 +14,19 @@ test_that("scQC works", {
   rownames(X) <- c(paste0('ng', 1:90), paste0('mt-', 1:10))
   
   # Input test 1
-  expect_equal(class(X), 'matrix')
+  validClass <- any(class(X) %in% 'matrix')
+  expect_true(validClass)
   X <- scQC(X, minLibSize = 0, removeOutlierCells = FALSE, minPCT = 0, maxMTratio = 1)
   
   # Input test 2
-  expect_equal(as.vector(class(X)), 'dgCMatrix')
+  validClass <- any(class(X) %in% 'dgCMatrix')
+  expect_true(validClass)
   X <- scQC(X, minLibSize = 0, removeOutlierCells = FALSE, minPCT = 0, maxMTratio = 1)
   
   # Output test 1 
   X <- scQC(X, minLibSize = 0, removeOutlierCells = FALSE, minPCT = 0, maxMTratio = 1)
-  expect_equal(as.vector(class(X)), 'dgCMatrix')
+  validClass <- any(class(X) %in% 'dgCMatrix')
+  expect_true(validClass)
   
   # Output test 3
   expect_equal(dim(X), c(nGenes,nCells))

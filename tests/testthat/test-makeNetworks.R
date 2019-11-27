@@ -25,5 +25,4 @@ test_that("makeNetworks works", {
   })
   dimTest <- unlist(dimTest)
   expect_true(all(dimTest))
-  
 })
