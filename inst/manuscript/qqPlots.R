@@ -29,16 +29,15 @@ sapply(seq_along(fileList), function(X){
   slope <- diff(y)/diff(x)
   int <- y[1L] - slope * x[1L]
   
-  png(paste0('figures/qq',sID[X],'.png'), width = 2100, height = 2100, res = 300, pointsize = 12)
+  png(paste0('figures/qq',sID[X],'.png'), width = 2100, height = 1500, res = 300, pointsize = 10)
   plotQQ <- ggplot(dF, aes(X,Y, label = geneID)) + 
     geom_point(color = geneColor, pch = genePoint) + 
     theme_bw() + 
-    geom_text_repel(segment.color = 'gray60', segment.alpha = 0.5, max.iter = 1e4) + 
+    geom_text_repel(segment.color = 'gray60', segment.alpha = 0.5, max.iter = 1e6) + 
     geom_abline(slope = slope, intercept = int, lty = 2) + 
     xlab('Theoretical Quantiles (Normal Distribution)') + 
     ylab('Sample Quantiles')
   print(plotQQ)
   dev.off()
-  
   
 })
