@@ -4,24 +4,25 @@
 \alias{dCoexpression}
 \title{Evaluates gene differential coexpression based on manifold alignment distances.}
 \usage{
-dCoexpression(manifoldOutput, minDist = 1e-05)
+dCoexpression(manifoldOutput, minFC = 1.5)
 }
 \arguments{
 \item{manifoldOutput}{A matrix. The output of the non-linear manifold alignment,  a labeled matrix with two times the number of shared genes as rows (X_ genes followed by Y_ genes in the same order) and \code{d} number of columns.}
 
-\item{minDist}{A decimal value. Defines the cut-off threshold of distance to limit the testing to genes that show, at least \code{minDist} deviation.}
+\item{minFC}{A decimal value. Defines the cut-off threshold of fold-change to limit the testing to genes that show, at least \code{minFC} deviation.}
 }
 \value{
 A data frame with 5 columns as follows: \itemize{
 \item \code{gene} A character vector with the gene id identified from the \code{manifoldAlignment} output.
 \item \code{distance} A numeric vector of the Euclidean distance computed between the coordinates of the same gene in both conditions.
 \item \code{Z} A numeric vector of the Z-scores computed after Box-Cox power transformation.
+\item \code{FC} A numeric vector of the FC computed with respect to the expectation.
 \item \code{p.value} A numeric vector of the p-values associated to the Z-scores, probabilities are \eqn{P[X > x]}
 \item \code{p.adj} A numeric vector of corrected p-values using Benjamini & Hochberg (1995) FDR.
 }
 }
 \description{
-Using the output of the non-linear manifold alignment, this function computes the Euclidean distance between the coordinates for the same gene in both conditions. Calculated distances are then transformed using Box-Cox power transformation, and standardized to ensure normality. P-values are assigned following the standard normal distribution.
+Using the output of the non-linear manifold alignment, this function computes the Euclidean distance between the coordinates for the same gene in both conditions. Calculated distances are then transformed using Box-Cox power transformation, and standardized to ensure normality. P-values are assigned following the chi-squared distribution over the fold-change computed with respect to the expectation.
 }
 \examples{
 library(scTenifoldNet)
@@ -63,14 +64,14 @@ tdOutput <- tensorDecomposition(xNetworks, K = 3, maxError = 1e5, maxIter = 1e3)
 maOutput <- manifoldAlignment(tdOutput$X, tdOutput$X)
 
 # Evaluating the difference in coexpression
-dcOutput <- dCoexpression(maOutput, minDist = 0)
+dcOutput <- dCoexpression(maOutput, minFC = 0)
 head(dcOutput)
 
 # Plotting
 # If FDR < 0.1, the gene will be colored in red.
 geneColor <- ifelse(dcOutput$p.adj < 0.1, 'red', 'black')
-qqnorm(dcOutput$Z, main = 'Standardized Distance', pch = 16, col = geneColor)
-qqline(dcOutput$Z)
+qqnorm(dcOutput$FC, main = 'Standardized Distance', pch = 16, col = geneColor)
+qqline(dcOutput$FC)
 }
 }
 \references{
