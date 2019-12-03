@@ -74,30 +74,30 @@ outputHA <- scTenifoldNet(X = X, Y = Y,
 As is shown below, under the H0, none of the genes shown a significative difference in coexpression profiles using an FDR cut-off of 0.1, but under the HA, the 6 genes involved in the perturbation (50, 11, 2, 10, 5, and 3) are identified as perturbed.
 ```
 head(outputH0$diffCoexpression, n = 10)
-#    gene     distance        Z    p.value     p.adj
-# 23 ng23 3.070131e-15 2.321093 0.01014092 0.5925054
-# 2   ng2 3.028738e-15 2.261954 0.01185011 0.5925054
-# 19 ng19 2.912207e-15 2.093459 0.01815409 0.6051362
-# 34 ng34 2.769999e-15 1.883624 0.02980793 0.7227582
-# 9   ng9 2.617076e-15 1.652429 0.04922353 0.7227582
-# 79 ng79 2.602655e-15 1.630314 0.05151755 0.7227582
-# 61 ng61 2.582711e-15 1.599635 0.05483975 0.7227582
-# 71 ng71 2.489774e-15 1.455239 0.07280162 0.7227582
-# 20 ng20 2.479350e-15 1.438890 0.07509082 0.7227582
-# 16 ng16 2.461000e-15 1.410037 0.07926437 0.7227582
+#   gene     distance        Z       FC   p.value     p.adj
+#23 ng23 3.070131e-15 2.322136 1.828489 0.1763061 0.4731993
+#2   ng2 3.028738e-15 2.262939 1.803837 0.1792493 0.4731993
+#19 ng19 2.912207e-15 2.094281 1.734434 0.1878456 0.4731993
+#34 ng34 2.769999e-15 1.884258 1.649739 0.1989945 0.4731993
+#9   ng9 2.617076e-15 1.652876 1.558662 0.2118613 0.4731993
+#79 ng79 2.602655e-15 1.630744 1.550073 0.2131246 0.4731993
+#61 ng61 2.582711e-15 1.600042 1.538195 0.2148867 0.4731993
+#71 ng71 2.489774e-15 1.455541 1.482844 0.2233301 0.4731993
+#20 ng20 2.479350e-15 1.439182 1.476636 0.2243016 0.4731993
+#16 ng16 2.461000e-15 1.410309 1.465707 0.2260242 0.4731993
 
 head(outputHA$diffCoexpression, n = 10)
-#    gene   distance        Z     p.value      p.adj
-# 50 ng50 0.03122694 3.016417 0.001278908 0.05348371
-# 11 ng11 0.03027085 2.955685 0.001559876 0.05348371
-# 2   ng2 0.03013548 2.946972 0.001604511 0.05348371
-# 10 ng10 0.02759308 2.777666 0.002737543 0.06065138
-# 5   ng5 0.02657637 2.706716 0.003397617 0.06065138
-# 3   ng3 0.02625458 2.683841 0.003639083 0.06065138
-# 31 ng31 0.01309219 1.490124 0.068095790 0.92871127
-# 96 mt-6 0.01099588 1.223016 0.110661811 0.92871127
-# 6   ng6 0.01067100 1.178311 0.119336356 0.92871127
-# 59 ng59 0.01063989 1.173978 0.120201927 0.92871127
+   gene   distance        Z       FC    p.value     p.adj
+#50 ng50 0.03122694 3.015237 5.407703 0.02004808 0.5497305
+#11 ng11 0.03027085 2.954575 5.242133 0.02204623 0.5497305
+#2   ng2 0.03013548 2.945872 5.218690 0.02234538 0.5497305
+#10 ng10 0.02759308 2.776751 4.778411 0.02881870 0.5497305
+#5   ng5 0.02657637 2.705876 4.602345 0.03192826 0.5497305
+#3   ng3 0.02625458 2.683024 4.546618 0.03298383 0.5497305
+#31 ng31 0.01309219 1.490233 2.267231 0.13213580 0.6588093
+#96 mt-6 0.01099588 1.223243 1.904204 0.16760853 0.6588093
+#6   ng6 0.01067100 1.178555 1.847943 0.17402286 0.6588093
+#59 ng59 0.01063989 1.174223 1.842556 0.17465166 0.6588093
 ```
 
 #### Plotting the results
@@ -105,13 +105,13 @@ Results can be easily displayed using quantile-quantile plots. Here we labeled i
 ![Example](https://raw.githubusercontent.com/cailab-tamu/scTenifoldNet/master/inst/readmeExample.png)
 ```{r}
 par(mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(1.5,0.5,0))
-geneColor <- ifelse(outputH0$diffCoexpression$p.adj < 0.1, 'red', 'black')
+geneColor <- ifelse(outputH0$diffCoexpression$p.value < 0.05, 'red', 'black')
 qqnorm(outputH0$diffCoexpression$Z, pch = 16, main = 'H0', col = geneColor)
 qqline(outputH0$diffCoexpression$Z)
-legend('bottomright', legend = c('FDR < 0.1'), pch = 16, col = 'red', bty='n', cex = 0.7)
+legend('bottomright', legend = c('P < 0.05'), pch = 16, col = 'red', bty='n', cex = 0.7)
 
-geneColor <- ifelse(outputHA$diffCoexpression$p.adj < 0.1, 'red', 'black')
+geneColor <- ifelse(outputHA$diffCoexpression$p.value < 0.05, 'red', 'black')
 qqnorm(outputHA$diffCoexpression$Z, pch = 16, main = 'HA', col = geneColor)
 qqline(outputHA$diffCoexpression$Z)
-legend('bottomright', legend = c('FDR < 0.1'), pch = 16, col = 'red', bty='n', cex = 0.7)
+legend('bottomright', legend = c('P < 0.05'), pch = 16, col = 'red', bty='n', cex = 0.7)
 ```
