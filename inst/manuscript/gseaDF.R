@@ -20,9 +20,15 @@ library(scTenifoldNet)
 library(ggplot2)
 mA <- read.csv('results/10X500DF_Itensor_Dalignment.csv', row.names = 1)[,1:30]
 rownames(mA) <- make.unique(toupper(rownames(mA)))
-dC <- dCoexpression(mA, minDist = 0)
-Z <- dC$Z
+dC <- dCoexpression(mA, minFC = 0)
+Z <- dC$distance
+lambda <- seq(-2, 2, 1/100)
+lambda <- lambda[lambda != 0]
+BC <- MASS::boxcox(Z~1,lambda =lambda)
+Z <- Z ^ BC$x[which.max(BC$y)]
+Z <- scale(Z)
 names(Z) <- gsub('MT-','',dC$gene)
+
 
 E <- fgsea(gSets, stats = Z, nperm = 1e6)
 E2 <- fgsea(reactomeDB, stats = Z, nperm = 1e6)

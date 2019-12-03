@@ -10,22 +10,19 @@ sID <- c('Aging', 'DermalFibroblasts', 'Morphine')
 sapply(seq_along(fileList), function(X){
   mA <- read.csv(fileList[X], row.names = 1)[,1:30]
   rownames(mA) <- make.unique(toupper(rownames(mA)))
-  dC <- dCoexpression(mA, minDist = 1e-5)
-  geneColor <- densCols(dC$Z)
-  geneColor[dC$p.value < 0.05] <- 'red'
-  geneColor <- geneColor
+  dC <- dCoexpression(mA)
+  geneColor <- ifelse(dC$p.adj < 0.1, 'red', 'black')
   genePoint <- (ifelse(dC$p.adj < 0.1, 8, 16))
   geneID <- dC$gene
   geneID[dC$p.adj > 0.1] <- ''
   
-  tQ <- qqnorm(dC$Z, plot.it = FALSE)
-  sQ <- tQ$y
-  tQ <- tQ$x
+  tQ <- -log10(seq(0,1,length.out = nrow(dC)))
+  sQ <- -log10(dC$p.value)
   dF <- data.frame(X= tQ, Y= sQ, geneID = geneID)
   rownames(dF) <- rownames(dC$gene)
-  y <- dC$Z
+  y <- -log10(dC$p.value)
   y <- quantile(y, c(0.25,0.75))
-  x <- qnorm(c(0.25,0.75))
+  x <- rev(-log10(qunif(c(0.25,0.75))))
   slope <- diff(y)/diff(x)
   int <- y[1L] - slope * x[1L]
   
@@ -33,11 +30,8 @@ sapply(seq_along(fileList), function(X){
   plotQQ <- ggplot(dF, aes(X,Y, label = geneID)) + 
     geom_point(color = geneColor, pch = genePoint) + 
     theme_bw() + 
-    geom_text_repel(segment.color = 'gray60', segment.alpha = 0.5, max.iter = 1e6) + 
-    geom_abline(slope = slope, intercept = int, lty = 2) + 
-    xlab('Theoretical Quantiles (Normal Distribution)') + 
-    ylab('Sample Quantiles')
+    geom_text_repel(segment.color = 'gray60', segment.alpha = 0.5, max.iter = 1e3) + 
+    geom_abline(slope = slope, intercept = int, lty = 2) + labs(y=expression(-log10[1*0]*" (Observed P-values)"),x=expression(-log10[1*0]*" (Expected P-values)"))
   print(plotQQ)
   dev.off()
-  
 })
