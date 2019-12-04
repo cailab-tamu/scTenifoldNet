@@ -5,13 +5,13 @@ library(ggplot2)
 library(ggrepel)
 
 fileList <- list.files('results/', pattern = '10X500', full.names = TRUE)
-sID <- c('Aging', 'DermalFibroblasts', 'Morphine')
+sID <- c('Aging', 'DermalFibroblasts', 'Morphine', 'nonmt-Aging')
 
 sapply(seq_along(fileList), function(X){
   mA <- read.csv(fileList[X], row.names = 1)[,1:30]
   rownames(mA) <- make.unique(toupper(rownames(mA)))
-  dC <- dCoexpression(mA)
-  geneColor <- ifelse(dC$p.adj < 0.1, 'red', 'black')
+  dC <- dCoexpression(mA, minFC = 0.75)
+  geneColor <- ifelse(dC$p.value < 0.01, 'red', 'black')
   genePoint <- (ifelse(dC$p.adj < 0.1, 8, 16))
   geneID <- dC$gene
   geneID[dC$p.adj > 0.1] <- ''
