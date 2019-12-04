@@ -5,7 +5,7 @@ library(ggplot2)
 library(ggrepel)
 
 fileList <- list.files('results/', pattern = '10X500', full.names = TRUE)
-sID <- c('Aging', 'DermalFibroblasts', 'Morphine', 'nonmt-Aging')
+sID <- c('Aging', 'DermalFibroblasts', 'Morphine', '-mtAging')
 
 sapply(seq_along(fileList), function(X){
   mA <- read.csv(fileList[X], row.names = 1)[,1:30]
