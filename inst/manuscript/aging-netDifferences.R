@@ -67,9 +67,9 @@ lNet <- t(t(lNet)/apply(abs(lNet),2,max))
 rownames(lNet) <- names(V(uNet))
 lNet['Uchl1',2] <- lNet['Uchl1',2]*1.1
 lNet['Gad1',2] <- lNet['Gad1',2]*1.8
-lNet['Itm2b',2] <- lNet['Itm2b',2]*1.8
+lNet['Itm2b',2] <- lNet['Itm2b',2]*2.2
 lNet['Atp1b1',1] <- lNet['Atp1b1',1]*0.2
-lNet['Prkca',] <- lNet['Prkca',]*c(0.9,1.8)
+lNet['Prkca',] <- lNet['Prkca',]*c(0.2,1.8)
 lNet['Stmn2',] <- lNet['Stmn2',]*c(1.2,1.6)
 lNet['Atp2b1',] <- lNet['Atp2b1',]*c(1.1,1.1)
 gY <- names(V(sY))

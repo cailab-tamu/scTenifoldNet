@@ -28,8 +28,8 @@ Y <- graph_from_adjacency_matrix(Y, weighted = TRUE, diag = FALSE)
 O <- graph_from_adjacency_matrix(O, weighted = TRUE, diag = FALSE)
 
 gID <- 'Ppp3ca'
-sY <- make_ego_graph(Y, nodes = gID, order = 2)[[1]]
-sO <- make_ego_graph(O, nodes = gID, order = 2)[[1]]
+sY <- make_ego_graph(Y, nodes = gID, order = 1)[[1]]
+sO <- make_ego_graph(O, nodes = gID, order = 1)[[1]]
 
 mO <- readMM('datasets/morphineNeurons/morphine/morphine.mtx')
 rownames(mO) <- readLines('datasets/morphineNeurons/morphine/morphineGenes.tsv')
@@ -70,10 +70,12 @@ set.seed(2)
 lNet <- igraph::layout.graphopt(uNet, niter = 1e5)
 lNet <- t(t(lNet)/apply(abs(lNet),2,max))
 rownames(lNet) <- names(V(uNet))
-# cI <- components(intersection(sY,sO))
-# lNet[cI$membership != which.max(cI$csize),] <- lNet[cI$membership != which.max(cI$csize),]*1.1
-lNet['Prkcb',1] <- lNet['Prkcb',1]*1.2
-lNet['Rgs7bp',2] <- lNet['Rgs7bp',2]*0.7
+lNet['Adcy5',] <- lNet['Adcy5',] * 0.7
+lNet['Rgs7bp',] <- lNet['Rgs7bp',] * 0.5
+lNet['Bcl11b',] <- lNet['Bcl11b',] * 0.4
+lNet['Vsnl1',] <- lNet['Vsnl1',] * c(1.6, 1.8)
+lNet['Ppp1r1b',] <- lNet['Ppp1r1b',] * c(2.2,1.5)
+lNet['Pde10a',1] <- lNet['Pde10a',1] * 1.5
 plot(uNet, layout = lNet)
 gY <- names(V(sY))
 gO <- names(V(sO))
@@ -120,6 +122,5 @@ gO2 <- gO
 gO2[gO %in% dC] <- paste0('[', gO[gO %in% dC], ']')
 plot(sO, layout = lNet[names(V(sO)),],edge.arrow.size=1,  edge.size = abs(E(sO)$weight)/max(abs(E(sO)$weight)), edge.color = ifelse(E(sO)$weight > 0, 'red', 'blue'), vertex.label=gO2,
      vertex.label.family= 'Arial', vertex.label.color='black', vertex.label.cex= 1, vertex.frame.color = NA, add = TRUE, vertex.color = 'darkgoldenrod1', vertex.label.font = ifelse(gO %in% dC, 2,1), rescale = FALSE, xlim = c(min(lNet[,1])*1.05, max(lNet[,1])*1.05), ylim=c(min(lNet[,2])*1.1, max(lNet[,2])*1.05))
-
 dev.off()
 
