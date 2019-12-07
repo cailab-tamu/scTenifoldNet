@@ -10,7 +10,8 @@ test_that("cpmNormalization works", {
   X <- as.matrix(X)
   
   # Input test 1
-  expect_equal(class(X), 'matrix')
+  isValid <- any(class(X) %in% 'matrix')
+  expect_true(isValid)
   X1 <- cpmNormalization(X)
   
   # Output test 1

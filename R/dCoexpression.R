@@ -39,7 +39,7 @@
 #' )
 #' 
 #' # Computing 3 single-cell gene regulatory networks each one from a subsample of 500 cells
-#' xNetworks <- makeNetworks(X = X,
+#' xNetworks <- makeNetworks(X = qcOutput,
 #'                          nNet = 3, 
 #'                          nCells = 500, 
 #'                          nComp = 3, 
@@ -63,8 +63,8 @@
 #' # Plotting
 #' # If FDR < 0.1, the gene will be colored in red.
 #' geneColor <- ifelse(dcOutput$p.adj < 0.1, 'red', 'black')
-#' qqnorm(dcOutput$FC, main = 'Standardized Distance', pch = 16, col = geneColor)
-#' qqline(dcOutput$FC)
+#' qqnorm(dcOutput$Z, main = 'Standardized Distance', pch = 16, col = geneColor)
+#' qqline(dcOutput$Z)
 #' }
 
 dCoexpression <- function(manifoldOutput, minFC = 1.5){
