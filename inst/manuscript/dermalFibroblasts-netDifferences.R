@@ -1,13 +1,15 @@
 library(Matrix)
 library(igraph)
 library(scTenifoldNet)
-dC <- read.csv('results/10X500morphineNeuron_Itensor_Dalignment.csv', row.names = 1)[,1:30]
+library(Seurat)
+dC <- read.csv('results/10X500DF_Itensor_Dalignment.csv', row.names = 1)[,1:30]
 dC <- dCoexpression(dC)
+plot(-log10(pchisq(seq(1,0,length.out = nrow(dC)),df = 1, lower.tail = FALSE)), -log10(dC$p.value))
 dC <- dC$gene[dC$p.adj < 0.1]
 
-Y <- readMM('results/tensorOutput/X_10X500morphineNeuron_Itensor.mtx')
-O <- readMM('results/tensorOutput/Y_10X500morphineNeuron_Itensor.mtx')
-gList <- readLines('results/tensorOutput/genes_10X500morphineNeuron_Itensor.mtx')
+Y <- readMM('results/tensorOutput/X_10X500DF_Itensor.mtx')
+O <- readMM('results/tensorOutput/Y_10X500DF_Itensor.mtx')
+gList <- readLines('results/tensorOutput/genes_10X500DF_Itensor.mtx')
 colnames(Y) <- rownames(Y) <- gList
 rownames(O) <- colnames(O) <- gList
 
@@ -27,15 +29,12 @@ O <- O[degree(O) > 0,degree(O) > 0]
 Y <- graph_from_adjacency_matrix(Y, weighted = TRUE, diag = FALSE)
 O <- graph_from_adjacency_matrix(O, weighted = TRUE, diag = FALSE)
 
-gID <- 'Ppp3ca'
-sY <- make_ego_graph(Y, nodes = gID, order = 1)[[1]]
-sO <- make_ego_graph(O, nodes = gID, order = 1)[[1]]
+gID <- 'RPL13'
+sY <- make_ego_graph(Y, nodes = gID, order = 2)[[1]]
+sO <- make_ego_graph(O, nodes = gID, order = 2)[[1]]
 
-mO <- readMM('datasets/morphineNeurons/morphine/morphine.mtx')
-rownames(mO) <- readLines('datasets/morphineNeurons/morphine/morphineGenes.tsv')
-
-mY <- readMM('datasets/morphineNeurons/mock/control.mtx')
-rownames(mY) <- readLines('datasets/morphineNeurons/mock/controlGenes.tsv')
+mO <- Read10X('datasets/dermalFibroblasts/stimulated/')
+mY <- Read10X('datasets/dermalFibroblasts/unstimulated/')
 
 mO <- scQC(mO)
 mO <- cpmNormalization(mO)
@@ -48,7 +47,7 @@ library(reshape2)
 
 mY <- as.data.frame(as.matrix(t(mY[names(V(sY)),])))
 mO <- as.data.frame(as.matrix(t(mO[names(V(sO)),])))
-
+ 
 assignDirectionNetworK <- function(igraphNetwork, countMatrix, bootR= 10){
    bnModel <- bnlearn::boot.strength(countMatrix, algorithm = 'hc', R = bootR)
    bnModel$direction <- round(bnModel$direction,1)
@@ -66,17 +65,18 @@ sY <- assignDirectionNetworK(igraphNetwork = sY, countMatrix = mY, bootR = 100)
 sO <- assignDirectionNetworK(igraphNetwork = sO, countMatrix = mO, bootR = 100)
 
 uNet <- igraph::union(sY,sO)
-set.seed(2)
-lNet <- igraph::layout.graphopt(uNet, niter = 1e5)
+set.seed(3)
+lNet <- igraph::layout.graphopt(uNet, charge = 1e-3)
+rownames(lNet) <- names(V(uNet))
+lNet[names(V(sO)),] <- lNet[names(V(sO)),]*4
+mCoord <- tkplot(uNet, layout= lNet)
+
+lNet <- tk_coords(mCoord)
 lNet <- t(t(lNet)/apply(abs(lNet),2,max))
 rownames(lNet) <- names(V(uNet))
-lNet['Adcy5',] <- lNet['Adcy5',] * 0.7
-lNet['Rgs7bp',] <- lNet['Rgs7bp',] * 0.5
-lNet['Bcl11b',] <- lNet['Bcl11b',] * 0.4
-lNet['Vsnl1',] <- lNet['Vsnl1',] * c(1.8, 1.6)
-lNet['Ppp1r1b',] <- lNet['Ppp1r1b',] * c(2.2,1.5)
-lNet['Pde10a',1] <- lNet['Pde10a',1] * 1.5
 plot(uNet, layout = lNet)
+lNet[,1] <- lNet[,1]*2.5
+lNet[,2] <- lNet[,2]*1.8
 gY <- names(V(sY))
 gO <- names(V(sO))
 
@@ -110,17 +110,17 @@ myCircle <- function(coords, v=NULL, params) {
 
 add.vertex.shape("fcircle", clip=igraph.shape.noclip,plot=myCircle, parameters=list(vertex.frame.color=1, vertex.frame.width=1))
 
-png('figures/morphineDiffNetworks.png', width = 6000, height = 3000, res = 300)
+png('figures/dfDiffNetworks.png', width = 6000, height = 3000, res = 300)
 par(mfrow=c(1,2))
-plot(sY, layout = lNet[names(V(sY)),], vertex.shape="fcircle", vertex.frame.color=ifelse(gY %in% gO, 'darkgoldenrod', NA), vertex.frame.width=12, vertex.label = NA, edge.width = NA, edge.arrow.size = 0, rescale = FALSE, xlim = c(min(lNet[,1])*1.05, max(lNet[,1])*1.05), ylim=c(min(lNet[,2])*1.05, max(lNet[,2])*1.05), mark.groups = which(gY %in% gO), mark.col="#C5E5E7", mark.border=NA)
+plot(sY, layout = lNet[names(V(sY)),], vertex.shape="fcircle", vertex.frame.color=ifelse(gY %in% gO, 'darkgoldenrod', NA), vertex.frame.width=12, vertex.label = NA, edge.width = NA, edge.arrow.size = 0, rescale = FALSE, xlim = c(min(lNet[,1]), max(lNet[,1])), ylim=c(min(lNet[,2]), max(lNet[,2])), mark.groups = which(gY %in% gO), mark.col="#C5E5E7", mark.border=NA)
 gY2 <- gY
 gY2[gY %in% dC] <- paste0('[', gY[gY %in% dC], ']')
 plot(sY, layout = lNet[names(V(sY)),], edge.arrow.size=1, edge.size = abs(E(sY)$weight)/max(abs(E(sY)$weight)), edge.color = ifelse(E(sY)$weight > 0, 'red', 'blue'), vertex.label = gY2,
-     vertex.label.family= 'Arial', vertex.label.color='black', vertex.label.cex= 1, vertex.frame.color = NA, add = TRUE, vertex.color = 'darkgoldenrod1', vertex.label.font = ifelse(gY %in% dC, 2,1), rescale = FALSE, xlim = c(min(lNet[,1])*1.05, max(lNet[,1])*1.05), ylim=c(min(lNet[,2])*1.05, max(lNet[,2])*1.05))
-plot(sO, layout = lNet[names(V(sO)),], vertex.shape="fcircle", vertex.frame.color=ifelse(gO %in% gY, 'darkgoldenrod', NA), vertex.frame.width=12, vertex.label = NA, edge.width = NA, edge.arrow.size = 0, rescale = FALSE, xlim = c(min(lNet[,1])*1.05, max(lNet[,1])*1.05), ylim=c(min(lNet[,2])*1.05, max(lNet[,2])*1.05), mark.groups = which(gO %in% gY), mark.col="#C5E5E7", mark.border=NA)
+     vertex.label.family= 'Arial', vertex.label.color='black', vertex.label.cex= 1, vertex.frame.color = NA, add = TRUE, vertex.color = 'darkgoldenrod1', vertex.label.font = ifelse(gY %in% dC, 2,1), rescale = FALSE, xlim = c(min(lNet[,1]), max(lNet[,1])), ylim=c(min(lNet[,2]), max(lNet[,2])))
+plot(sO, layout = lNet[names(V(sO)),], vertex.shape="fcircle", vertex.frame.color=ifelse(gO %in% gY, 'darkgoldenrod', NA), vertex.frame.width=12, vertex.label = NA, edge.width = NA, edge.arrow.size = 0, rescale = FALSE, xlim = c(min(lNet[,1]), max(lNet[,1])), ylim=c(min(lNet[,2]), max(lNet[,2])), mark.groups = which(gO %in% gY), mark.col="#C5E5E7", mark.border=NA)
 gO2 <- gO
 gO2[gO %in% dC] <- paste0('[', gO[gO %in% dC], ']')
 plot(sO, layout = lNet[names(V(sO)),],edge.arrow.size=1,  edge.size = abs(E(sO)$weight)/max(abs(E(sO)$weight)), edge.color = ifelse(E(sO)$weight > 0, 'red', 'blue'), vertex.label=gO2,
-     vertex.label.family= 'Arial', vertex.label.color='black', vertex.label.cex= 1, vertex.frame.color = NA, add = TRUE, vertex.color = 'darkgoldenrod1', vertex.label.font = ifelse(gO %in% dC, 2,1), rescale = FALSE, xlim = c(min(lNet[,1])*1.05, max(lNet[,1])*1.05), ylim=c(min(lNet[,2])*1.1, max(lNet[,2])*1.05))
+     vertex.label.family= 'Arial', vertex.label.color='black', vertex.label.cex= 1, vertex.frame.color = NA, add = TRUE, vertex.color = 'darkgoldenrod1', vertex.label.font = ifelse(gO %in% dC, 2,1), rescale = FALSE, xlim = c(min(lNet[,1]), max(lNet[,1])), ylim=c(min(lNet[,2])*1.1, max(lNet[,2])))
 dev.off()
 
