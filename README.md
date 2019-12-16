@@ -120,7 +120,8 @@ qqline(outputHA$diffCoexpression$Z)
 legend('bottomright', legend = c('P < 0.05'), pch = 16, col = 'red', bty='n', cex = 0.7)
 ```
 
-#### Citation
+Citation
+--------
 To cite package **scTenifoldNet** in publications use:
 
   Daniel Osorio, Yan Zhong, Guanxun Li, Jianhua Huang and James Cai (2019). scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data. R package version 1.0.0.
