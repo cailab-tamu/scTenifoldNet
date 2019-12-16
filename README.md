@@ -7,8 +7,12 @@ Install:
 -------
 **scTenifoldNet** requires *numpy* and *scipy* from the ***Python*** programming language, to install them, we recommend to install *miniconda Python*: https://docs.conda.io/en/latest/miniconda.html.
 
-After install the ***Phyton*** dependencies, install **scTenifoldNet**, using the following command:
-
+**scTenifoldNet** is available through the CRAN repositories, after install the ***Phyton*** dependencies, you can install **scTenifoldNet**, using the following command:
+```{R}
+install.packages('scTenifoldNet')
+library(scTenifoldNet)
+```
+Or if you are interested in the version in development, you can install **scTenifoldNet**, using the following command:
 ```{R}
 library(devtools)
 install_github('cailab-tamu/scTenifoldNet')
@@ -101,7 +105,7 @@ head(outputHA$diffCoexpression, n = 10)
 ```
 
 #### Plotting the results
-Results can be easily displayed using quantile-quantile plots. Here we labeled in red the identified perturbed genes with FDR < 0.1.
+Results can be easily displayed using quantile-quantile plots. Here we labeled in red the identified perturbed genes with P < 0.05.
 ![Example](https://raw.githubusercontent.com/cailab-tamu/scTenifoldNet/master/inst/readmeExample.png)
 ```{r}
 par(mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(1.5,0.5,0))
@@ -115,3 +119,20 @@ qqnorm(outputHA$diffCoexpression$Z, pch = 16, main = 'HA', col = geneColor)
 qqline(outputHA$diffCoexpression$Z)
 legend('bottomright', legend = c('P < 0.05'), pch = 16, col = 'red', bty='n', cex = 0.7)
 ```
+
+#### Citation
+To cite package **scTenifoldNet** in publications use:
+
+  Daniel Osorio, Yan Zhong, Guanxun Li, Jianhua Huang and James Cai (2019). scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data. R package version 1.0.0.
+  https://CRAN.R-project.org/package=scTenifoldNet
+
+A BibTeX entry for LaTeX users is
+```
+  @Manual{,
+    title = {scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data},
+    author = {Daniel Osorio and Yan Zhong and Guanxun Li and Jianhua Huang and James Cai},
+    year = {2019},
+    note = {R package version 1.0.0},
+    url = {https://CRAN.R-project.org/package=scTenifoldNet},
+  }
+  ```
