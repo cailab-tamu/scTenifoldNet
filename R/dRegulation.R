@@ -1,8 +1,8 @@
-#' @export dCoexpression
+#' @export dRegulation
 #' @importFrom stats dist pchisq p.adjust qqnorm
 #' @importFrom MASS boxcox
-#' @title Evaluates gene differential coexpression based on manifold alignment distances. 
-#' @description Using the output of the non-linear manifold alignment, this function computes the Euclidean distance between the coordinates for the same gene in both conditions. Calculated distances are then transformed using Box-Cox power transformation, and standardized to ensure normality. P-values are assigned following the chi-squared distribution over the fold-change computed with respect to the expectation. 
+#' @title Evaluates gene differential regulation based on manifold alignment distances. 
+#' @description Using the output of the non-linear manifold alignment, this function computes the Euclidean distance between the coordinates for the same gene in both conditions. Calculated distances are then transformed using Box-Cox power transformation, and standardized to ensure normality. P-values are assigned following the chi-square distribution over the fold-change computed with respect to the expectation. 
 #' @param manifoldOutput A matrix. The output of the non-linear manifold alignment,  a labeled matrix with two times the number of shared genes as rows (X_ genes followed by Y_ genes in the same order) and \code{d} number of columns.
 #' @param minFC A decimal value. Defines the cut-off threshold of fold-change to limit the testing to genes that show, at least \code{minFC} deviation.
 #' @return A data frame with 5 columns as follows: \itemize{
@@ -10,8 +10,8 @@
 #' \item \code{distance} A numeric vector of the Euclidean distance computed between the coordinates of the same gene in both conditions.
 #' \item \code{Z} A numeric vector of the Z-scores computed after Box-Cox power transformation.
 #' \item \code{FC} A numeric vector of the FC computed with respect to the expectation.
-#' \item \code{p.value} A numeric vector of the p-values associated to the Z-scores, probabilities are \eqn{P[X > x]}
-#' \item \code{p.adj} A numeric vector of corrected p-values using Benjamini & Hochberg (1995) FDR.
+#' \item \code{p.value} A numeric vector of the p-values associated to the fold-changes, probabilities are asigned as \eqn{P[X > x]} using the Chi-square distribution with one degree of freedom.
+#' \item \code{p.adj} A numeric vector of adjusted p-values using Benjamini & Hochberg (1995) FDR correction.
 #' }
 #' @references \itemize{
 #' \item Benjamini, Y., and Yekutieli, D. (2001). The control of the false discovery rate in multiple testing under dependency. Annals of Statistics, 29, 1165-1188. doi: 10.1214/aos/1013699998.
@@ -56,8 +56,8 @@
 #' # For this example, we are using the same input, the match should be perfect. 
 #' maOutput <- manifoldAlignment(tdOutput$X, tdOutput$X)
 #'
-#' # Evaluating the difference in coexpression
-#' dcOutput <- dCoexpression(maOutput, minFC = 0)
+#' # Evaluating the difference in regulation
+#' dcOutput <- dRegulation(maOutput, minFC = 0)
 #' head(dcOutput)
 #' 
 #' # Plotting
@@ -67,7 +67,7 @@
 #' qqline(dcOutput$Z)
 #' }
 
-dCoexpression <- function(manifoldOutput, minFC = 1.5){
+dRegulation <- function(manifoldOutput, minFC = 1.5){
   
   geneList <- rownames(manifoldOutput)
   geneList <- geneList[grepl('^X_', geneList)]

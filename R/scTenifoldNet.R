@@ -24,7 +24,7 @@
 #' \itemize{
 #' \item{tensorNetworks:} The generated weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition.
 #' \item{manifoldAlignment:} The generated low-dimensional features result of the non-linear manifold alignment.
-#' \item{diffCoexpression:} The results of the differential coexpression analysis.
+#' \item{diffRegulation} The results of the differential regulation analysis.
 #' }
 #' @examples 
 #' library(scTenifoldNet)
@@ -54,14 +54,14 @@
 #' # Structure of the output
 #' str(Output)
 #' 
-#' # Differential coexpression
-#' head(Output$diffCoexpression,n = 10)
+#' # Differential Regulation
+#' head(Output$diffRegulation,n = 10)
 #' 
 #' # Plotting
 #' # Genes with FDR < 0.1 are labeled as red
-#' geneColor <- ifelse(Output$diffCoexpression$p.adj < 0.1, 'red', 'black')
-#' qqnorm(Output$diffCoexpression$Z, pch = 16, main = 'Standardized distance', col = geneColor)
-#' qqline(Output$diffCoexpression$Z)
+#' geneColor <- ifelse(Output$diffRegulation$p.adj < 0.1, 'red', 'black')
+#' qqnorm(Output$diffRegulation$Z, pch = 16, main = 'Standardized distance', col = geneColor)
+#' qqline(Output$diffRegulation$Z)
 #' }
 
 scTenifoldNet <- function(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TRUE,
@@ -113,8 +113,8 @@ scTenifoldNet <- function(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TR
       # outFile <-paste0(id,'_',M,'tensor_',A,'alignment.csv')
       # write.csv(mA, outFile)
   
-  # Differential coexpression testing
-  dC <- dCoexpression(manifoldOutput = mA, minFC = dc_minFC)
+  # Differential regulation testing
+  dR <- dRegulation(manifoldOutput = mA, minFC = dc_minFC)
       # write.csv(dC, paste0('dCoex_',id,'_',M,'tensor_',A,'alignment.csv'))
       # }
       # }
@@ -123,7 +123,7 @@ scTenifoldNet <- function(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TR
   outputResult <- list()
   outputResult$tensorNetworks <- tensorOut
   outputResult$manifoldAlignment <- mA
-  outputResult$diffCoexpression <- dC
+  outputResult$diffRegulation <- dR
 
   # Return
   return(outputResult)

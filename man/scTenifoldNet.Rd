@@ -50,7 +50,7 @@ A list with 3 slots as follows:
 \itemize{
 \item{tensorNetworks:} The generated weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition.
 \item{manifoldAlignment:} The generated low-dimensional features result of the non-linear manifold alignment.
-\item{diffCoexpression:} The results of the differential coexpression analysis.
+\item{diffRegulation} The results of the differential regulation analysis.
 }
 }
 \description{
@@ -84,13 +84,13 @@ Output <- scTenifoldNet(X = X, Y = Y,
 # Structure of the output
 str(Output)
 
-# Differential coexpression
-head(Output$diffCoexpression,n = 10)
+# Differential Regulation
+head(Output$diffRegulation,n = 10)
 
 # Plotting
 # Genes with FDR < 0.1 are labeled as red
-geneColor <- ifelse(Output$diffCoexpression$p.adj < 0.1, 'red', 'black')
-qqnorm(Output$diffCoexpression$Z, pch = 16, main = 'Standardized distance', col = geneColor)
-qqline(Output$diffCoexpression$Z)
+geneColor <- ifelse(Output$diffRegulation$p.adj < 0.1, 'red', 'black')
+qqnorm(Output$diffRegulation$Z, pch = 16, main = 'Standardized distance', col = geneColor)
+qqline(Output$diffRegulation$Z)
 }
 }

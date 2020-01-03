@@ -30,7 +30,7 @@ Available functions:
 |makeNetworks|Computes gene regulatory networks for subsamples of cells based on principal component regression|
 |tensorDecomposition|Performs CANDECOMP/PARAFAC (CP) Tensor Decomposition|
 |manifoldAlignment|Performs non-linear manifold alignment of two gene regulatory networks|
-|dCoexpression|Evaluates gene differential coexpression based on manifold alignment distances|
+|dRegulation|Evaluates gene differential regulation based on manifold alignment distances|
 |scTenifoldNet|Construct and compare single-cell gene regulatory networks (scGRNs) using single-cell RNA-seq (scRNA-seq) data sets collected from different conditions based on principal component regression, tensor decomposition, and manifold alignment.|
 
 Example:
@@ -62,22 +62,22 @@ Y[2,] <- Y[11,]
 Y[3,] <- Y[5,]
 ```
 #### scTenifoldNet
-Here we run **scTenifoldNet** under the H0 (there is no change in the coexpression profiles) using the same matrix as input and under the HA (there is a change in the coexpression profiles of some genes) using the control and the perturbed network.
+Here we run **scTenifoldNet** under the H0 (there is no change in the regulation of the gene) using the same matrix as input and under the HA (there is a change in the regulation of the genes) using the control and the perturbed network.
 ```{r}
 outputH0 <- scTenifoldNet(X = X, Y = X,
                           nc_nNet = 10, nc_nCells = 500,
                           td_K = 3, qc_minLibSize = 30,
-                          dc_minDist = 0)
+                          dc_minFC = 0)
 
 outputHA <- scTenifoldNet(X = X, Y = Y,
                           nc_nNet = 10, nc_nCells = 500,
                           td_K = 3, qc_minLibSize = 30,
-                          dc_minDist = 0)
+                          dc_minFC = 0)
 ```
-#### Differential coexpression based on manifold alignment distances
-As is shown below, under the H0, none of the genes shown a significative difference in coexpression profiles using an FDR cut-off of 0.1, but under the HA, the 6 genes involved in the perturbation (50, 11, 2, 10, 5, and 3) are identified as perturbed.
+#### Differential regulation based on manifold alignment distances
+As is shown below, under the H0, none of the genes shown a significative difference in regulatory profiles using an FDR cut-off of 0.1, but under the HA, the 6 genes involved in the perturbation (50, 11, 2, 10, 5, and 3) are identified as perturbed.
 ```
-head(outputH0$diffCoexpression, n = 10)
+head(outputH0$diffRegulation, n = 10)
 #   gene     distance        Z       FC   p.value     p.adj
 #23 ng23 3.070131e-15 2.322136 1.828489 0.1763061 0.4731993
 #2   ng2 3.028738e-15 2.262939 1.803837 0.1792493 0.4731993
@@ -90,7 +90,7 @@ head(outputH0$diffCoexpression, n = 10)
 #20 ng20 2.479350e-15 1.439182 1.476636 0.2243016 0.4731993
 #16 ng16 2.461000e-15 1.410309 1.465707 0.2260242 0.4731993
 
-head(outputHA$diffCoexpression, n = 10)
+head(outputHA$diffRegulation, n = 10)
    gene   distance        Z       FC    p.value     p.adj
 #50 ng50 0.03122694 3.015237 5.407703 0.02004808 0.5497305
 #11 ng11 0.03027085 2.954575 5.242133 0.02204623 0.5497305
@@ -109,14 +109,14 @@ Results can be easily displayed using quantile-quantile plots. Here we labeled i
 ![Example](https://raw.githubusercontent.com/cailab-tamu/scTenifoldNet/master/inst/readmeExample.png)
 ```{r}
 par(mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(1.5,0.5,0))
-geneColor <- ifelse(outputH0$diffCoexpression$p.value < 0.05, 'red', 'black')
-qqnorm(outputH0$diffCoexpression$Z, pch = 16, main = 'H0', col = geneColor)
-qqline(outputH0$diffCoexpression$Z)
+geneColor <- ifelse(outputH0$diffRegulation$p.value < 0.05, 'red', 'black')
+qqnorm(outputH0$diffRegulation$Z, pch = 16, main = 'H0', col = geneColor)
+qqline(outputH0$diffRegulation$Z)
 legend('bottomright', legend = c('P < 0.05'), pch = 16, col = 'red', bty='n', cex = 0.7)
 
-geneColor <- ifelse(outputHA$diffCoexpression$p.value < 0.05, 'red', 'black')
-qqnorm(outputHA$diffCoexpression$Z, pch = 16, main = 'HA', col = geneColor)
-qqline(outputHA$diffCoexpression$Z)
+geneColor <- ifelse(outputHA$diffRegulation$p.value < 0.05, 'red', 'black')
+qqnorm(outputHA$diffRegulation$Z, pch = 16, main = 'HA', col = geneColor)
+qqline(outputHA$diffRegulation$Z)
 legend('bottomright', legend = c('P < 0.05'), pch = 16, col = 'red', bty='n', cex = 0.7)
 ```
 
@@ -124,7 +124,7 @@ Citation
 --------
 To cite **scTenifoldNet** in publications use:
 
-  Daniel Osorio, Yan Zhong, Guanxun Li, Jianhua Huang and James Cai (2019). scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data. R package version 1.0.0.
+  Daniel Osorio, Yan Zhong, Guanxun Li, Jianhua Huang and James Cai (2019). scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data. R package version 1.1.0.
   https://CRAN.R-project.org/package=scTenifoldNet
 
 A BibTeX entry for LaTeX users is
@@ -133,7 +133,7 @@ A BibTeX entry for LaTeX users is
     title = {scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data},
     author = {Daniel Osorio and Yan Zhong and Guanxun Li and Jianhua Huang and James Cai},
     year = {2019},
-    note = {R package version 1.0.0},
+    note = {R package version 1.1.0},
     url = {https://CRAN.R-project.org/package=scTenifoldNet},
   }
   ```
