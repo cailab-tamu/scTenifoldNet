@@ -3,7 +3,7 @@ library(igraph)
 library(scTenifoldNet)
 library(Seurat)
 dC <- read.csv('results/10X500DF_Itensor_Dalignment.csv', row.names = 1)[,1:30]
-dC <- dCoexpression(dC)
+dC <- dRegulation(dC)
 plot(-log10(pchisq(seq(1,0,length.out = nrow(dC)),df = 1, lower.tail = FALSE)), -log10(dC$p.value))
 dC <- dC$gene[dC$p.adj < 0.1]
 
@@ -83,6 +83,7 @@ mY <- as.data.frame(as.matrix(t(mY[names(V(sY)),])))
 mO <- as.data.frame(as.matrix(t(mO[names(V(sO)),])))
  
 assignDirectionNetworK <- function(igraphNetwork, countMatrix, bootR= 10){
+   set.seed(1)
    bnModel <- bnlearn::boot.strength(countMatrix, algorithm = 'hc', R = bootR)
    bnModel$direction <- round(bnModel$direction,1)
    bnModel <- bnModel[bnModel$direction >= 0.5,]
@@ -104,13 +105,14 @@ lNet <- igraph::layout.graphopt(uNet, charge = 1e-3)
 rownames(lNet) <- names(V(uNet))
 lNet[names(V(sO)),] <- lNet[names(V(sO)),]*4
 mCoord <- tkplot(uNet, layout= lNet)
-
+ 
 lNet <- tk_coords(mCoord)
+write.table(lNet, 'figures/coordinatesDFplot.tsv')
 lNet <- t(t(lNet)/apply(abs(lNet),2,max))
 rownames(lNet) <- names(V(uNet))
 plot(uNet, layout = lNet)
-lNet[,1] <- lNet[,1]*2.5
-lNet[,2] <- lNet[,2]*1.8
+lNet[,1] <- lNet[,1]*3.5
+lNet[,2] <- lNet[,2]*1.3
 gY <- names(V(sY))
 gO <- names(V(sO))
 
@@ -146,15 +148,19 @@ add.vertex.shape("fcircle", clip=igraph.shape.noclip,plot=myCircle, parameters=l
 
 png('figures/dfDiffNetworks.png', width = 6000, height = 3000, res = 300)
 par(mfrow=c(1,2))
-plot(sY, layout = lNet[names(V(sY)),], vertex.shape="fcircle", vertex.frame.color=ifelse(gY %in% gO, 'darkgoldenrod', NA), vertex.frame.width=12, vertex.label = NA, edge.width = NA, edge.arrow.size = 0, rescale = FALSE, xlim = c(min(lNet[,1]), max(lNet[,1])), ylim=c(min(lNet[,2]), max(lNet[,2])), mark.groups = which(gY %in% gO), mark.col="#C5E5E7", mark.border=NA)
+fColor <- ifelse(gY %in% gO, 'darkgoldenrod', NA)
+fColor[(gY %in% dC) & fColor == 'darkgoldenrod'] <- 'forestgreen'
+plot(sY, layout = lNet[names(V(sY)),], vertex.shape="fcircle", vertex.frame.color=fColor, vertex.frame.width=12, vertex.label = NA, edge.width = NA, edge.arrow.size = 0, rescale = FALSE, xlim = c(min(lNet[,1]), max(lNet[,1])), ylim=c(min(lNet[,2]), max(lNet[,2])), mark.groups = which(gY %in% gO), mark.col="#C5E5E7", mark.border=NA)
 gY2 <- gY
-gY2[gY %in% dC] <- paste0('[', gY[gY %in% dC], ']')
+#gY2[gY %in% dC] <- paste0('[', gY[gY %in% dC], ']')
 plot(sY, layout = lNet[names(V(sY)),], edge.arrow.size=1, edge.size = abs(E(sY)$weight)/max(abs(E(sY)$weight)), edge.color = ifelse(E(sY)$weight > 0, 'red', 'blue'), vertex.label = gY2,
-     vertex.label.family= 'Arial', vertex.label.color='black', vertex.label.cex= 1, vertex.frame.color = NA, add = TRUE, vertex.color = 'darkgoldenrod1', vertex.label.font = ifelse(gY %in% dC, 2,1), rescale = FALSE, xlim = c(min(lNet[,1]), max(lNet[,1])), ylim=c(min(lNet[,2]), max(lNet[,2])))
-plot(sO, layout = lNet[names(V(sO)),], vertex.shape="fcircle", vertex.frame.color=ifelse(gO %in% gY, 'darkgoldenrod', NA), vertex.frame.width=12, vertex.label = NA, edge.width = NA, edge.arrow.size = 0, rescale = FALSE, xlim = c(min(lNet[,1]), max(lNet[,1])), ylim=c(min(lNet[,2]), max(lNet[,2])), mark.groups = which(gO %in% gY), mark.col="#C5E5E7", mark.border=NA)
+     vertex.label.family= 'Arial', vertex.label.color='black', vertex.label.cex= 1, vertex.frame.color = NA, add = TRUE, vertex.color = ifelse(gY %in% dC, 'green3' ,'darkgoldenrod1'), vertex.label.font = ifelse(gY %in% dC, 2,1), rescale = FALSE, xlim = c(min(lNet[,1]), max(lNet[,1])), ylim=c(min(lNet[,2]), max(lNet[,2])))
+fColor <- ifelse(gO %in% gY, 'darkgoldenrod', NA)
+fColor[(gO %in% dC) & fColor == 'darkgoldenrod'] <- 'forestgreen'
+plot(sO, layout = lNet[names(V(sO)),], vertex.shape="fcircle", vertex.frame.color=fColor, vertex.frame.width=12, vertex.label = NA, edge.width = NA, edge.arrow.size = 0, rescale = FALSE, xlim = c(min(lNet[,1]), max(lNet[,1])), ylim=c(min(lNet[,2]), max(lNet[,2])), mark.groups = which(gO %in% gY), mark.col="#C5E5E7", mark.border=NA)
 gO2 <- gO
-gO2[gO %in% dC] <- paste0('[', gO[gO %in% dC], ']')
+#gO2[gO %in% dC] <- paste0('[', gO[gO %in% dC], ']')
 plot(sO, layout = lNet[names(V(sO)),],edge.arrow.size=1,  edge.size = abs(E(sO)$weight)/max(abs(E(sO)$weight)), edge.color = ifelse(E(sO)$weight > 0, 'red', 'blue'), vertex.label=gO2,
-     vertex.label.family= 'Arial', vertex.label.color='black', vertex.label.cex= 1, vertex.frame.color = NA, add = TRUE, vertex.color = 'darkgoldenrod1', vertex.label.font = ifelse(gO %in% dC, 2,1), rescale = FALSE, xlim = c(min(lNet[,1]), max(lNet[,1])), ylim=c(min(lNet[,2])*1.1, max(lNet[,2])))
+     vertex.label.family= 'Arial', vertex.label.color='black', vertex.label.cex= 1, vertex.frame.color = NA, add = TRUE, vertex.color = ifelse(gO %in% dC, 'green3' ,'darkgoldenrod1'), vertex.label.font = ifelse(gO %in% dC, 2,1), rescale = FALSE, xlim = c(min(lNet[,1]), max(lNet[,1])), ylim=c(min(lNet[,2])*1.1, max(lNet[,2])))
 dev.off()
 
