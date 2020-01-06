@@ -10,7 +10,7 @@ library(scTenifoldNet)
 library(ggplot2)
 mA <- read.csv('results/10X500ANEURON_Itensor_Dalignment.csv', row.names = 1)[,1:30]
 rownames(mA) <- make.unique(toupper(rownames(mA)))
-dC <- dCoexpression(mA, minFC = 0)
+dC <- dRegulation(mA, minFC = 0)
 Z <- dC$distance
 lambda <- seq(-2, 2, 1/100)
 lambda <- lambda[lambda != 0]
