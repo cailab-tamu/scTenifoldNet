@@ -9,9 +9,20 @@ sID <- c('Aging', 'DermalFibroblasts', 'Morphine', '-mtAging')
 
 sapply(seq_along(fileList), function(X){
   mA <- read.csv(fileList[X], row.names = 1)[,1:30]
-  rownames(mA) <- make.unique(toupper(rownames(mA)))
-  dC <- dCoexpression(mA, minFC = 0.75)
+  rownames(mA) <- make.unique((rownames(mA)))
+  dC <- dRegulation(mA, minFC = 0.75)
   geneColor <- ifelse(dC$p.value < 0.01, 'red', 'black')
+  if(sID[X] == 'Morphine'){
+    gList <- c('Adcy5', 'Foxp1', 'Atp2b1', 'Ppp3ca', 'Rgs7bp', 'Ppp1r1b')
+  }
+  if(sID[X] %in% c('Aging', '-mtAging')){
+    gList <- c('Ndrg4', 'Celf2', 'Pbx1', 'Gria2', 'Malat1', 'Dclk1', 'Ptpro', 'Camk2b', 'Inpp5j', 'Atp1b1', 'Gad1', 'Meis2', 'Ckb', 'Shisa8', 'Nrxn3', 'Prkca', 'Rps19', 'Itm2b')
+  }
+  if(sID[X] == 'DermalFibroblasts'){
+    gList <- c('RPS12', 'RPL13', 'RPS18', 'RPLP1', 'RPS14', 'RPL10A', 'RPL10', 'RPL11', 'RPL6', 'RPL3', 'RPS3A', 'RPS4X', 'RPL12', 'RPL13A', 'RPS9', 'RPL15', 'RPS6')
+  }
+  
+  geneColor[dC$gene %in% gList] <- 'forestgreen'
   genePoint <- (ifelse(dC$p.adj < 0.1, 8, 16))
   geneID <- dC$gene
   geneID[dC$p.adj > 0.1] <- ''
@@ -30,7 +41,7 @@ sapply(seq_along(fileList), function(X){
   plotQQ <- ggplot(dF, aes(X,Y, label = geneID)) + 
     geom_point(color = geneColor, pch = genePoint) + 
     theme_bw() + 
-    geom_text_repel(segment.color = 'gray60', segment.alpha = 0.5, max.iter = 1e3) + 
+    geom_text_repel(segment.color = 'gray60', segment.alpha = 0.5, max.iter = 1e3, aes(fontface = ifelse(dC$gene %in% gList,2,1))) + 
     geom_abline(slope = slope, intercept = int, lty = 2) + labs(y=expression(-log10[1*0]*" (Observed P-values)"),x=expression(-log10[1*0]*" (Expected P-values)"))
   print(plotQQ)
   dev.off()
