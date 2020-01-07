@@ -35,13 +35,13 @@ ggplot(df, mapping = aes(x = tSNE_1, y = tSNE_2, color = Group)) + geom_point(pc
 dev.off()
 
 png('figures/morphineADCY5.png', width = 1000, height = 1000, res = 300)
-VlnPlot(allMorphine, features = 'Adcy5', cols = c(rep('#E41A1C',4), rep("#377EB8",4)), pt.size = 0.25)+ theme_bw() + labs(title = 'ADCY5') + theme(plot.title = element_text(size=20),legend.position = "none") + xlab('Sample')
+VlnPlot(allMorphine, features = 'Adcy5', cols = c(rep('#E41A1C',4), rep("#377EB8",4)), pt.size = 0.25)+ theme_bw() + labs(title = 'Adcy5') + theme(plot.title = element_text(size=20),legend.position = "none") + xlab('Sample')
 dev.off()
 
 png('figures/morphinePPP3CA.png', width = 1000, height = 1000, res = 300)
-VlnPlot(allMorphine, features = 'Ppp3ca', cols = c(rep('#E41A1C',4), rep("#377EB8",4)), pt.size = 0.25)+ theme_bw() + labs(title = 'PPP3CA') + theme(plot.title = element_text(size=20),legend.position = "none") + xlab('Sample')
+VlnPlot(allMorphine, features = 'Ppp3ca', cols = c(rep('#E41A1C',4), rep("#377EB8",4)), pt.size = 0.25)+ theme_bw() + labs(title = 'Ppp3ca') + theme(plot.title = element_text(size=20),legend.position = "none") + xlab('Sample')
 dev.off()
 
 png('figures/morphinePPP1R1B.png', width = 1000, height = 1000, res = 300)
-VlnPlot(allMorphine, features = 'Ppp1r1b', cols = c(rep('#E41A1C',4), rep("#377EB8",4)), pt.size = 0.25)+ theme_bw() + labs(title = 'PPP1R1B') + theme(plot.title = element_text(size=20),legend.position = "none") + xlab('Sample')
+VlnPlot(allMorphine, features = 'Ppp1r1b', cols = c(rep('#E41A1C',4), rep("#377EB8",4)), pt.size = 0.25)+ theme_bw() + labs(title = 'Ppp1r1b') + theme(plot.title = element_text(size=20),legend.position = "none") + xlab('Sample')
 dev.off()

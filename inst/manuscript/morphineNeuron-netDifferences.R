@@ -112,7 +112,7 @@ myCircle <- function(coords, v=NULL, params) {
 
 add.vertex.shape("fcircle", clip=igraph.shape.noclip,plot=myCircle, parameters=list(vertex.frame.color=1, vertex.frame.width=1))
 
-png('figures/morphineDiffNetworks.png', width = 6000, height = 3000, res = 300)
+png('figures/morphineDiffNetworks.png', width = 6000, height = 3000, res = 300, pointsize = 20, bg = NA)
 par(mfrow=c(1,2))
 fColor <- ifelse(gY %in% gO, 'darkgoldenrod', NA)
 fColor[(gY %in% dC) & fColor == 'darkgoldenrod'] <- 'forestgreen'
