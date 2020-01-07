@@ -39,13 +39,13 @@ VlnPlot(allAging,'Celf2')
 VlnPlot(allAging,'mt-Cytb')
 
 png('figures/agingMEIS2.png', width = 1000, height = 1000, res = 300)
-VlnPlot(allAging, features = 'Meis2', cols = c(rep('#E41A1C',1), rep("#377EB8",1)), pt.size = 0.25)+ theme_bw() + labs(title = 'MEIS2') + theme(plot.title = element_text(size=20),legend.position = "none") + xlab('Sample')
+VlnPlot(allAging, features = 'Meis2', cols = c(rep('#E41A1C',1), rep("#377EB8",1)), pt.size = 0.25)+ theme_bw() + labs(title = 'Meis2') + theme(plot.title = element_text(size=20),legend.position = "none") + xlab('Sample')
 dev.off()
 
 png('figures/agingCELF2.png', width = 1000, height = 1000, res = 300)
-VlnPlot(allAging, features = 'Celf2', cols = c(rep('#E41A1C',1), rep("#377EB8",1)), pt.size = 0.25)+ theme_bw() + labs(title = 'CELF2') + theme(plot.title = element_text(size=20),legend.position = "none") + xlab('Sample')
+VlnPlot(allAging, features = 'Celf2', cols = c(rep('#E41A1C',1), rep("#377EB8",1)), pt.size = 0.25)+ theme_bw() + labs(title = 'Celf2') + theme(plot.title = element_text(size=20),legend.position = "none") + xlab('Sample')
 dev.off()
 
 png('figures/agingCOX7C.png', width = 1000, height = 1000, res = 300)
-VlnPlot(allAging, features = 'Cox7c', cols = c(rep('#E41A1C',1), rep("#377EB8",1)), pt.size = 0.25)+ theme_bw() + labs(title = 'COX7C') + theme(plot.title = element_text(size=20),legend.position = "none") + xlab('Sample')
+VlnPlot(allAging, features = 'Cox7c', cols = c(rep('#E41A1C',1), rep("#377EB8",1)), pt.size = 0.25)+ theme_bw() + labs(title = 'Cox7c') + theme(plot.title = element_text(size=20),legend.position = "none") + xlab('Sample')
 dev.off()

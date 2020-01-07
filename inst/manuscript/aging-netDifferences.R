@@ -74,6 +74,7 @@ lNet['Prkca',] <- lNet['Prkca',]*c(0.2,2)
 lNet['Stmn2',] <- lNet['Stmn2',]*c(1.2,1.6)
 lNet['Atp2b1',] <- lNet['Atp2b1',]*c(1.1,1.1)
 lNet['Rps19',] <- lNet['Rps19',]*c(1,1.1)
+lNet['Meis2',] <- lNet['Meis2',]*c(0.8,1)
 gY <- names(V(sY))
 gO <- names(V(sO))
 plot(uNet, layout = lNet, mark.groups = which(gO %in% gY))
@@ -108,8 +109,8 @@ myCircle <- function(coords, v=NULL, params) {
 
 add.vertex.shape("fcircle", clip=igraph.shape.noclip,plot=myCircle, parameters=list(vertex.frame.color=1, vertex.frame.width=1))
 
-png('figures/agingDiffNetworks.png', width = 6000, height = 3000, res = 300)
-par(mfrow=c(1,2))
+png('figures/agingDiffNetworks.png', width = 6000, height = 3000, res = 300, pointsize = 20, bg = NA)
+par(mfrow=c(1,2), mar = c(0,0,0,0))
 fColor <- ifelse(gY %in% gO, 'darkgoldenrod', NA)
 fColor[(gY %in% dC) & fColor == 'darkgoldenrod'] <- 'forestgreen'
 plot(sY, layout = lNet[names(V(sY)),], vertex.shape="fcircle", vertex.frame.color=fColor, vertex.frame.width=12, vertex.label = NA, edge.width = NA, edge.arrow.size = 0, rescale = FALSE, xlim = c(min(lNet[,1])*1.05, max(lNet[,1])*1.05), ylim=c(min(lNet[,2])*1.05, max(lNet[,2])*1.05), mark.groups = which(gY %in% gO), mark.col="#C5E5E7", mark.border=NA)
