@@ -100,19 +100,20 @@ sY <- assignDirectionNetworK(igraphNetwork = sY, countMatrix = mY, bootR = 100)
 sO <- assignDirectionNetworK(igraphNetwork = sO, countMatrix = mO, bootR = 100)
 
 uNet <- igraph::union(sY,sO)
-set.seed(3)
-lNet <- igraph::layout.graphopt(uNet, charge = 1e-3)
+set.seed(1)
+lNet <- igraph::layout.graphopt(uNet, charge = 1e-2)
+plot(uNet, layout = lNet)
 rownames(lNet) <- names(V(uNet))
-lNet[names(V(sO)),] <- lNet[names(V(sO)),]*4
-mCoord <- tkplot(uNet, layout= lNet)
- 
-lNet <- tk_coords(mCoord)
-write.table(lNet, 'figures/coordinatesDFplot.tsv')
+#lNet[names(V(sO)),] <- lNet[names(V(sO)),]*4
+#mCoord <- tkplot(uNet, layout= lNet)
+  
+#lNet <- tk_coords(mCoord)
+#write.table(lNet, 'figures/coordinatesDFplot.tsv')
+lNet <- read.table('figures/coordinatesDFplot.tsv')
 lNet <- t(t(lNet)/apply(abs(lNet),2,max))
 rownames(lNet) <- names(V(uNet))
 plot(uNet, layout = lNet)
-lNet[,1] <- lNet[,1]*3.5
-lNet[,2] <- lNet[,2]*1.3
+lNet[,] <- lNet[,] * -1.5
 gY <- names(V(sY))
 gO <- names(V(sO))
 
@@ -146,8 +147,8 @@ myCircle <- function(coords, v=NULL, params) {
 
 add.vertex.shape("fcircle", clip=igraph.shape.noclip,plot=myCircle, parameters=list(vertex.frame.color=1, vertex.frame.width=1))
 
-png('figures/dfDiffNetworks.png', width = 6000, height = 3000, res = 300)
-par(mfrow=c(1,2))
+png('figures/dfDiffNetworks.png', width = 6000, height = 3000, res = 300, pointsize = 20, bg = NA)
+par(mfrow=c(1,2), mar=c(1,1,1,1))
 fColor <- ifelse(gY %in% gO, 'darkgoldenrod', NA)
 fColor[(gY %in% dC) & fColor == 'darkgoldenrod'] <- 'forestgreen'
 plot(sY, layout = lNet[names(V(sY)),], vertex.shape="fcircle", vertex.frame.color=fColor, vertex.frame.width=12, vertex.label = NA, edge.width = NA, edge.arrow.size = 0, rescale = FALSE, xlim = c(min(lNet[,1]), max(lNet[,1])), ylim=c(min(lNet[,2]), max(lNet[,2])), mark.groups = which(gY %in% gO), mark.col="#C5E5E7", mark.border=NA)
