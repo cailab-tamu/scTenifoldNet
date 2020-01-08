@@ -42,7 +42,7 @@ sapply(seq_along(fileList), function(X){
     geom_point(color = geneColor, pch = genePoint) + 
     theme_bw() + 
     geom_text_repel(segment.color = 'gray60', segment.alpha = 0.5, max.iter = 1e3, aes(fontface = ifelse(dC$gene %in% gList,2,1))) + 
-    geom_abline(slope = slope, intercept = int, lty = 2) + labs(y=expression(-log10[1*0]*" (Observed P-values)"),x=expression(-log10[1*0]*" (Expected P-values)"))
+    geom_abline(slope = slope, intercept = int, lty = 2) + labs(y=expression(-log[1*0]*" (Observed P-values)"),x=expression(-log[1*0]*" (Expected P-values)"))
   print(plotQQ)
   dev.off()
 })
