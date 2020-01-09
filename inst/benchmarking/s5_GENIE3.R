@@ -37,24 +37,23 @@ rownames(inputData) <- readLines('data/geneList.txt')
 
 q <- seq(0,1,0.05)
 metricOutput <- lapply(q, function(Q){
-
   Acurracy <- lapply(nCells, function(X){
     fileList <- list.files('networks/GENIE3/', full.names = TRUE)
     fileList <- fileList[grepl(paste0(X,'cells'), fileList)]
     fileContent <- lapply(fileList, readMM)
     fileContent <- lapply(fileContent, function(X){
-      diag(X) <- 0
       X <- as.matrix(X)
+      X <- X - median(X)
       X <- X/max(abs(X))
-      X <- (X - median(X))
       X[abs(X) < quantile(abs(X), Q)] <-  0
       diag(X) <- 1
-      c1p <- sum(X[1:40,1:40] > 0)
-      c2p <- sum(X[41:98,41:98] > 0)
-      c1n <- sum(X[1:40,41:98] < 0)
-      c2n <- sum(X[41:98,1:40] < 0)
-      AC <- (c1p+c2p+c1n+c2n)/(sum(X[1:98,1:98]!=0))
-      return(AC)
+      dataMatrix <- X
+      TP <- sum(dataMatrix[1:40,1:40] > 0) + sum(dataMatrix[41:98,41:98] > 0)
+      FP <- sum(dataMatrix[1:40,41:98] > 0) + sum(dataMatrix[41:98, 1:40] > 0)
+      TN <- sum(dataMatrix[1:40,41:98] < 0) + sum(dataMatrix[41:98, 1:40] < 0)
+      FN <- sum(dataMatrix[1:40,1:40] < 0) + sum(dataMatrix[41:98,41:98] < 0)
+      ACC <- round((TP+TN)/(TP+TN+FN+FP),2)
+      return(ACC)
     })
     unlist(fileContent)
   })
@@ -63,25 +62,27 @@ metricOutput <- lapply(q, function(Q){
     fileList <- fileList[grepl(paste0(X,'cells'), fileList)]
     fileContent <- lapply(fileList, readMM)
     fileContent <- lapply(fileContent, function(X){
-      diag(X) <- 0
       X <- as.matrix(X)
+      X <- X - median(X)
       X <- X/max(abs(X))
-      X <- (X - median(X))
       X[abs(X) < quantile(abs(X), Q)] <-  0
       diag(X) <- 1
-      c1p <- sum(X[1:40,1:40] > 0)
-      c2p <- sum(X[41:98,41:98] > 0)
-      AC <- (c1p+c2p)/((40*40)+(58*58))
-      return(AC)
+      dataMatrix <- X
+      TP <- sum(dataMatrix[1:40,1:40] > 0) + sum(dataMatrix[41:98,41:98] > 0)
+      FP <- sum(dataMatrix[1:40,41:98] > 0) + sum(dataMatrix[41:98, 1:40] > 0)
+      TN <- sum(dataMatrix[1:40,41:98] < 0) + sum(dataMatrix[41:98, 1:40] < 0)
+      FN <- sum(dataMatrix[1:40,1:40] < 0) + sum(dataMatrix[41:98,41:98] < 0)
+      REC <- round((TP)/((40*40)+(58*58)),2)
+      return(REC)
     })
     unlist(fileContent)
   })
-
+  
   accMean <- unlist(lapply(Acurracy, mean))
   accSD <- unlist(lapply(Acurracy, sd))
   recallMean <- unlist(lapply(ReCall, mean))
   recallSD <- unlist(lapply(ReCall, sd))
-
+  
   outputMetric <- NULL
   outputMetric$q <- rep(Q, length(nCells))
   outputMetric$nCells <- nCells
@@ -91,14 +92,11 @@ metricOutput <- lapply(q, function(Q){
   outputMetric$recallLB <- recallMean - recallSD
   outputMetric$recall <- recallMean
   outputMetric$recallUB <- recallMean + recallSD
-
+  
   outputMetric <- as.data.frame(outputMetric)
-  outputMetric[outputMetric <= 0] <- 0
-  return(outputMetric)
+  outputMetric
 })
 
 metricOutput <- do.call(rbind.data.frame, metricOutput)
 metricOutput <- round(metricOutput,3)
-
 write.csv(metricOutput, row.names = FALSE, file = 'metrics/GENIE3.csv')
-

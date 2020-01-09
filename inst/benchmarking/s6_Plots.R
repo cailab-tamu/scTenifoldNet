@@ -14,11 +14,13 @@ library(RColorBrewer)
 pColors <- RColorBrewer::brewer.pal(4,'Dark2')
 #par(xpd = T, mar = par()$mar + c(0,0,0,1))
 
-png('figures/methodSelection.png', width = 900*2, height = 900, res = 300)
-layout(matrix(c(1,1,1,1,2,2,2,2,2), 1, 9, byrow = TRUE))
-par(mar=c(3,3,1,1), mgp=c(1.8,0.5,0))
+png('figures/ACC.png', width = 900, height = 900, res = 300, pointsize = 10)
+#layout(matrix(c(1,1,1,1,2,2,2,2,2), 1, 9, byrow = TRUE))
+par(mar=c(3.5,3.5,1,1), mgp=c(2.4,0.5,0), las = 1)
 plot(PCR$nCells, PCR$acc, ylim=c(0.5,0.8), type='b', col = pColors[1],
-     ylab = 'Accuracy', xlab = 'Number of Cells', pch = 15,)
+     ylab = '', xlab = '', pch = 15,)
+mtext('Number of Cells', side = 1, line = 1.6)
+mtext('Accuracy', side = 2, line = 2.5, las = 3)
 arrows(x0 = PCR$nCells, x1 = PCR$nCells, y0 = PCR$accLB, y1 = PCR$accUB,
        length = 0.03, code = 3, angle = 90, col = pColors[1])
 points(SCC$nCells, SCC$acc, col = pColors[2], type='b', pch = 16)
@@ -30,10 +32,17 @@ arrows(x0 = MI$nCells, x1 = MI$nCells, y0 = MI$accLB, y1 = MI$accUB,
 points(GENIE3$nCells, GENIE3$acc, col = pColors[4], type='b', pch = 18)
 arrows(x0 = GENIE3$nCells, x1 = GENIE3$nCells, y0 = GENIE3$accLB, y1 = GENIE3$accUB,
        length = 0.03, code = 3, angle = 90, col = pColors[4])
+legend('bottomright', legend = c('PCR','SCC', 'MI', 'GENIE3'), bty = 'n',
+       cex = 0.7, ncol = 2, pch = 15:18, col = pColors)
+dev.off()
 
-par(xpd = T, mar = par()$mar + c(0,0,0,5))
+png('figures/REC.png', width = 900, height = 900, res = 300, pointsize = 10)
+#layout(matrix(c(1,1,1,1,2,2,2,2,2), 1, 9, byrow = TRUE))
+par(mar=c(3.5,3.5,1,1), mgp=c(2.4,0.5,0), las = 1)
 plot(PCR$nCells, PCR$recall, ylim=c(0.15,1), type='b', col = pColors[1],
-     ylab = 'Recall', xlab = 'Number of Cells', pch = 15)
+     ylab = '', xlab = '', pch = 15)
+mtext('Number of Cells', side = 1, line = 1.6)
+mtext('Recall', side = 2, line = 2.5, las = 3)
 arrows(x0 = PCR$nCells, x1 = PCR$nCells, y0 = PCR$recallLB, y1 = PCR$recallUB,
        length = 0.03, code = 3, angle = 90, col = pColors[1])
 points(SCC$nCells, SCC$recall, col = pColors[2], type='b', pch = 16)
@@ -45,8 +54,8 @@ arrows(x0 = MI$nCells, x1 = MI$nCells, y0 = MI$recallLB, y1 = MI$recallUB,
 points(GENIE3$nCells, GENIE3$recall, col = pColors[4], type='b', pch = 18)
 arrows(x0 = GENIE3$nCells, x1 = GENIE3$nCells, y0 = GENIE3$recallLB, y1 = GENIE3$recallUB,
        length = 0.03, code = 3, angle = 90, col = pColors[4])
-legend(x = 3200, y = 0.65, legend = c('PCR','SCC', 'MI', 'GENIE3'), bty = 'n',
-       cex = 1, ncol = 1, pch = 15:18, col = pColors)
+legend('bottomright', legend = c('PCR','SCC', 'MI', 'GENIE3'), bty = 'n',
+       cex = 0.7, ncol = 2, pch = 15:18, col = pColors)
 dev.off()
 
 

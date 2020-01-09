@@ -1,17 +1,23 @@
 library(Matrix)
 
 Accuracy <- function(X){
-  c1p <- sum(X[1:40,1:40] > 0)
-  c2p <- sum(X[41:98,41:98] > 0)
-  c1n <- sum(X[1:40,41:98] < 0)
-  c2n <- sum(X[41:98,1:40] < 0)
-  (c1p+c1n+c2p+c2n)/sum(X[1:98,1:98] != 0)
+  dataMatrix <- X
+  TP <- sum(dataMatrix[1:40,1:40] > 0) + sum(dataMatrix[41:98,41:98] > 0)
+  FP <- sum(dataMatrix[1:40,41:98] > 0) + sum(dataMatrix[41:98, 1:40] > 0)
+  TN <- sum(dataMatrix[1:40,41:98] < 0) + sum(dataMatrix[41:98, 1:40] < 0)
+  FN <- sum(dataMatrix[1:40,1:40] < 0) + sum(dataMatrix[41:98,41:98] < 0)
+  ACC <- round((TP+TN)/(TP+TN+FN+FP),2)
+  return(ACC)
 }
 
 reCall <- function(X){
-  c1p <- sum(X[1:40,1:40] > 0)
-  c2p <- sum(X[41:98,41:98] > 0)
-  (c1p+c2p)/((40*40)+(58*58))
+  dataMatrix <- X
+  TP <- sum(dataMatrix[1:40,1:40] > 0) + sum(dataMatrix[41:98,41:98] > 0)
+  FP <- sum(dataMatrix[1:40,41:98] > 0) + sum(dataMatrix[41:98, 1:40] > 0)
+  TN <- sum(dataMatrix[1:40,41:98] < 0) + sum(dataMatrix[41:98, 1:40] < 0)
+  FN <- sum(dataMatrix[1:40,1:40] < 0) + sum(dataMatrix[41:98,41:98] < 0)
+  REC <- round((TP)/((40*40)+(58*58)),2)
+  return(REC)
 }
 
 nCells <- c(500, 1000, 2000, 3000)
