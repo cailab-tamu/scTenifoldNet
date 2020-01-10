@@ -1,15 +1,16 @@
 library(scTenifoldNet)
-mA <- read.csv('../inst/manuscript/results/nonmit_10X500ANEURON_Itensor_Dalignment.csv', row.names = 1)[,1:30]
-dR <- dRegulation(mA, minFC = 1)
-dR <- dR[dR$p.value < 0.1,]
+mA <- read.csv('../inst/manuscript/results/10X500DF_Itensor_Dalignment.csv', row.names = 1)[,1:30]
+dR <- dRegulation(mA, minFC = 0)
+dR <- dR[log2(dR$FC) > 1,]
 fMA <- mA[c(paste0('X_', dR$gene), paste0("y_", dR$gene)),1:30]
 X <- fMA
 library(apcluster)
 library(enrichR)
-X <- negDistMat(X, r = 2, signed = TRUE)
+X <- linKernel(X, normalize = TRUE)
 set.seed(1)
-O <- apcluster(X, maxits=1e6, convits = 10)
+O <- apcluster(X)#, maxits=1e6, convits = 10)
 C <- O@clusters
+barplot(lengths(C))
 C <- C[lengths(O@clusters) > 10]
 C <- lapply(C, names)
 CX <- lapply(C, function(X){
@@ -35,15 +36,20 @@ JCm <-  reshape2::melt(JC)
 JCm <- JCm[!JCm[,3] %in% c(1,0),]
 
 L <- unique(c(unique(JCm[,1]), unique(JCm[,2])))
-sapply(L, function(i){
+Ex <- lapply(L, function(i){
   Ex <- enrichr(CX[[i]], databases = c('BioPlanet_2019', 'KEGG_2019_Human', 'Reactome_2016'))
   Ex <- do.call(rbind.data.frame, Ex)
   Ex <- Ex[Ex$Adjusted.P.value < 0.05,]
-  
+  Ex <- Ex[order(Ex$Adjusted.P.value),]
+  Ex$Term
+})
+
+
+Ey <- lapply(L, function(i){
   Ey <- enrichr(CY[[i]], databases = c('BioPlanet_2019', 'KEGG_2019_Human', 'Reactome_2016'))
   Ey <- do.call(rbind.data.frame, Ey)
   Ey <- Ey[Ey$Adjusted.P.value < 0.05,]
-  
-  Tall <- table(c(Ey$Term, Ex$Term))
-  Tall#[Tall == 1]
+  Ey <- Ey[order(Ey$Adjusted.P.value),]
+  Ey$Term
 })
+
