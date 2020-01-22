@@ -22,7 +22,7 @@ A data frame with 5 columns as follows: \itemize{
 }
 }
 \description{
-Using the output of the non-linear manifold alignment, this function computes the Euclidean distance between the coordinates for the same gene in both conditions. Calculated distances are then transformed using Box-Cox power transformation, and standardized to ensure normality. P-values are assigned following the chi-square distribution over the fold-change computed with respect to the expectation.
+Using the output of the non-linear manifold alignment, this function computes the Euclidean distance between the coordinates for the same gene in both conditions. Calculated distances are then transformed using Box-Cox power transformation, and standardized to ensure normality. P-values are assigned following the chi-square distribution over the fold-change of the squared distance computed with respect to the expectation.
 }
 \examples{
 library(scTenifoldNet)
@@ -68,8 +68,8 @@ dcOutput <- dRegulation(maOutput, minFC = 0)
 head(dcOutput)
 
 # Plotting
-# If FDR < 0.1, the gene will be colored in red.
-geneColor <- ifelse(dcOutput$p.adj < 0.1, 'red', 'black')
+# If FDR < 0.05, the gene will be colored in red.
+geneColor <- ifelse(dcOutput$p.adj < 0.05, 'red', 'black')
 qqnorm(dcOutput$Z, main = 'Standardized Distance', pch = 16, col = geneColor)
 qqline(dcOutput$Z)
 }

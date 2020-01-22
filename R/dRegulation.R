@@ -2,7 +2,7 @@
 #' @importFrom stats dist pchisq p.adjust qqnorm
 #' @importFrom MASS boxcox
 #' @title Evaluates gene differential regulation based on manifold alignment distances. 
-#' @description Using the output of the non-linear manifold alignment, this function computes the Euclidean distance between the coordinates for the same gene in both conditions. Calculated distances are then transformed using Box-Cox power transformation, and standardized to ensure normality. P-values are assigned following the chi-square distribution over the fold-change computed with respect to the expectation. 
+#' @description Using the output of the non-linear manifold alignment, this function computes the Euclidean distance between the coordinates for the same gene in both conditions. Calculated distances are then transformed using Box-Cox power transformation, and standardized to ensure normality. P-values are assigned following the chi-square distribution over the fold-change of the squared distance computed with respect to the expectation. 
 #' @param manifoldOutput A matrix. The output of the non-linear manifold alignment,  a labeled matrix with two times the number of shared genes as rows (X_ genes followed by Y_ genes in the same order) and \code{d} number of columns.
 #' @param minFC A decimal value. Defines the cut-off threshold of fold-change to limit the testing to genes that show, at least \code{minFC} deviation.
 #' @return A data frame with 5 columns as follows: \itemize{
@@ -61,8 +61,8 @@
 #' head(dcOutput)
 #' 
 #' # Plotting
-#' # If FDR < 0.1, the gene will be colored in red.
-#' geneColor <- ifelse(dcOutput$p.adj < 0.1, 'red', 'black')
+#' # If FDR < 0.05, the gene will be colored in red.
+#' geneColor <- ifelse(dcOutput$p.adj < 0.05, 'red', 'black')
 #' qqnorm(dcOutput$Z, main = 'Standardized Distance', pch = 16, col = geneColor)
 #' qqline(dcOutput$Z)
 #' }
@@ -107,8 +107,8 @@ dRegulation <- function(manifoldOutput, minFC = 1.5){
     nD <- dMetric ^ BC
   }
   Z <- scale(nD)
-  E <- mean(dMetric)
-  FC <- dMetric/E
+  E <- mean(dMetric^2)
+  FC <- dMetric^2/E
   pValues <- pchisq(q = FC,df = 1,lower.tail = FALSE)
   pAdjusted <- p.adjust(pValues, method = 'fdr')
   dOut <- data.frame(
