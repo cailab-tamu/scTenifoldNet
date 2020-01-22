@@ -124,7 +124,7 @@ Citation
 --------
 To cite **scTenifoldNet** in publications use:
 
-  Daniel Osorio, Yan Zhong, Guanxun Li, Jianhua Huang and James Cai (2019). scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data. R package version 1.1.0.
+  Daniel Osorio, Yan Zhong, Guanxun Li, Jianhua Huang and James Cai (2019). scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data. R package version 1.2.0.
   https://CRAN.R-project.org/package=scTenifoldNet
 
 A BibTeX entry for LaTeX users is
