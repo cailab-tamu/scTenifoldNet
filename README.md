@@ -133,7 +133,7 @@ A BibTeX entry for LaTeX users is
     title = {scTenifoldNet: Construct and Compare scGRN from Single-Cell Transcriptomic Data},
     author = {Daniel Osorio and Yan Zhong and Guanxun Li and Jianhua Huang and James Cai},
     year = {2019},
-    note = {R package version 1.1.0},
+    note = {R package version 1.2.0},
     url = {https://CRAN.R-project.org/package=scTenifoldNet},
   }
   ```
