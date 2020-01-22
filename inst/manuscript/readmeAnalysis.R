@@ -25,13 +25,13 @@ outputHA <- scTenifoldNet(X = X, Y = Y,
                           dc_minFC = 0)
 
 png('figures/readmeExample.png', width = 900, height = 900, res = 300, pointsize = 10)
-par(mar=c(2.5,2.5,1,1), mgp = c(1.5,0.5,0))
+par(mfrow = c(1,2), mar=c(2.5,2.5,1,1), mgp = c(1.5,0.5,0))
 plotQQ <- function(D, ...){
-  P <- D$diffRegulation$p.value
-  gColor <- ifelse(D$diffRegulation$p.value < 0.05, 'red', 'black')
+  P <- D$diffRegulation$p.adj
+  gColor <- ifelse(P < 0.05, 'red', 'black')
   qqnorm(D$diffRegulation$Z, pch = 20, col= gColor, ...)
   qqline(D$diffRegulation$Z)
-  legend('bottomright', legend = 'P < 0.05', col = 'red', pch = 20, bty = 'n', cex = 0.7)
+  legend('bottomright', legend = 'FDR < 0.05', col = 'red', pch = 20, bty = 'n', cex = 0.7)
 }
 plotQQ(outputH0, main = 'Original vs Original', xlab = 'Normal Quantiles')
 plotQQ(outputHA, main = 'Original vs Perturbed', xlab = 'Normal Quantiles')

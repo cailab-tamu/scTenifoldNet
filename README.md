@@ -78,46 +78,46 @@ outputHA <- scTenifoldNet(X = X, Y = Y,
 As is shown below, under the H0, none of the genes shown a significative difference in regulatory profiles using an FDR cut-off of 0.1, but under the HA, the 6 genes involved in the perturbation (50, 11, 2, 10, 5, and 3) are identified as perturbed.
 ```
 head(outputH0$diffRegulation, n = 10)
-#   gene     distance        Z       FC   p.value     p.adj
-#23 ng23 3.070131e-15 2.322136 1.828489 0.1763061 0.4731993
-#2   ng2 3.028738e-15 2.262939 1.803837 0.1792493 0.4731993
-#19 ng19 2.912207e-15 2.094281 1.734434 0.1878456 0.4731993
-#34 ng34 2.769999e-15 1.884258 1.649739 0.1989945 0.4731993
-#9   ng9 2.617076e-15 1.652876 1.558662 0.2118613 0.4731993
-#79 ng79 2.602655e-15 1.630744 1.550073 0.2131246 0.4731993
-#61 ng61 2.582711e-15 1.600042 1.538195 0.2148867 0.4731993
-#71 ng71 2.489774e-15 1.455541 1.482844 0.2233301 0.4731993
-#20 ng20 2.479350e-15 1.439182 1.476636 0.2243016 0.4731993
-#16 ng16 2.461000e-15 1.410309 1.465707 0.2260242 0.4731993
+#    gene     distance        Z       FC    p.value     p.adj
+# 23 ng23 3.070131e-15 2.322136 3.043773 0.08104736 0.5707127
+# 2   ng2 3.028738e-15 2.262939 2.962251 0.08522920 0.5707127
+# 19 ng19 2.912207e-15 2.094281 2.738690 0.09794501 0.5707127
+# 34 ng34 2.769999e-15 1.884258 2.477752 0.11546719 0.5707127
+# 9   ng9 2.617076e-15 1.652876 2.211725 0.13696542 0.5707127
+# 79 ng79 2.602655e-15 1.630744 2.187418 0.13914237 0.5707127
+# 61 ng61 2.582711e-15 1.600042 2.154021 0.14219705 0.5707127
+# 71 ng71 2.489774e-15 1.455541 2.001789 0.15711364 0.5707127
+# 20 ng20 2.479350e-15 1.439182 1.985062 0.15885815 0.5707127
+# 16 ng16 2.461000e-15 1.410309 1.955788 0.16196447 0.5707127
 
 head(outputHA$diffRegulation, n = 10)
-   gene   distance        Z       FC    p.value     p.adj
-#50 ng50 0.03122694 3.015237 5.407703 0.02004808 0.5497305
-#11 ng11 0.03027085 2.954575 5.242133 0.02204623 0.5497305
-#2   ng2 0.03013548 2.945872 5.218690 0.02234538 0.5497305
-#10 ng10 0.02759308 2.776751 4.778411 0.02881870 0.5497305
-#5   ng5 0.02657637 2.705876 4.602345 0.03192826 0.5497305
-#3   ng3 0.02625458 2.683024 4.546618 0.03298383 0.5497305
-#31 ng31 0.01309219 1.490233 2.267231 0.13213580 0.6588093
-#96 mt-6 0.01099588 1.223243 1.904204 0.16760853 0.6588093
-#6   ng6 0.01067100 1.178555 1.847943 0.17402286 0.6588093
-#59 ng59 0.01063989 1.174223 1.842556 0.17465166 0.6588093
+#    gene   distance        Z        FC      p.value      p.adj
+# 50 ng50 0.03122694 3.015237 13.196102 0.0002805319 0.01518175
+# 11 ng11 0.03027085 2.954575 12.400413 0.0004292389 0.01518175
+# 2   ng2 0.03013548 2.945872 12.289751 0.0004554525 0.01518175
+# 10 ng10 0.02759308 2.776751 10.303556 0.0013277411 0.03319353
+# 5   ng5 0.02657637 2.705876  9.558250 0.0019905282 0.03760933
+# 3   ng3 0.02625458 2.683024  9.328183 0.0022565601 0.03760933
+# 31 ng31 0.01309219 1.490233  2.319592 0.1277535062 0.91141393
+# 96 mt-6 0.01099588 1.223243  1.636240 0.2008421562 0.91141393
+# 6   ng6 0.01067100 1.178555  1.540980 0.2144719537 0.91141393
+# 59 ng59 0.01063989 1.174223  1.532010 0.2158110783 0.91141393
 ```
 
 #### Plotting the results
-Results can be easily displayed using quantile-quantile plots. Here we labeled in red the identified perturbed genes with P < 0.05.
+Results can be easily displayed using quantile-quantile plots. Here we labeled in red the identified perturbed genes with FDR < 0.05.
 ![Example](https://raw.githubusercontent.com/cailab-tamu/scTenifoldNet/master/inst/readmeExample.png)
 ```{r}
 par(mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(1.5,0.5,0))
-geneColor <- ifelse(outputH0$diffRegulation$p.value < 0.05, 'red', 'black')
+geneColor <- ifelse(outputH0$diffRegulation$p.adj < 0.05, 'red', 'black')
 qqnorm(outputH0$diffRegulation$Z, pch = 16, main = 'H0', col = geneColor)
 qqline(outputH0$diffRegulation$Z)
-legend('bottomright', legend = c('P < 0.05'), pch = 16, col = 'red', bty='n', cex = 0.7)
+legend('bottomright', legend = c('FDR < 0.05'), pch = 16, col = 'red', bty='n', cex = 0.7)
 
-geneColor <- ifelse(outputHA$diffRegulation$p.value < 0.05, 'red', 'black')
+geneColor <- ifelse(outputHA$diffRegulation$p.adj < 0.05, 'red', 'black')
 qqnorm(outputHA$diffRegulation$Z, pch = 16, main = 'HA', col = geneColor)
 qqline(outputHA$diffRegulation$Z)
-legend('bottomright', legend = c('P < 0.05'), pch = 16, col = 'red', bty='n', cex = 0.7)
+legend('bottomright', legend = c('FDR < 0.05'), pch = 16, col = 'red', bty='n', cex = 0.7)
 ```
 
 Citation
