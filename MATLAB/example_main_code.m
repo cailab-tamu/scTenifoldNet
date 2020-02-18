@@ -19,7 +19,7 @@ s1_network_constr;
 s2_tensor_decomp;
 s3_manifold_algn;
 [~,i]=sort(vecnorm(aln0-aln1,2,2),'descend');
-gx=upper(unique(genelist(i),'stable'));
+gx=genelist(i);
 
 find(gx=="SWAP70")
 find(gx=="CISD1")
