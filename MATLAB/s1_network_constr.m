@@ -4,7 +4,7 @@
 % c=grp2idx(agegroup_input);
 
 
-
+%{
 i0=mean(X0>0,2)>0.1;
 i1=mean(X1>0,2)>0.1;
 genelist0=genelist(i0);
@@ -15,6 +15,7 @@ X1=X1(i1,:);
 [genelist,i,j]=intersect(genelist0,genelist1);
 X0=X0(i,:);
 X1=X1(j,:);
+%}
 
 % clearvars -except X0 X1 agegroup_ne genelist
 
