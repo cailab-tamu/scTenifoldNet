@@ -8,6 +8,9 @@
 [~,i]=sort(vecnorm(aln0-aln1,2,2),'descend');
 gx=upper(unique(genelist(i),'stable'));
 
+
+return;
+
 [Tpbp,Tnbp]=run_fgsea(gx,[],'bp');
 [Tpmf,Tnmf]=run_fgsea(gx,[],'mf');
 

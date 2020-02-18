@@ -1,8 +1,9 @@
-% load neuron_tensor.mat
+% load examplenetworks.mat A0 A1
 clear X
-for k=1:10
-    X(:,:,1,k)=full(Ayng{k});
-    X(:,:,2,k)=full(Aold{k});
+addpath('thirdparty\tensor_toolbox-v3.1\');
+for k=1:5
+    X(:,:,1,k)=full(A0{k});
+    X(:,:,2,k)=full(A1{k});
 end
 T=tensor(X);
 [M1,U1]=cp_als(T,3);
@@ -23,9 +24,7 @@ A1=A1-diag(diag(A1));
 % writematrix(A1,'A1');
 
 %{
-
 close all
-
 % i=4100;
 i=400;
 ix=i:i+50;

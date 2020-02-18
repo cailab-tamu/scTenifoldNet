@@ -1,10 +1,9 @@
 % load neuron_microglia.mat Xne agegroup_ne genelist
 % Xinput=Xne;
 % agegroup_input=agegroup_ne;
+% c=grp2idx(agegroup_input);
 
-c=grp2idx(agegroup_input);
-X0=Xinput(:,c==1);
-X1=Xinput(:,c==2);
+
 
 i0=mean(X0>0,2)>0.1;
 i1=mean(X1>0,2)>0.1;
@@ -19,23 +18,23 @@ X1=X1(j,:);
 
 % clearvars -except X0 X1 agegroup_ne genelist
 
-
-
-
 %%
-for k=1:10
+for k=1:5
+    k
+    tic    
     Xrep=X0(:,randperm(size(X0,2)));    
     A=sc_pcnetpar(Xrep(:,1:700),3,true);
-    Ayng{k}=sparse(A.*(abs(A)>quantile(abs(A(:)),0.95)));
+    A0{k}=sparse(A.*(abs(A)>quantile(abs(A(:)),0.95)));
+    toc
 end
 
 %%
-for k=1:10
+for k=1:5
     k
     tic
     Xrep=X1(:,randperm(size(X1,2)));
     A=sc_pcnetpar(Xrep(:,1:700),3,true);
-    Aold{k}=sparse(A.*(abs(A)>quantile(abs(A(:)),0.95)));
+    A1{k}=sparse(A.*(abs(A)>quantile(abs(A(:)),0.95)));
     toc
 end
 

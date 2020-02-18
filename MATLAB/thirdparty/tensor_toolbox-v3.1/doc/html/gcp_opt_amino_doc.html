@@ -1,0 +1,504 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>GCP-OPT Examples with Amino Acids Dataset</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-04-26"><meta name="DC.source" content="gcp_opt_amino_doc.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>GCP-OPT Examples with Amino Acids Dataset</h1><!--introduction--><p>For more details, see <a href="gcp_opt_doc.html">Generalized CP Tensor Decomposition</a>.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Setup</a></li><li><a href="#2">CP-ALS</a></li><li><a href="#3">GCP with Gaussian</a></li><li><a href="#4">GCP with Gaussian and Missing Data</a></li><li><a href="#5">GCP with ADAM</a></li><li><a href="#6">GCP with Gamma (terrible!)</a></li><li><a href="#7">GCP with Huber + Lower Bound</a></li><li><a href="#8">GCP with Beta</a></li></ul></div><h2 id="1">Setup</h2><p>We use the well known amino acids dataset for some tests. This data has some negative values, but the factorization itself should be nonnegative.</p><pre class="codeinput"><span class="comment">% Load the data</span>
+load(fullfile(getfield(what(<span class="string">'tensor_toolbox'</span>),<span class="string">'path'</span>),<span class="string">'doc'</span>,<span class="string">'aminoacids.mat'</span>))
+
+clear <span class="string">M</span> <span class="string">fit</span>
+
+vizopts = {<span class="string">'PlotCommands'</span>,{@bar,@(x,y) plot(x,y,<span class="string">'r'</span>),@(x,y) plot(x,y,<span class="string">'g'</span>)},<span class="keyword">...</span>
+    <span class="string">'BottomSpace'</span>,0.1, <span class="string">'HorzSpace'</span>, 0.04, <span class="string">'Normalize'</span>, @(x) normalize(x,<span class="string">'sort'</span>,2)};
+</pre><h2 id="2">CP-ALS</h2><p>Just a reminder of what CP-ALS does.</p><pre class="codeinput">cnt = 1;
+
+tic, M{cnt} = cp_als(X,3,<span class="string">'printitn'</span>,10); toc
+
+fit(cnt) = 1 - norm(full(M{cnt})-X)/norm(X);
+fprintf(<span class="string">'Fit: %g\n'</span>, fit(cnt));
+
+viz(M{cnt},<span class="string">'Figure'</span>,cnt,vizopts{:});
+</pre><pre class="codeoutput">
+CP_ALS:
+ Iter 10: f = 8.923994e-01 f-delta = 5.1e-02
+ Iter 20: f = 9.645445e-01 f-delta = 1.3e-03
+ Iter 30: f = 9.720363e-01 f-delta = 4.3e-04
+ Iter 40: f = 9.742512e-01 f-delta = 1.1e-04
+ Iter 41: f = 9.743468e-01 f-delta = 9.6e-05
+ Final f = 9.743468e-01 
+Elapsed time is 0.171536 seconds.
+Fit: 0.974347
+</pre><img vspace="5" hspace="5" src="gcp_opt_amino_doc_01.png" alt=""> <h2 id="3">GCP with Gaussian</h2><p>We can instead call the GCP with the Gaussian function.</p><pre class="codeinput">cnt = 2;
+M{cnt} = gcp_opt(X,3,<span class="string">'type'</span>,<span class="string">'Gaussian'</span>,<span class="string">'printitn'</span>,10);
+
+fit(cnt) = 1 - norm(full(M{cnt})-X)/norm(X);
+fprintf(<span class="string">'Fit: %g\n'</span>, fit(cnt));
+
+viz(M{cnt},<span class="string">'Figure'</span>,cnt,vizopts{:});
+</pre><pre class="codeoutput">
+GCP-OPT-LBFGSB (Generalized CP Tensor Decomposition)
+
+Tensor size: 5 x 201 x 61 (61305 total entries)
+Generalized function Type: Gaussian
+Objective function: @(x,m)(m-x).^2
+Gradient function: @(x,m)2.*(m-x)
+Lower bound of factor matrices: -Inf
+Optimization method: lbfgsb
+Max iterations: 1000
+Projected gradient tolerance: 6.131
+
+Begin Main loop
+Iter    10, f(x) = 3.271851e+08, ||grad||_infty = 2.42e+06
+Iter    20, f(x) = 5.025022e+06, ||grad||_infty = 2.52e+05
+Iter    30, f(x) = 1.497984e+06, ||grad||_infty = 5.00e+04
+Iter    40, f(x) = 1.445673e+06, ||grad||_infty = 6.42e+03
+Iter    50, f(x) = 1.445131e+06, ||grad||_infty = 2.16e+03
+Iter    60, f(x) = 1.445110e+06, ||grad||_infty = 1.63e+02
+Iter    66, f(x) = 1.445110e+06, ||grad||_infty = 1.47e+01
+End Main Loop
+
+Final objective: 1.4451e+06
+Setup time: 0.00 seconds
+Main loop time: 0.17 seconds
+Outer iterations: 66
+Total iterations: 139
+L-BFGS-B Exit message: CONVERGENCE: REL_REDUCTION_OF_F_&lt;=_FACTR*EPSMCH.
+Fit: 0.974951
+</pre><img vspace="5" hspace="5" src="gcp_opt_amino_doc_02.png" alt=""> <h2 id="4">GCP with Gaussian and Missing Data</h2><p>What is some data is missing?</p><pre class="codeinput">cnt = 3;
+
+<span class="comment">% Proportion of missing data</span>
+p = 0.35;
+
+<span class="comment">% Create a mask with the missing entries set to 0 and everything else 1</span>
+W = tensor(double(rand(size(X))&gt;p));
+
+<span class="comment">% Fit the model, using the 'mask' option</span>
+M{cnt} = gcp_opt(X.*W,3,<span class="string">'type'</span>,<span class="string">'Gaussian'</span>,<span class="string">'mask'</span>,W,<span class="string">'printitn'</span>,10);
+
+fit(cnt) = 1 - norm(full(M{cnt})-X)/norm(X);
+fprintf(<span class="string">'Fit: %g\n'</span>, fit(cnt));
+
+viz(M{cnt},<span class="string">'Figure'</span>,cnt,vizopts{:});
+</pre><pre class="codeoutput">
+GCP-OPT-LBFGSB (Generalized CP Tensor Decomposition)
+
+Tensor size: 5 x 201 x 61 (61305 total entries)
+Missing entries: 21488 (35%)
+Generalized function Type: Gaussian
+Objective function: @(x,m)(m-x).^2
+Gradient function: @(x,m)2.*(m-x)
+Lower bound of factor matrices: -Inf
+Optimization method: lbfgsb
+Max iterations: 1000
+Projected gradient tolerance: 6.131
+
+Begin Main loop
+Iter    10, f(x) = 6.949081e+07, ||grad||_infty = 3.55e+06
+Iter    20, f(x) = 2.586026e+06, ||grad||_infty = 1.70e+05
+Iter    30, f(x) = 9.454964e+05, ||grad||_infty = 8.12e+04
+Iter    40, f(x) = 9.283551e+05, ||grad||_infty = 4.45e+03
+Iter    50, f(x) = 9.280079e+05, ||grad||_infty = 1.57e+03
+Iter    60, f(x) = 9.280041e+05, ||grad||_infty = 4.03e+01
+Iter    65, f(x) = 9.280040e+05, ||grad||_infty = 1.03e+01
+End Main Loop
+
+Final objective: 9.2800e+05
+Setup time: 0.00 seconds
+Main loop time: 0.20 seconds
+Outer iterations: 65
+Total iterations: 138
+L-BFGS-B Exit message: CONVERGENCE: REL_REDUCTION_OF_F_&lt;=_FACTR*EPSMCH.
+Fit: 0.974836
+</pre><img vspace="5" hspace="5" src="gcp_opt_amino_doc_03.png" alt=""> <h2 id="5">GCP with ADAM</h2><p>We can also use stochastic gradient, though it's pretty slow for such a small tensor.</p><pre class="codeinput">cnt = 4;
+
+<span class="comment">% Specify 'opt' = 'adam'</span>
+M{cnt} = gcp_opt(X,3,<span class="string">'type'</span>,<span class="string">'Gaussian'</span>,<span class="string">'opt'</span>,<span class="string">'adam'</span>,<span class="string">'printitn'</span>,1,<span class="string">'fsamp'</span>,5000,<span class="string">'gsamp'</span>,500);
+
+fit(cnt) = 1 - norm(full(M{cnt})-X)/norm(X);
+fprintf(<span class="string">'Fit: %g\n'</span>, fit(cnt));
+
+viz(M{cnt},<span class="string">'Figure'</span>,cnt,vizopts{:});
+</pre><pre class="codeoutput">
+GCP-OPT-ADAM (Generalized CP Tensor Decomposition)
+
+Tensor size: 5 x 201 x 61 (61305 total entries)
+Generalized function Type: Gaussian
+Objective function: @(x,m)(m-x).^2
+Gradient function: @(x,m)2.*(m-x)
+Lower bound of factor matrices: -Inf
+Optimization method: adam
+Max iterations (epochs): 1000
+Iterations per epoch: 1000
+Learning rate / decay / maxfails: 0.001 0.1 1
+Function Sampler: uniform with 5000 samples
+Gradient Sampler: uniform with 500 samples
+
+Begin Main loop
+Initial f-est: 2.370396e+09
+Epoch  1: f-est = 1.587379e+09, step = 0.001
+Epoch  2: f-est = 1.227244e+09, step = 0.001
+Epoch  3: f-est = 9.959063e+08, step = 0.001
+Epoch  4: f-est = 8.378263e+08, step = 0.001
+Epoch  5: f-est = 7.074626e+08, step = 0.001
+Epoch  6: f-est = 5.734918e+08, step = 0.001
+Epoch  7: f-est = 4.291828e+08, step = 0.001
+Epoch  8: f-est = 2.976357e+08, step = 0.001
+Epoch  9: f-est = 1.912060e+08, step = 0.001
+Epoch 10: f-est = 1.158204e+08, step = 0.001
+Epoch 11: f-est = 6.630478e+07, step = 0.001
+Epoch 12: f-est = 3.868896e+07, step = 0.001
+Epoch 13: f-est = 2.407166e+07, step = 0.001
+Epoch 14: f-est = 1.597763e+07, step = 0.001
+Epoch 15: f-est = 1.115011e+07, step = 0.001
+Epoch 16: f-est = 7.931146e+06, step = 0.001
+Epoch 17: f-est = 5.626357e+06, step = 0.001
+Epoch 18: f-est = 4.003385e+06, step = 0.001
+Epoch 19: f-est = 2.934238e+06, step = 0.001
+Epoch 20: f-est = 2.211545e+06, step = 0.001
+Epoch 21: f-est = 1.798214e+06, step = 0.001
+Epoch 22: f-est = 1.588134e+06, step = 0.001
+Epoch 23: f-est = 1.490513e+06, step = 0.001
+Epoch 24: f-est = 1.456792e+06, step = 0.001
+Epoch 25: f-est = 1.436484e+06, step = 0.001
+Epoch 26: f-est = 1.440624e+06, step = 0.001, nfails = 1 (resetting to solution from last epoch)
+Epoch 27: f-est = 1.428806e+06, step = 0.0001
+Epoch 28: f-est = 1.424006e+06, step = 0.0001
+Epoch 29: f-est = 1.420764e+06, step = 0.0001
+Epoch 30: f-est = 1.424495e+06, step = 0.0001, nfails = 2 (resetting to solution from last epoch)
+End Main Loop
+
+Final f-est: 1.4208e+06
+Setup time: 0.00 seconds
+Main loop time: 26.05 seconds
+Total iterations: 30000
+Fit: 0.974894
+</pre><img vspace="5" hspace="5" src="gcp_opt_amino_doc_04.png" alt=""> <h2 id="6">GCP with Gamma (terrible!)</h2><p>We can try Gamma, but it's not really the right distribution and produces a terrible result.</p><pre class="codeinput">cnt = 5;
+
+Y = tensor(X(:) .* (X(:) &gt; 0), size(X));
+M{cnt} = gcp_opt(Y,3,<span class="string">'type'</span>,<span class="string">'Gamma'</span>,<span class="string">'printitn'</span>,25);
+
+fit(cnt) = 1 - norm(full(M{cnt})-X)/norm(X);
+fprintf(<span class="string">'Fit: %g\n'</span>, fit(cnt));
+
+viz(M{cnt},<span class="string">'Figure'</span>,cnt,vizopts{:});
+</pre><pre class="codeoutput">Warning: Using 'Gamma' type but tensor X is not nonnegative 
+
+GCP-OPT-LBFGSB (Generalized CP Tensor Decomposition)
+
+Tensor size: 5 x 201 x 61 (61305 total entries)
+Generalized function Type: Gamma
+Objective function: @(x,m)x./(m+1e-10)+log(m+1e-10)
+Gradient function: @(x,m)-x./((m+1e-10).^2)+1./(m+1e-10)
+Lower bound of factor matrices: 0
+Optimization method: lbfgsb
+Max iterations: 1000
+Projected gradient tolerance: 6.131
+
+Begin Main loop
+Iter    25, f(x) = 3.043120e+05, ||grad||_infty = 1.77e+03
+Iter    50, f(x) = 3.020489e+05, ||grad||_infty = 2.15e+03
+Iter    75, f(x) = 3.004138e+05, ||grad||_infty = 3.86e+03
+Iter   100, f(x) = 2.990434e+05, ||grad||_infty = 3.64e+03
+Iter   125, f(x) = 2.982634e+05, ||grad||_infty = 2.88e+03
+Iter   150, f(x) = 2.970770e+05, ||grad||_infty = 1.85e+03
+Iter   175, f(x) = 2.958838e+05, ||grad||_infty = 3.16e+03
+Iter   200, f(x) = 2.942980e+05, ||grad||_infty = 2.12e+04
+Iter   225, f(x) = 2.932444e+05, ||grad||_infty = 2.94e+03
+Iter   250, f(x) = 2.924878e+05, ||grad||_infty = 2.45e+03
+Iter   275, f(x) = 2.918342e+05, ||grad||_infty = 3.05e+03
+Iter   300, f(x) = 2.912069e+05, ||grad||_infty = 7.50e+03
+Iter   325, f(x) = 2.906649e+05, ||grad||_infty = 3.50e+03
+Iter   350, f(x) = 2.902689e+05, ||grad||_infty = 3.76e+03
+Iter   375, f(x) = 2.899448e+05, ||grad||_infty = 3.33e+03
+Iter   400, f(x) = 2.895878e+05, ||grad||_infty = 3.82e+03
+Iter   425, f(x) = 2.892458e+05, ||grad||_infty = 3.32e+03
+Iter   450, f(x) = 2.887209e+05, ||grad||_infty = 1.10e+04
+Iter   475, f(x) = 2.879184e+05, ||grad||_infty = 3.67e+03
+Iter   500, f(x) = 2.872554e+05, ||grad||_infty = 2.57e+03
+Iter   525, f(x) = 2.869756e+05, ||grad||_infty = 2.59e+03
+Iter   550, f(x) = 2.867130e+05, ||grad||_infty = 4.64e+03
+Iter   575, f(x) = 2.865309e+05, ||grad||_infty = 2.61e+03
+Iter   600, f(x) = 2.863194e+05, ||grad||_infty = 1.33e+04
+Iter   625, f(x) = 2.860109e+05, ||grad||_infty = 2.89e+03
+Iter   650, f(x) = 2.857354e+05, ||grad||_infty = 2.62e+03
+Iter   675, f(x) = 2.852209e+05, ||grad||_infty = 3.94e+03
+Iter   700, f(x) = 2.849618e+05, ||grad||_infty = 2.73e+03
+Iter   725, f(x) = 2.847007e+05, ||grad||_infty = 2.72e+03
+Iter   750, f(x) = 2.844455e+05, ||grad||_infty = 2.68e+03
+Iter   775, f(x) = 2.842615e+05, ||grad||_infty = 2.67e+03
+Iter   800, f(x) = 2.839909e+05, ||grad||_infty = 2.81e+03
+Iter   825, f(x) = 2.838567e+05, ||grad||_infty = 2.55e+03
+Iter   850, f(x) = 2.836044e+05, ||grad||_infty = 2.62e+03
+Iter   875, f(x) = 2.834286e+05, ||grad||_infty = 2.84e+03
+Iter   900, f(x) = 2.832111e+05, ||grad||_infty = 2.52e+03
+Iter   925, f(x) = 2.828901e+05, ||grad||_infty = 2.39e+03
+Iter   950, f(x) = 2.826842e+05, ||grad||_infty = 2.94e+03
+Iter   975, f(x) = 2.824698e+05, ||grad||_infty = 4.91e+03
+Iter  1000, f(x) = 2.822129e+05, ||grad||_infty = 3.33e+03
+End Main Loop
+
+Final objective: 2.8221e+05
+Setup time: 0.01 seconds
+Main loop time: 4.41 seconds
+Outer iterations: 1000
+Total iterations: 2187
+L-BFGS-B Exit message: UNRECOGNIZED EXIT FLAG
+Fit: 0.417271
+</pre><img vspace="5" hspace="5" src="gcp_opt_amino_doc_05.png" alt=""> <h2 id="7">GCP with Huber + Lower Bound</h2><p>Huber works well. By default, Huber has no lower bound. To add one, we have to pass in the func/grad/lower information explicitly. We can use <tt>gcp_fg_setup</tt> to get the func/grad parameters.</p><pre class="codeinput">cnt = 6;
+
+<span class="comment">% Call helper function tt_gcp_fg_setup to get the function and gradient handles</span>
+[fh,gh] = tt_gcp_fg_setup(<span class="string">'Huber (0.25)'</span>);
+
+<span class="comment">% Pass the func/grad/lower explicitly.</span>
+M{cnt} = gcp_opt(X,3,<span class="string">'func'</span>,fh,<span class="string">'grad'</span>,gh,<span class="string">'lower'</span>,0,<span class="string">'printitn'</span>,25);
+
+fit(cnt) = 1 - norm(full(M{cnt})-X)/norm(X);
+fprintf(<span class="string">'Fit: %g\n'</span>, fit(cnt));
+
+viz(M{cnt},<span class="string">'Figure'</span>,cnt,vizopts{:});
+</pre><pre class="codeoutput">
+GCP-OPT-LBFGSB (Generalized CP Tensor Decomposition)
+
+Tensor size: 5 x 201 x 61 (61305 total entries)
+Generalized function Type: user-specified
+Objective function: @(x,m)(x-m).^2.*(abs(x-m)&lt;0.25)+(0.5.*abs(x-m)-0.0625).*(abs(x-m)&gt;=0.25)
+Gradient function: @(x,m)-2.*(x-m).*(abs(x-m)&lt;0.25)-(0.5.*sign(x-m)).*(abs(x-m)&gt;=0.25)
+Lower bound of factor matrices: 0
+Optimization method: lbfgsb
+Max iterations: 1000
+Projected gradient tolerance: 6.131
+
+Begin Main loop
+Iter    25, f(x) = 7.711627e+05, ||grad||_infty = 6.87e+03
+Iter    50, f(x) = 7.127088e+05, ||grad||_infty = 6.76e+03
+Iter    75, f(x) = 6.640264e+05, ||grad||_infty = 6.07e+03
+Iter   100, f(x) = 6.138988e+05, ||grad||_infty = 5.99e+03
+Iter   125, f(x) = 4.665418e+05, ||grad||_infty = 8.79e+03
+Iter   150, f(x) = 1.222041e+05, ||grad||_infty = 5.90e+03
+Iter   175, f(x) = 8.320133e+04, ||grad||_infty = 3.23e+03
+Iter   200, f(x) = 8.304100e+04, ||grad||_infty = 3.34e+03
+Iter   222, f(x) = 8.303986e+04, ||grad||_infty = 3.32e+03
+End Main Loop
+
+Final objective: 8.3040e+04
+Setup time: 0.01 seconds
+Main loop time: 0.73 seconds
+Outer iterations: 222
+Total iterations: 450
+L-BFGS-B Exit message: CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_&lt;=_PGTOL.
+Fit: 0.973482
+</pre><img vspace="5" hspace="5" src="gcp_opt_amino_doc_06.png" alt=""> <h2 id="8">GCP with Beta</h2><p>This is also pretty bad, which gives an idea of the struggle of choosing the wrong distribution. It can work a little bit, but it's clearly the wrong objective.</p><pre class="codeinput">cnt = 7;
+
+M{cnt} = gcp_opt(X,3,<span class="string">'type'</span>,<span class="string">'beta (0.75)'</span>,<span class="string">'printitn'</span>,25);
+
+fit(cnt) = 1 - norm(full(M{cnt})-X)/norm(X);
+fprintf(<span class="string">'Fit: %g\n'</span>, fit(cnt));
+viz(M{cnt},<span class="string">'Figure'</span>,cnt,vizopts{:});
+</pre><pre class="codeoutput">Warning: Using 'beta' type but tensor X is not nonnegative 
+
+GCP-OPT-LBFGSB (Generalized CP Tensor Decomposition)
+
+Tensor size: 5 x 201 x 61 (61305 total entries)
+Generalized function Type: beta (0.75)
+Objective function: @(x,m)(1.33333).*(m+1e-10).^(0.75)-(-4).*x.*(m+1e-10).^(-0.25)
+Gradient function: @(x,m)(m+1e-10).^(-0.25)-x.*(m+1e-10).^(-1.25)
+Lower bound of factor matrices: 0
+Optimization method: lbfgsb
+Max iterations: 1000
+Projected gradient tolerance: 6.131
+
+Begin Main loop
+Iter    25, f(x) = 1.000642e+07, ||grad||_infty = 7.42e+06
+Iter    50, f(x) = 9.999832e+06, ||grad||_infty = 8.75e+06
+Iter    75, f(x) = 9.999234e+06, ||grad||_infty = 8.18e+06
+Iter   100, f(x) = 9.902039e+06, ||grad||_infty = 9.00e+15
+Iter   101, f(x) = 9.902039e+06, ||grad||_infty = 9.00e+15
+End Main Loop
+
+Final objective: 9.9020e+06
+Setup time: 0.00 seconds
+Main loop time: 3.18 seconds
+Outer iterations: 101
+Total iterations: 262
+L-BFGS-B Exit message: CONVERGENCE: REL_REDUCTION_OF_F_&lt;=_FACTR*EPSMCH.
+Fit: 0.462047
+</pre><img vspace="5" hspace="5" src="gcp_opt_amino_doc_07.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% GCP-OPT Examples with Amino Acids Dataset
+%
+% For more details, see <gcp_opt_doc.html Generalized CP Tensor
+% Decomposition>.
+
+%% Setup
+% We use the well known amino acids dataset for some tests. This data has
+% some negative values, but the factorization itself should be nonnegative.
+
+% Load the data
+load(fullfile(getfield(what('tensor_toolbox'),'path'),'doc','aminoacids.mat'))
+
+clear M fit
+
+vizopts = {'PlotCommands',{@bar,@(x,y) plot(x,y,'r'),@(x,y) plot(x,y,'g')},...
+    'BottomSpace',0.1, 'HorzSpace', 0.04, 'Normalize', @(x) normalize(x,'sort',2)};
+
+%% CP-ALS
+% Just a reminder of what CP-ALS does.
+
+cnt = 1;
+
+tic, M{cnt} = cp_als(X,3,'printitn',10); toc
+
+fit(cnt) = 1 - norm(full(M{cnt})-X)/norm(X);
+fprintf('Fit: %g\n', fit(cnt));
+
+viz(M{cnt},'Figure',cnt,vizopts{:});
+
+%% GCP with Gaussian
+% We can instead call the GCP with the Gaussian function. 
+
+cnt = 2;
+M{cnt} = gcp_opt(X,3,'type','Gaussian','printitn',10);
+
+fit(cnt) = 1 - norm(full(M{cnt})-X)/norm(X);
+fprintf('Fit: %g\n', fit(cnt));
+
+viz(M{cnt},'Figure',cnt,vizopts{:});
+
+%% GCP with Gaussian and Missing Data
+% What is some data is missing? 
+cnt = 3;
+
+% Proportion of missing data
+p = 0.35; 
+
+% Create a mask with the missing entries set to 0 and everything else 1
+W = tensor(double(rand(size(X))>p)); 
+
+% Fit the model, using the 'mask' option
+M{cnt} = gcp_opt(X.*W,3,'type','Gaussian','mask',W,'printitn',10);
+
+fit(cnt) = 1 - norm(full(M{cnt})-X)/norm(X);
+fprintf('Fit: %g\n', fit(cnt));
+
+viz(M{cnt},'Figure',cnt,vizopts{:});
+
+%% GCP with ADAM
+% We can also use stochastic gradient, though it's pretty slow for such a
+% small tensor.
+cnt = 4;
+
+% Specify 'opt' = 'adam'
+M{cnt} = gcp_opt(X,3,'type','Gaussian','opt','adam','printitn',1,'fsamp',5000,'gsamp',500);
+
+fit(cnt) = 1 - norm(full(M{cnt})-X)/norm(X);
+fprintf('Fit: %g\n', fit(cnt));
+
+viz(M{cnt},'Figure',cnt,vizopts{:});
+
+%% GCP with Gamma (terrible!)
+% We can try Gamma, but it's not really the right distribution and produces
+% a terrible result.
+cnt = 5;
+
+Y = tensor(X(:) .* (X(:) > 0), size(X));
+M{cnt} = gcp_opt(Y,3,'type','Gamma','printitn',25);
+
+fit(cnt) = 1 - norm(full(M{cnt})-X)/norm(X);
+fprintf('Fit: %g\n', fit(cnt));
+
+viz(M{cnt},'Figure',cnt,vizopts{:});
+
+%% GCP with Huber + Lower Bound
+% Huber works well. By default, Huber has no lower bound. To add one, we
+% have to pass in the func/grad/lower information explicitly. We can use
+% |gcp_fg_setup| to get the func/grad parameters.
+cnt = 6;
+
+% Call helper function tt_gcp_fg_setup to get the function and gradient handles
+[fh,gh] = tt_gcp_fg_setup('Huber (0.25)');
+
+% Pass the func/grad/lower explicitly.
+M{cnt} = gcp_opt(X,3,'func',fh,'grad',gh,'lower',0,'printitn',25);
+
+fit(cnt) = 1 - norm(full(M{cnt})-X)/norm(X);
+fprintf('Fit: %g\n', fit(cnt));
+
+viz(M{cnt},'Figure',cnt,vizopts{:});
+
+%% GCP with Beta
+% This is also pretty bad, which gives an idea of the struggle of choosing
+% the wrong distribution. It can work a little bit, but it's clearly the
+% wrong objective.
+cnt = 7;
+
+M{cnt} = gcp_opt(X,3,'type','beta (0.75)','printitn',25);
+
+fit(cnt) = 1 - norm(full(M{cnt})-X)/norm(X);
+fprintf('Fit: %g\n', fit(cnt));
+viz(M{cnt},'Figure',cnt,vizopts{:});
+
+##### SOURCE END #####
+--></body></html>
