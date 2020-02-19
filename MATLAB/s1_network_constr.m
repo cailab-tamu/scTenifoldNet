@@ -20,7 +20,7 @@ X1=X1(j,:);
 % clearvars -except X0 X1 agegroup_ne genelist
 
 %%
-for k=1:10
+for k=1:5
     k
     tic    
     Xrep=X0(:,randperm(size(X0,2)));    
@@ -30,7 +30,7 @@ for k=1:10
 end
 
 %%
-for k=1:10
+for k=1:5
     k
     tic
     Xrep=X1(:,randperm(size(X1,2)));
