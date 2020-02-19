@@ -20,21 +20,21 @@ X1=X1(j,:);
 % clearvars -except X0 X1 agegroup_ne genelist
 
 %%
-for k=1:5
+for k=1:10
     k
     tic    
     Xrep=X0(:,randperm(size(X0,2)));    
-    A=sc_pcnetpar(Xrep(:,1:700),3,true);
+    A=sc_pcnetpar(Xrep(:,1:500),3,true);
     A0{k}=sparse(A.*(abs(A)>quantile(abs(A(:)),0.95)));
     toc
 end
 
 %%
-for k=1:5
+for k=1:10
     k
     tic
     Xrep=X1(:,randperm(size(X1,2)));
-    A=sc_pcnetpar(Xrep(:,1:700),3,true);
+    A=sc_pcnetpar(Xrep(:,1:500),3,true);
     A1{k}=sparse(A.*(abs(A)>quantile(abs(A(:)),0.95)));
     toc
 end
