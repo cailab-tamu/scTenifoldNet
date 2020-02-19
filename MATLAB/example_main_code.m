@@ -3,11 +3,13 @@
 %[X]=sc_selectc(X,2000);
 load example10xdata_1877 X genelist
 %%
-rng default
-c=rand(size(X,2),1)>0.5;
-X0=X(:,~c);
-X1=X(:,c);
-X0=X1;
+%rng default
+%c=rand(size(X,2),1)>0.5;
+%X0=X(:,~c);
+%X1=X(:,c);
+
+X1=X;
+X0=X;
 i=find(genelist=="SWAP70");    % 8
 j=find(genelist=="CISD1");     % 80
 % s=X1(i,:); t=X1(j,:);

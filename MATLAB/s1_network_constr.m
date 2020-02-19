@@ -25,6 +25,7 @@ for k=1:5
     tic    
     Xrep=X0(:,randperm(size(X0,2)));    
     A=sc_pcnetpar(Xrep(:,1:700),3,true);
+    A=A./max(abs(A(:)));
     A0{k}=sparse(A.*(abs(A)>quantile(abs(A(:)),0.95)));
     toc
 end
@@ -34,7 +35,8 @@ for k=1:5
     k
     tic
     Xrep=X1(:,randperm(size(X1,2)));
-    A=sc_pcnetpar(Xrep(:,1:700),3,true);
+    A=sc_pcnetpar(Xrep(:,1:700),3,true);    
+    A=A./max(abs(A(:)));
     A1{k}=sparse(A.*(abs(A)>quantile(abs(A(:)),0.95)));
     toc
 end
