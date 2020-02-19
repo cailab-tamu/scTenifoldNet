@@ -13,11 +13,11 @@ fM=full(M2);
 A0=mean(fM.data(:,:,1,:),4);
 A1=mean(fM.data(:,:,2,:),4);
 
-A0=A0-diag(diag(A0));
-A1=A1-diag(diag(A1));
+%A0=A0-diag(diag(A0));
+%A1=A1-diag(diag(A1));
 
-% A0=A0.*(abs(A0)>quantile(abs(A0(:)),0.95));
-% A1=A1.*(abs(A1)>quantile(abs(A1(:)),0.95));
+A0=A0.*(abs(A0)>quantile(abs(A0(:)),0.95));
+A1=A1.*(abs(A1)>quantile(abs(A1(:)),0.95));
 
 % writematrix(genelist,'genelist.txt')
 % writematrix(A0,'A0');
