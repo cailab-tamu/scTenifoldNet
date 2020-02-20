@@ -1,17 +1,25 @@
 % load examplenetworks.mat A0 A1
-clear X
+% clear X
 addpath('thirdparty\tensor_toolbox-v3.1\');
-for k=1:5
-    X(:,:,1,k)=full(Ax0{k});
-    X(:,:,2,k)=full(Ax1{k});
+for k=1:length(Ax0)
+    Xx0(:,:,k)=full(Ax0{k});
 end
-T=tensor(X);
-[M1,U1]=cp_als(T,3);
+for k=1:length(Ax1)
+    Xx1(:,:,k)=full(Ax1{k});
+end
 
-M2=cp_als(T,3,'maxiters',100,'init',U1,'printitn',10);
-fM=full(M2);
-A0=mean(fM.data(:,:,1,:),4);
-A1=mean(fM.data(:,:,2,:),4);
+T0=tensor(Xx0);
+[M1,U1]=cp_als(T0,3);
+M2=cp_als(T0,3,'maxiters',100,'init',U1,'printitn',10);
+fM0=full(M2);
+
+T1=tensor(Xx1);
+[M1,U1]=cp_als(T1,3);
+M2=cp_als(T1,3,'maxiters',100,'init',U1,'printitn',10);
+fM1=full(M2);
+
+A0=mean(fM0.data(:,:,:),3);
+A1=mean(fM1.data(:,:,:),3);
 
 %A0=A0-diag(diag(A0));
 %A1=A1-diag(diag(A1));
