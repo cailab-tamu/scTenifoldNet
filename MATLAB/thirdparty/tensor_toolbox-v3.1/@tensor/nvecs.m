@@ -58,7 +58,7 @@ Xn = double(tenmat(X,n));
 if flag
     [u,~,~] = svds(Xn, r);
 else
-    Y = Xn*Xn';
+    Y = Xn*Xn';    
     [u,~] = eigs(Y, r, 'LM', eigsopts);
 end
 
