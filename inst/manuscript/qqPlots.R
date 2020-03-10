@@ -41,7 +41,7 @@ sapply(seq_along(fileList), function(X){
   slope <- diff(y)/diff(x)
   int <- y[1L] - slope * x[1L]
   
-  png(paste0('figures/qq',sID[X],'.png'), width = 3150, height = 2250, res = 300, pointsize = 30)
+  png(paste0('figures/qq',sID[X],'.png'), width = 2835, height = 2025, res = 300, pointsize = 30)
   plotQQ <- ggplot(dF, aes(X,Y, label = geneID)) + 
     geom_point(color = geneColor, pch = genePoint) + 
     theme_bw() + 
