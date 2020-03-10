@@ -8,8 +8,10 @@
 #' @param maxError A decimal value between 0 and 1. Defines the relative Frobenius norm error tolerance
 #' @param maxIter An integer value. Defines the maximum number of iterations if error stay above \code{maxError}.
 #' @return A list of weight-averaged denoised gene regulatory networks.
+#' @author This is an adaptation of the code provided by Li, J., Bien, J., & Wells, M. T. (2018)
 #' @references 
 #' \itemize{
+#' \item Li, J., Bien, J., & Wells, M. T. (2018). rTensor: An R Package for Multidimensional Array (Tensor) Unfolding, Multiplication, and Decomposition. Journal of Statistical Software, 87(10), 1-31.
 #' \item Kolda, Tamara G., and Brett W. Bader. "Tensor decompositions and applications." SIAM review 51.3 (2009): 455-500.
 #' \item Morup, Morten. "Applications of tensor (multiway array) factorizations and decompositions in data mining." Wiley Interdisciplinary Reviews: Data Mining and Knowledge Discovery 1.1 (2011): 24-40.
 #' }
