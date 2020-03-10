@@ -20,9 +20,9 @@ Imports: reticulate,
          pbapply,
          RSpectra,
          Matrix,
-         rTensor,
          methods,
          stats,
+         utils,
          MASS
 Suggests: 
     testthat (>= 2.1.0)
