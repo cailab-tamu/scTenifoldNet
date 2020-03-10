@@ -14,7 +14,7 @@ library(scTenifoldNet)
 ```
 Or if you are interested in the version in development, you can install **scTenifoldNet**, using the following command:
 ```{R}
-library(devtools)
+library(remotes)
 install_github('cailab-tamu/scTenifoldNet')
 library(scTenifoldNet)
 ```
