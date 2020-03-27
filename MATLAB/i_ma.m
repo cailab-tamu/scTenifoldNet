@@ -23,3 +23,4 @@ V=V(:,1:dim);
 p1=size(W1,1);
 aln0=V(1:p1,:);
 aln1=V(p1+1:end,:);
+end
