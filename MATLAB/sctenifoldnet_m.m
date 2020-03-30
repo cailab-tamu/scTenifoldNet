@@ -22,19 +22,20 @@ function T=sctenifoldnet_m(X0,X1,genelist,doplot)
 
         Xrep=X0(:,randperm(size(X0,2)));
         A=sc_pcnetpar(Xrep(:,1:500),3,false);
-        XM0(:,:,k)=A;
+        A=A./max(abs(A(:)));        
+        XM0(:,:,k)=A.*(abs(A)>quantile(abs(A(:)),0.95));
 
         Xrep=X1(:,randperm(size(X1,2)));
         A=sc_pcnetpar(Xrep(:,1:500),3,false);    
-        XM1(:,:,k)=A; %.*(abs(A)>quantile(abs(A(:)),0.95));    
+        A=A./max(abs(A(:)));
+        XM1(:,:,k)=A.*(abs(A)>quantile(abs(A(:)),0.95));
     end
         
     A0=i_td(XM0,2);
     A1=i_td(XM1,2);
     
     [aln0,aln1]=i_ma(A0,A1);
-    drdist=vecnorm(aln0-aln1,2,2);
-    %drdist=drdist.^2;
+    drdist=vecnorm(aln0-aln1,2,2).^2;
     FC=drdist./mean(drdist);
     pValues=chi2cdf(FC,1,'upper');
     pAdjusted = mafdr(pValues,'BHFDR',true);
