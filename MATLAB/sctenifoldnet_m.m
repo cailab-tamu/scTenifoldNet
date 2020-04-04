@@ -13,49 +13,19 @@ function T=sctenifoldnet_m(X0,X1,genelist,doplot)
     pw1=fileparts(which(mfilename));
     cd(pw1);
     addpath('thirdparty\tensor_toolbox-v3.1\');
+    cd(pw0);
+    if exist('sc_pcnet.m','file')~=2
+        error('scGEAToolbox installation is required. Link: https://github.com/jamesjcai/scGEAToolbox');
+    end    
     
-    n=size(X0,1);
-    XM0=zeros(n,n,10);
-    XM1=zeros(n,n,10);
-    for k=1:10
-        fprintf('network...%d of 10\n',k);
-
-        Xrep=X0(:,randperm(size(X0,2)));
-        A=sc_pcnetpar(Xrep(:,1:500),3,false);
-        A=A./max(abs(A(:)));        
-        XM0(:,:,k)=A.*(abs(A)>quantile(abs(A(:)),0.95));
-
-        Xrep=X1(:,randperm(size(X1,2)));
-        A=sc_pcnetpar(Xrep(:,1:500),3,false);    
-        A=A./max(abs(A(:)));
-        XM1(:,:,k)=A.*(abs(A)>quantile(abs(A(:)),0.95));
-    end
-        
+    X0=sc_norm(X0,"type","libsize");
+    X1=sc_norm(X1,"type","libsize");
+    
+    [XM0,XM1]=i_nc(X0,X1);
     A0=i_td(XM0,2);
     A1=i_td(XM1,2);
-    
     [aln0,aln1]=i_ma(A0,A1);
-    drdist=vecnorm(aln0-aln1,2,2).^2;
-    FC=drdist./mean(drdist);
-    pValues=chi2cdf(FC,1,'upper');
-    pAdjusted = mafdr(pValues,'BHFDR',true);
-    if size(genelist,1)==1, genelist=genelist'; end
-    T=table(genelist,drdist,FC,pValues,pAdjusted);    
-    if doplot
-        pd = makedist('Gamma','a',0.5,'b',2);
-        qqplot(FC,pd);
-        [~,i]=sort(FC);
-        dt = datacursormode;
-        dt.UpdateFcn = {@i_myupdatefcn1,genelist(i)};
-    end
-    cd(pw0);
-end
-
-function txt = i_myupdatefcn1(~,event_obj,g)
-% Customizes text of data tips
-% pos = event_obj.Position;
-idx = event_obj.DataIndex;
-% i_plotsiglegene(idx,g);
-txt = {g(idx)};
+    T=i_dr(aln0,aln1,genelist,doplot);
+    
 end
 
