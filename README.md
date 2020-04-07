@@ -5,7 +5,7 @@ A R/MATLAB package to construct and compare single-cell gene regulatory networks
 
 Install:
 -------
-**scTenifoldNet** is available through the CRAN repositories, after install the ***Phyton*** dependencies, you can install **scTenifoldNet**, using the following command:
+**scTenifoldNet** is available through the CRAN repositories, you can install **scTenifoldNet**, using the following command:
 ```{R}
 install.packages('scTenifoldNet')
 library(scTenifoldNet)
