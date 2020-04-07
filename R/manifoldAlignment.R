@@ -1,5 +1,5 @@
 #' @export manifoldAlignment
-#' @importFrom reticulate py_available py_module_available import_from_path
+#' @importFrom RSpectra eigs
 #' @title Performs non-linear manifold alignment of two gene regulatory networks. 
 #' @description Build comparable low-dimensional features for two weight-averaged denoised single-cell gene regulatory networks. Using a non-linear network embedding method \code{manifoldAlignment } aligns two gene regulatory networks and finds the structural similarities between them. This function is a wrapper of the \code{Python} code provided by Vu et al., (2012) at https://github.com/all-umass/ManifoldWarping. 
 #' @param X A gene regulatory network.
@@ -67,35 +67,27 @@
 #'        pch = c(16,1), cex = 0.7)
 #' }
 
-
 manifoldAlignment <- function(X, Y, d = 30){
-  if(checkPyDependencies()){
-    X <- as.matrix(X)
-    Y <- as.matrix(Y)
-    file <- system.file('python/', package = 'scTenifoldNet')
-    d <- as.integer(d)
-    sharedGenes <- intersect(rownames(X), rownames(Y))
-    X <- X[sharedGenes, sharedGenes]
-    Y <- Y[sharedGenes, sharedGenes]
-    L <- diag(length(sharedGenes))
-    # if(type == 'O'){
-    #   wX <- X
-    #   wY <- Y
-    # }
-    # if(type == 'D'){
-    wX <- X+1
-    wY <- Y+1
-    # }
-    # if(type == 'P'){
-    #   wX <- X
-    #   wY <- Y
-    #   wX[wX != 0] <- wX[wX != 0]+1
-    #   wY[wY != 0] <- wY[wY != 0]+1
-    # }
-    netManifold <- reticulate::import_from_path(module = 'nonLinearManifold', path = file, convert = TRUE)
-    alignedNet <- netManifold$nonLinearManifold(X = X, Y = Y, corr = L, num_dims = d, Wx = wX, Wy = wY)
-    colnames(alignedNet) <- paste0('NLMA ', seq_len(d))
-    rownames(alignedNet) <- c(paste0('X_', sharedGenes), paste0('Y_', sharedGenes))
-    return(alignedNet)
-  }
+  sharedGenes <- intersect(rownames(X), rownames(Y))
+  X <- X[sharedGenes, sharedGenes]
+  Y <- Y[sharedGenes, sharedGenes]
+  L <- diag(length(sharedGenes))
+  wX <- X+1
+  wY <- Y+1
+  wXY <- 0.9 * (sum(wX) + sum(wY)) / (2 * sum(L)) * L
+  W <- rbind(cbind(wX, wXY), cbind(t(wXY), wY))
+  W <- -W
+  diag(W) <- 0
+  diag(W) <- -apply(W, 2, sum)
+  E <- suppressWarnings(RSpectra::eigs(W, d*2, 'SR'))
+  E$values <- suppressWarnings(as.numeric(E$values))
+  E$vectors <- suppressWarnings(apply(E$vectors,2,as.numeric))
+  newOrder <- order(E$values)
+  E$values <- E$values[newOrder]
+  E$vectors <- E$vectors[,newOrder]
+  E$vectors <- E$vectors[,E$values > 1e-8]
+  alignedNet <- E$vectors[,1:30]
+  colnames(alignedNet) <- paste0('NLMA ', seq_len(d))
+  rownames(alignedNet) <- c(paste0('X_', sharedGenes), paste0('Y_', sharedGenes))
+  return(alignedNet)
 }
