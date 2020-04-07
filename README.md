@@ -5,8 +5,6 @@ A R/MATLAB package to construct and compare single-cell gene regulatory networks
 
 Install:
 -------
-**scTenifoldNet** requires *numpy* and *scipy* from the ***Python*** programming language, to install them, we recommend to install *miniconda Python*: https://docs.conda.io/en/latest/miniconda.html.
-
 **scTenifoldNet** is available through the CRAN repositories, after install the ***Phyton*** dependencies, you can install **scTenifoldNet**, using the following command:
 ```{R}
 install.packages('scTenifoldNet')
