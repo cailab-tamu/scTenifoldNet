@@ -18,7 +18,6 @@
 #' @param td_maxIter An integer value. Defines the maximum number of iterations if error stay above \code{td_maxError}.
 #' @param td_maxError A decimal value between 0 and 1. Defines the relative Frobenius norm error tolerance.
 #' @param ma_nDim An integer value. Defines the number of dimensions of the low-dimensional feature space to be returned from the non-linear manifold alignment.
-#' @param dc_minFC A decimal value. Defines the cut-off threshold of fold-change to limit the testing to genes that show, at least \code{dc_minFC} deviation.
 #' @return A list with 3 slots as follows: 
 #' \itemize{
 #' \item{tensorNetworks:} The generated weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition.
@@ -66,7 +65,7 @@
 scTenifoldNet <- function(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TRUE,
                           qc_minPCT = 0.05, qc_maxMTratio = 0.1, nc_nNet = 10,
                           nc_nCells = 500, nc_nComp = 3, nc_symmetric = FALSE, nc_scaleScores = TRUE,
-                          nc_q = 0.05, td_K = 3, td_maxIter = 1e3, td_maxError = 1e-5, ma_nDim = 30, dc_minFC = 1.5){
+                          nc_q = 0.05, td_K = 3, td_maxIter = 1e3, td_maxError = 1e-5, ma_nDim = 30){
   # Single-cell Quality Control
   X <- scQC(X, minLibSize = qc_minLibSize, removeOutlierCells = qc_removeOutlierCells, minPCT = qc_minPCT, maxMTratio = qc_maxMTratio)
   Y <- scQC(Y, minLibSize = qc_minLibSize, removeOutlierCells = qc_removeOutlierCells, minPCT = qc_minPCT, maxMTratio = qc_maxMTratio)
@@ -113,7 +112,7 @@ scTenifoldNet <- function(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TR
       # write.csv(mA, outFile)
   
   # Differential regulation testing
-  dR <- dRegulation(manifoldOutput = mA, minFC = dc_minFC)
+  dR <- dRegulation(manifoldOutput = mA)
       # write.csv(dC, paste0('dCoex_',id,'_',M,'tensor_',A,'alignment.csv'))
       # }
       # }

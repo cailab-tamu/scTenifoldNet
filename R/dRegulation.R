@@ -4,7 +4,6 @@
 #' @title Evaluates gene differential regulation based on manifold alignment distances. 
 #' @description Using the output of the non-linear manifold alignment, this function computes the Euclidean distance between the coordinates for the same gene in both conditions. Calculated distances are then transformed using Box-Cox power transformation, and standardized to ensure normality. P-values are assigned following the chi-square distribution over the fold-change of the squared distance computed with respect to the expectation. 
 #' @param manifoldOutput A matrix. The output of the non-linear manifold alignment,  a labeled matrix with two times the number of shared genes as rows (X_ genes followed by Y_ genes in the same order) and \code{d} number of columns.
-#' @param minFC A decimal value. Defines the cut-off threshold of fold-change to limit the testing to genes that show, at least \code{minFC} deviation.
 #' @return A data frame with 5 columns as follows: \itemize{
 #' \item \code{gene} A character vector with the gene id identified from the \code{manifoldAlignment} output.
 #' \item \code{distance} A numeric vector of the Euclidean distance computed between the coordinates of the same gene in both conditions.
@@ -67,7 +66,7 @@
 #' qqline(dcOutput$Z)
 #' }
 
-dRegulation <- function(manifoldOutput, minFC = 1.5){
+dRegulation <- function(manifoldOutput){
   
   geneList <- rownames(manifoldOutput)
   geneList <- geneList[grepl('^X_', geneList)]
@@ -119,7 +118,6 @@ dRegulation <- function(manifoldOutput, minFC = 1.5){
     p.value = pValues,
     p.adj = pAdjusted
   )
-  dOut <- dOut[FC > minFC,]
   dOut <- dOut[order(dOut$p.value),]
   dOut <- as.data.frame.array(dOut)
   return(dOut)

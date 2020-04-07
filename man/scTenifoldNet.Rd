@@ -8,7 +8,7 @@ scTenifoldNet(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TRUE,
   qc_minPCT = 0.05, qc_maxMTratio = 0.1, nc_nNet = 10,
   nc_nCells = 500, nc_nComp = 3, nc_symmetric = FALSE,
   nc_scaleScores = TRUE, nc_q = 0.05, td_K = 3, td_maxIter = 1000,
-  td_maxError = 1e-05, ma_nDim = 30, dc_minFC = 1.5)
+  td_maxError = 1e-05, ma_nDim = 30)
 }
 \arguments{
 \item{X}{Raw counts matrix with cells as columns and genes (symbols) as rows.}
@@ -42,8 +42,6 @@ scTenifoldNet(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TRUE,
 \item{td_maxError}{A decimal value between 0 and 1. Defines the relative Frobenius norm error tolerance.}
 
 \item{ma_nDim}{An integer value. Defines the number of dimensions of the low-dimensional feature space to be returned from the non-linear manifold alignment.}
-
-\item{dc_minFC}{A decimal value. Defines the cut-off threshold of fold-change to limit the testing to genes that show, at least \code{dc_minFC} deviation.}
 }
 \value{
 A list with 3 slots as follows: 

@@ -4,12 +4,10 @@
 \alias{dRegulation}
 \title{Evaluates gene differential regulation based on manifold alignment distances.}
 \usage{
-dRegulation(manifoldOutput, minFC = 1.5)
+dRegulation(manifoldOutput)
 }
 \arguments{
 \item{manifoldOutput}{A matrix. The output of the non-linear manifold alignment,  a labeled matrix with two times the number of shared genes as rows (X_ genes followed by Y_ genes in the same order) and \code{d} number of columns.}
-
-\item{minFC}{A decimal value. Defines the cut-off threshold of fold-change to limit the testing to genes that show, at least \code{minFC} deviation.}
 }
 \value{
 A data frame with 5 columns as follows: \itemize{
