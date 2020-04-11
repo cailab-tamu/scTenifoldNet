@@ -86,7 +86,7 @@ manifoldAlignment <- function(X, Y, d = 30){
   E$values <- E$values[newOrder]
   E$vectors <- E$vectors[,newOrder]
   E$vectors <- E$vectors[,E$values > 1e-8]
-  alignedNet <- E$vectors[,1:30]
+  alignedNet <- E$vectors[,seq_len(d)]
   colnames(alignedNet) <- paste0('NLMA ', seq_len(d))
   rownames(alignedNet) <- c(paste0('X_', sharedGenes), paste0('Y_', sharedGenes))
   return(alignedNet)
