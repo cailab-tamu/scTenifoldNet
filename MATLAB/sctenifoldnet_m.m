@@ -22,10 +22,8 @@ function T=sctenifoldnet_m(X0,X1,genelist,doplot)
     X1=sc_norm(X1,"type","libsize");
     
     [XM0,XM1]=i_nc(X0,X1);
-    A0=i_td(XM0,2);
-    A1=i_td(XM1,2);
+    [A0,A1]=i_td(XM0,XM1);
     [aln0,aln1]=i_ma(A0,A1);
     T=i_dr(aln0,aln1,genelist,doplot);
-    
 end
 
