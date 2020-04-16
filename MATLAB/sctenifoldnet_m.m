@@ -1,8 +1,16 @@
-function T=sctenifoldnet_m(X0,X1,genelist,doplot)
-    if nargin<3
-        error('USAGE: T=sctenifoldnet_m(X0,X1,genelist)');
+function T=sctenifoldnet_m(X0,X1,genelist,varargin)
+    % X0 and X1 are gene x cell matrices
+    if nargin<2
+        error('USAGE: T=sctenifoldnet_m(X0,X1)');
     end
-    if nargin<4, doplot=false; end
+    if nargin<3, genelist=string(num2cell(1:size(X0,1)))'; end
+    
+   p = inputParser;
+   addOptional(p,'doqqplot',false,@islogical);
+   addOptional(p,'tdmethod',1,@(x) ismember(x,[1 2]));
+   parse(p,varargin{:});   
+   doqqplot=p.Results.doqqplot;
+   tdmethod=p.Results.tdmethod;
     if size(X0,1)~=size(X1,1)
         error('X0 and X1 need the same number of rows.');
     end
@@ -22,8 +30,8 @@ function T=sctenifoldnet_m(X0,X1,genelist,doplot)
     X1=sc_norm(X1,"type","libsize");
     
     [XM0,XM1]=i_nc(X0,X1);
-    [A0,A1]=i_td(XM0,XM1);
+    [A0,A1]=i_td(XM0,XM1,tdmethod);
     [aln0,aln1]=i_ma(A0,A1);
-    T=i_dr(aln0,aln1,genelist,doplot);
+    T=i_dr(aln0,aln1,genelist,doqqplot);
 end
 

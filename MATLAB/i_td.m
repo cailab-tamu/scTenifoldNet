@@ -9,7 +9,7 @@ switch methodid
     case 2
         XM(:,:,:,1)=XM0;
         XM(:,:,:,2)=XM1;
-        Xhat=do_td(XM);
+        Xhat=do_td(single(XM));
         Xhat0=Xhat(:,:,:,1);
         Xhat1=Xhat(:,:,:,2);
 end

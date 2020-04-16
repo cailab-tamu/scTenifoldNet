@@ -6,6 +6,7 @@ function [T]=i_dr(aln0,aln1,genelist,doplot)
     pAdjusted = mafdr(pValues,'BHFDR',true);
     if size(genelist,1)==1, genelist=genelist'; end
     sortid=[1:length(genelist)]';
+    if size(genelist,2)>1, genelist=genelist'; end
     T=table(sortid,genelist,drdist,FC,pValues,pAdjusted);
     T = sortrows(T,'drdist','descend');
     if doplot
