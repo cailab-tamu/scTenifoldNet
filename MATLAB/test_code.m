@@ -14,24 +14,14 @@ for k=1:NGENES, genelist(k)=sprintf("g%d",k); end
 X0=sc_norm(X0,"type","libsize");
 X1=sc_norm(X1,"type","libsize");
 
-X0=zscore(X0')';
-X1=zscore(X1')';
-
-s1_network_constr;
-s2_tensor_decomp;
-s3_manifold_algn;
+addpath('thirdparty\tensor_toolbox-v3.1\');
+[XM0,XM1]=i_nc(X0,X1);  % s1_network_constr;
+[A0,A1]=i_td(XM0,XM1);    % s2_tensor_decomp;
+[aln0,aln1]=i_ma(A0,A1);  % s3_manifold_algn;
+figure;
+T=i_dr(aln0,aln1,genelist,true);   % diff regulatory gene detection
 
 %%
-d=vecnorm(aln0-aln1,2,2);
-ds=d.^2;
-FC=ds./mean(ds);
-pValues=chi2cdf(FC,1,'upper');
-pAdjusted = mafdr(pValues,'BHFDR',true);
-T=table(genelist,FC,pValues,pAdjusted);
+figure;
+T2=sctenifoldnet_p(X0,X1,genelist,true);
 
-figure; 
-pd=makedist('Gamma','a',0.5,'b',2);
-qqplot(FC,pd);
-[~,i]=sort(FC);
-dt = datacursormode;
-dt.UpdateFcn = {@i_myupdatefcn1,genelist(i)};

@@ -1,11 +1,11 @@
-function  [XM0,XM1]=i_nc(X0,X1,nk)
-if nargin<3, nk=10; end
+function  [XM0,XM1]=i_nc(X0,X1,N)
+if nargin<3, N=10; end
 
     n=size(X0,1);
-    XM0=zeros(n,n,nk);
-    XM1=zeros(n,n,nk);
-    for k=1:nk
-        fprintf('network...%d of %d\n',k,nk);
+    XM0=zeros(n,n,N);
+    XM1=zeros(n,n,N);
+    for k=1:N
+        fprintf('network...%d of %d\n',k,N);
 
         Xrep=X0(:,randperm(size(X0,2)));
         A=sc_pcnetpar(Xrep(:,1:500),3,false);
