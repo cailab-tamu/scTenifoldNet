@@ -1,5 +1,6 @@
 function [T]=i_dr(aln0,aln1,genelist,doplot)
     if nargin<4, doplot=false; end
+    if nargin<3, genelist=string(num2cell(1:size(aln0,1)))'; end
     drdist=vecnorm(aln0-aln1,2,2).^2;
     FC=drdist./mean(drdist);
     pValues=chi2cdf(FC,1,'upper');
