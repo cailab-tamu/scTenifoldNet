@@ -16,8 +16,16 @@ end
 A0=mean(Xhat0,3);
 A1=mean(Xhat1,3);
 
+A0=i_transf(A0);
+A1=i_transf(A1);
+
 %A0=A0./max(abs(A0(:)));
 %A0=round(A0,5);
+end
+
+function a=i_transf(a)
+    a=a./max(abs(a(:)));
+    a=a.*(abs(a)>quantile(abs(a(:)),0.95));
 end
 
 function Xhat0=do_td(XM0)
