@@ -1,4 +1,5 @@
 MATLAB/*
+JULIA/*
 ^.*\.Rproj$
 ^\.Rproj\.user$
 inst/benchmarking/*

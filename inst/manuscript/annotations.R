@@ -2,19 +2,10 @@ library(enrichR)
 library(scTenifoldNet)
 
 nDim <- 30
-fileList <- list.files(path = 'results/',pattern = 'non', full.names = TRUE)
+fileList <- list.files(path = 'results/',pattern = 'sym', full.names = TRUE)
 
 sapply(fileList, function(X){
-  fileContent <- read.csv(X, row.names = 1, stringsAsFactors = FALSE)
-  fileContent <- fileContent[,seq_len(nDim)]
-  gList <- rownames(fileContent)
-  gList <- gList[grepl('X_', gList)]
-  gList <- gsub('X_', '', gList)
-  nGenes <- length(gList)
-  dC <- dRegulation(fileContent, minFC = 0)
-  dC$FC <- dC$distance^2/mean(dC$distance^2)
-  dC$p.value <- pchisq(dC$FC, df = 1, lower.tail = FALSE)
-  dC$p.adj <- p.adjust(dC$p.value, method = 'fdr')
+  dC <- read.csv(X, row.names = 1, stringsAsFactors = FALSE)
   sGenes <- dC$gene[(dC$p.adj < 0.05)]
   sGenes <- toupper(sGenes)
   sGenes <- gsub('^MT-','',sGenes)

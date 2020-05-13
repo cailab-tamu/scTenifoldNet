@@ -1,34 +1,10 @@
-source('https://raw.githubusercontent.com/dosorio/utilities/master/idConvert/hsa_ENSEMBL2SYMBOL.R')
-reactomeDB <- read.csv('reactomeDB2019.txt', stringsAsFactors = FALSE, sep = '\t', header = FALSE)
-reactomeDB <- reactomeDB[reactomeDB$V6 == 'Homo sapiens',]
-symbolID <- hsa_ENSEMBL2SYMBOL(reactomeDB$V1)
-pathID <- unique(reactomeDB$V4)
-reactomeDB <- lapply(pathID, function(X){
-  symbolID$SYMBOL[symbolID$GENEID %in% reactomeDB$V1[reactomeDB$V4 %in% X]]
-})
-names(reactomeDB) <- pathID
-
-gSets <- read.csv('bioPlanet2019.csv', stringsAsFactors = FALSE)
-pIDs <- unique(gSets$PATHWAY_NAME)
-gSets <- lapply(pIDs, function(X){
-  gSets$GENE_SYMBOL[gSets$PATHWAY_NAME %in% X]
-})
-names(gSets) <- pIDs
-
 library(fgsea)
-library(scTenifoldNet)
+gSets <- gmtPathways('https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=BioPlanet_2019')
+reactomeDB <- gmtPathways('https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=Reactome_2016')
 library(ggplot2)
-mA <- read.csv('results/10X500DF_Itensor_Dalignment.csv', row.names = 1)[,1:30]
-rownames(mA) <- make.unique(toupper(rownames(mA)))
-dC <- dCoexpression(mA, minFC = 0)
-Z <- dC$distance
-lambda <- seq(-2, 2, 1/100)
-lambda <- lambda[lambda != 0]
-BC <- MASS::boxcox(Z~1,lambda =lambda)
-Z <- Z ^ BC$x[which.max(BC$y)]
-Z <- scale(Z)
-names(Z) <- gsub('MT-','',dC$gene)
-
+dC <- read.csv('results/sym10X500DF_Itensor_Dalignment.csv')
+Z <- dC$Z
+names(Z) <- toupper(gsub('MT-','',dC$gene))
 
 E <- fgsea(gSets, stats = Z, nperm = 1e6)
 E2 <- fgsea(reactomeDB, stats = Z, nperm = 1e6)

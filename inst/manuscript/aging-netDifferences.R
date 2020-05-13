@@ -1,8 +1,7 @@
 library(Matrix)
 library(igraph)
 library(scTenifoldNet)
-dC <- read.csv('results/nonmit_10X500ANEURON_Itensor_Dalignment.csv', row.names = 1)[,1:30]
-dC <- dRegulation(dC)
+dC <- read.csv('results/sym10X500ANEURON_Itensor_Dalignment.csv', row.names = 1, stringsAsFactors = FALSE)
 dC <- dC$gene[dC$p.adj < 0.1]
 
 Y <- readMM('results/tensorOutput/X_10X500ANEURON_Itensor.mtx')
