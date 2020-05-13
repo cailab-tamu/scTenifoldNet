@@ -103,6 +103,10 @@ scTenifoldNet <- function(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TR
   tX <- as.matrix(tensorOut$X)
   tY <- as.matrix(tensorOut$Y)
   
+  # Making it symmetric to fulfill the requirements of the MA
+  tX <- (tX + t(tX))/2
+  tY <- (tY + t(tY))/2
+  
   # Non-linear manifold alignment
       # for(A in c('O','D','P')){
   set.seed(1)
