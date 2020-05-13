@@ -1,25 +1,12 @@
-gSets <- read.csv('bioPlanet2019.csv', stringsAsFactors = FALSE)
-pIDs <- unique(gSets$PATHWAY_NAME)
-gSets <- lapply(pIDs, function(X){
-  gSets$GENE_SYMBOL[gSets$PATHWAY_NAME %in% X]
-})
-names(gSets) <- pIDs
-
-
-KEGG <- readLines('https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=KEGG_2019_Mouse')
-KEGG <- strsplit(KEGG, '\t')
-KEGGnames <- lapply(KEGG, function(X){X[1]})
-KEGG <- lapply(KEGG, function(X){X[-c(1,2)]})
-names(KEGG) <- unlist(KEGGnames)
-
 library(fgsea)
-library(scTenifoldNet)
+gSets <- gmtPathways('https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=BioPlanet_2019')
+reactomeDB <- gmtPathways('https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=Reactome_2016')
+KEGG <- gmtPathways('https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=KEGG_2019_Mouse')
+
 library(ggplot2)
-mA <- read.csv('results/10X500morphineNeuron_Itensor_Dalignment.csv', row.names = 1)[,1:30]
-rownames(mA) <- make.unique(toupper(rownames(mA)))
-dC <- dRegulation(mA, minFC = 0)
+dC <- read.csv('results/sym10X500morphineNeuron_Itensor_Dalignment.csv')
 Z <- dC$Z
-names(Z) <- dC$gene
+names(Z) <- toupper(gsub('MT-','',dC$gene))
 
 E <- fgsea(gSets, stats = Z, nperm = 1e6)
 

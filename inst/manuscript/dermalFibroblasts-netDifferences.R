@@ -2,8 +2,7 @@ library(Matrix)
 library(igraph)
 library(scTenifoldNet)
 library(Seurat)
-dC <- read.csv('results/10X500DF_Itensor_Dalignment.csv', row.names = 1)[,1:30]
-dC <- dRegulation(dC)
+dC <- read.csv('results/sym10X500DF_Itensor_Dalignment.csv', row.names = 1)
 plot(-log10(pchisq(seq(1,0,length.out = nrow(dC)),df = 1, lower.tail = FALSE)), -log10(dC$p.value))
 dC <- dC$gene[dC$p.adj < 0.1]
 

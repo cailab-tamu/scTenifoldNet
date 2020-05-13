@@ -1,27 +1,10 @@
-gSets <- read.csv('bioPlanet2019.csv', stringsAsFactors = FALSE)
-pIDs <- unique(gSets$PATHWAY_NAME)
-gSets <- lapply(pIDs, function(X){
-  gSets$GENE_SYMBOL[gSets$PATHWAY_NAME %in% X]
-})
-names(gSets) <- pIDs
-
 library(fgsea)
-library(scTenifoldNet)
+gSets <- gmtPathways('https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=BioPlanet_2019')
+
 library(ggplot2)
-mA <- read.csv('results/10X500ANEURON_Itensor_Dalignment.csv', row.names = 1)[,1:30]
-rownames(mA) <- make.unique(toupper(rownames(mA)))
-dC <- dRegulation(mA, minFC = 0)
-Z <- dC$distance
-lambda <- seq(-2, 2, 1/100)
-lambda <- lambda[lambda != 0]
-BC <- MASS::boxcox(Z~1,lambda =lambda)
-BC <- BC$x[which.max(BC$y)]
-Z <- Z ^ BC
-if(BC < 0){
-  Z <- 1/Z
-}
-Z <- scale(Z)
-names(Z) <- gsub('MT-','',dC$gene)
+dC <- read.csv('results/sym10X500ANEURON_Itensor_Dalignment.csv')
+Z <- dC$Z
+names(Z) <- toupper(gsub('MT-','',dC$gene))
 
 E <- fgsea(gSets, stats = Z, nperm = 1e6)
 

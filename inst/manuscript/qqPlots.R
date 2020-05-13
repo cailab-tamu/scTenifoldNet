@@ -4,16 +4,11 @@ library(scTenifoldNet)
 library(ggplot2)
 library(ggrepel)
 
-fileList <- list.files('results/', pattern = '10X500', full.names = TRUE)
-sID <- c('Aging', 'DermalFibroblasts', 'Morphine', '-mtAging')
+fileList <- list.files('results/', pattern = 'sym', full.names = TRUE)
+sID <- c('Aging', 'DermalFibroblasts', 'Morphine')
 
 sapply(seq_along(fileList), function(X){
-  mA <- read.csv(fileList[X], row.names = 1)[,1:30]
-  rownames(mA) <- make.unique((rownames(mA)))
-  dC <- dRegulation(mA, minFC = 0)
-  dC$FC <- dC$distance^2/mean(dC$distance^2)
-  dC$p.value <- pchisq(dC$FC, df = 1, lower.tail = FALSE)
-  dC$p.adj <- p.adjust(dC$p.value, method = 'fdr')
+  dC <- read.csv(fileList[X], row.names = 1, stringsAsFactors = FALSE)
   geneColor <- ifelse(dC$p.adj < 0.1, 'red', 'black')
   if(sID[X] == 'Morphine'){
     gList <- c('Adcy5', 'Foxp1', 'Atp2b1', 'Ppp3ca', 'Rgs7bp', 'Ppp1r1b')
