@@ -1,4 +1,6 @@
 library(scTenifoldNet)
+library(ComplexHeatmap)
+library(circlize)
 library(Matrix)
 iMatrix <- readMM('../benchmarking/data/CTL.mtx')
 rownames(iMatrix) <- readLines('../benchmarking/data/geneList.txt')
@@ -25,7 +27,7 @@ for (i in seq_len(nNet)){
   ACC <- round((TP+TN)/(TP+TN+FN+FP),2)
   REC <- round((TP)/((40*40)+(58*58)),2)
   print(ComplexHeatmap::Heatmap(dataMatrix, row_order = 1:98, column_order = 1:98, col= circlize::colorRamp2(breaks = c(-1, 0, 1), 
-                                                                                                             colors = c('blue', 'white', 'red')), show_heatmap_legend = FALSE, show_row_names = FALSE, show_column_names = FALSE, use_raster = TRUE, border = 'red', 
+                                                                                                             colors = c('blue', 'white', 'black')), show_heatmap_legend = FALSE, show_row_names = FALSE, show_column_names = FALSE, use_raster = TRUE, border = 'red', 
                                 name = 'foo', column_title = paste0('Accuracy = ', ACC, ' | Recall = ', REC)))
   decorate_heatmap_body("foo", {grid.rect(gp = gpar(fill = "transparent", col = "red", lwd = 5))})
   dev.off()
@@ -57,7 +59,7 @@ for (i in seq_len(nNet)){
   ACC <- round((TP+TN)/(TP+TN+FN+FP),2)
   REC <- round((TP)/((40*40)+(58*58)),2)
   print(ComplexHeatmap::Heatmap(dataMatrix, row_order = 1:98, column_order = 1:98, col= circlize::colorRamp2(breaks = c(-1, 0, 1), 
-        colors = c('blue', 'white', 'red')), show_heatmap_legend = FALSE, show_row_names = FALSE, show_column_names = FALSE, use_raster = TRUE, border = 'forestgreen', 
+        colors = c('blue', 'white', 'black')), show_heatmap_legend = FALSE, show_row_names = FALSE, show_column_names = FALSE, use_raster = TRUE, border = 'forestgreen', 
         name = 'foo', column_title = paste0('Accuracy = ', ACC, ' | Recall = ', REC)))
   decorate_heatmap_body("foo", {grid.rect(gp = gpar(fill = "transparent", col = "forestgreen", lwd = 5))})
   dev.off()
@@ -75,7 +77,7 @@ FN <- sum(dataMatrix[1:40,1:40] < 0) + sum(dataMatrix[41:98,41:98] < 0)
 ACC <- round((TP+TN)/(TP+TN+FN+FP),2)
 REC <- round((TP)/((40*40)+(58*58)),2)
 print(ComplexHeatmap::Heatmap(dataMatrix, row_order = 1:98, column_order = 1:98, col= circlize::colorRamp2(breaks = c(-1, 0, 1), 
-                                                                                                           colors = c('blue', 'white', 'red')), show_heatmap_legend = FALSE, show_row_names = FALSE, show_column_names = FALSE, use_raster = TRUE, border = 'red', 
+                                                                                                           colors = c('blue', 'white', 'black')), show_heatmap_legend = FALSE, show_row_names = FALSE, show_column_names = FALSE, use_raster = TRUE, border = 'red', 
                               name = 'foo', column_title = paste0('Accuracy = ', ACC, ' | Recall = ', REC)))
 decorate_heatmap_body("foo", {grid.rect(gp = gpar(fill = "transparent", col = "red", lwd = 5))})
 dev.off()
@@ -94,7 +96,7 @@ FN <- sum(dataMatrix[1:40,1:40] < 0) + sum(dataMatrix[41:98,41:98] < 0)
 ACC <- round((TP+TN)/(TP+TN+FN+FP),2)
 REC <- round((TP)/((40*40)+(58*58)),2)
 print(ComplexHeatmap::Heatmap(dataMatrix, row_order = 1:98, column_order = 1:98, col= circlize::colorRamp2(breaks = c(-1, 0, 1), 
-                                                                                                           colors = c('blue', 'white', 'red')), show_heatmap_legend = FALSE, show_row_names = FALSE, show_column_names = FALSE, use_raster = TRUE, border = 'forestgreen', 
+                                                                                                           colors = c('blue', 'white', 'black')), show_heatmap_legend = FALSE, show_row_names = FALSE, show_column_names = FALSE, use_raster = TRUE, border = 'forestgreen', 
                               name = 'foo', column_title = paste0('Accuracy = ', ACC, ' | Recall = ', REC)))
 decorate_heatmap_body("foo", {grid.rect(gp = gpar(fill = "transparent", col = "forestgreen", lwd = 5))})
 dev.off()
