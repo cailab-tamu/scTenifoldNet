@@ -17,10 +17,15 @@ X1=sc_norm(X1,"type","libsize");
 addpath('thirdparty\tensor_toolbox-v3.1\');
 [XM0,XM1]=i_nc(X0,X1);  % s1_network_constr;
 [A0,A1]=i_td(XM0,XM1);    % s2_tensor_decomp;
+
+%A0=0.5*(A0+A0');
+%A1=0.5*(A1+A1');
+
 [aln0,aln1]=i_ma(A0,A1);  % s3_manifold_algn;
 figure;
 T=i_dr(aln0,aln1,genelist,true);   % diff regulatory gene detection
 
+return;
 %%
 figure;
 T2=sctenifoldnet_p(X0,X1,genelist,true);

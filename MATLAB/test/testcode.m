@@ -6,3 +6,4 @@ genelist=string(t.Var1);
 tic;
 T=sctenifoldnet_m(X0,X1,genelist,true);
 toc;
+T2=sctenifoldnet_p(X0,X1,genelist,true);
