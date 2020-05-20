@@ -1,15 +1,15 @@
 function T=sctenifoldnet_m(X0,X1,genelist,varargin)
     % X0 and X1 are gene x cell matrices
     if nargin<2
-        error('USAGE: T=sctenifoldnet_m(X0,X1)');
+        error(sprintf('USAGE: T=sctenifoldnet_m(X0,X1);\n       T=sctenifoldnet_m(X0,X1,genelist,''qqplot'',true);'));
     end
     if nargin<3, genelist=string(num2cell(1:size(X0,1)))'; end
     
    p = inputParser;
-   addOptional(p,'doqqplot',false,@islogical);
+   addOptional(p,'qqplot',false,@islogical);
    addOptional(p,'tdmethod',1,@(x) ismember(x,[1 2]));
    parse(p,varargin{:});   
-   doqqplot=p.Results.doqqplot;
+   doqqplot=p.Results.qqplot;
    tdmethod=p.Results.tdmethod;
     if size(X0,1)~=size(X1,1)
         error('X0 and X1 need the same number of rows.');
