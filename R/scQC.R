@@ -94,7 +94,7 @@ scQC <- function(X, minLibSize = 1000, removeOutlierCells = TRUE, minPCT = 0.05,
     X <- X[,!lSize %in% boxplot.stats(lSize)$out]
   }
   # Computing mitochondrial ratio
-  mtGenes <- grepl('MT-',toupper(rownames(X)))
+  mtGenes <- grepl('^MT-',toupper(rownames(X)), ignore.case = TRUE)
   if(sum(mtGenes) > 0){
     mtRate <- X[mtGenes,]
     mtRate <- Matrix::colSums(mtRate)/Matrix::colSums(X)
