@@ -5,7 +5,7 @@ library(ggplot2)
 library(ggrepel)
 
 fileList <- list.files('results/', pattern = 'sym', full.names = TRUE)
-sID <- c('Aging', 'DermalFibroblasts', 'Morphine')
+sID <- c('SCC6','Aging', 'DermalFibroblasts', 'Morphine')
 
 sapply(seq_along(fileList), function(X){
   dC <- read.csv(fileList[X], row.names = 1, stringsAsFactors = FALSE)
@@ -19,7 +19,9 @@ sapply(seq_along(fileList), function(X){
   if(sID[X] == 'DermalFibroblasts'){
     gList <- c('RPS12', 'RPL13', 'RPS18', 'RPLP1', 'RPS14', 'RPL10A', 'RPL10', 'RPL11', 'RPL6', 'RPL3', 'RPS3A', 'RPS4X', 'RPL12', 'RPL13A', 'RPS9', 'RPL15', 'RPS6')
   }
-  
+  if(sID[X] == 'SCC6'){
+    gList <- NULL
+  }
   geneColor[dC$gene %in% gList] <- 'forestgreen'
   genePoint <- (ifelse(dC$p.adj < 0.05, 8, 16))
   geneID <- dC$gene
