@@ -3,7 +3,7 @@ library(Matrix)
 library(ggplot2)
 library(scTenifoldNet)
 library(RColorBrewer)
-
+library(harmony)
 
 #DF
 U <- Read10X('datasets/dermalFibroblasts/unstimulated/')
@@ -21,9 +21,11 @@ allDF <- NormalizeData(allDF)
 allDF <- ScaleData(allDF)
 allDF <- FindVariableFeatures(allDF)
 allDF <- RunPCA(allDF, verbose = FALSE)
-allDF <- RunTSNE(allDF)
+allDF <- RunHarmony(allDF, group.by.vars = 'orig.ident')
+allDF <- RunTSNE(allDF, reduction = 'harmony')
+allDF <- RunUMAP(allDF, reduction = 'harmony')
 TSNEPlot(allDF)
-
+UMAPPlot(allDF)
 
 gID <- ifelse(Idents(allDF) == 'U', 'Unstimulated', 'Stimulated')
 Idents(allDF) <- gID
