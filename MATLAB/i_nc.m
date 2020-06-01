@@ -1,5 +1,5 @@
 function  [XM0,XM1]=i_nc(X0,X1,N,ncom,usingboot)
-if nargin<5, usingboot=true; end   % using m-out-of-n bootstrap (false by default)
+if nargin<5, usingboot=false; end   % using m-out-of-n bootstrap (false by default)
 if nargin<4, ncom=3; end    % number of components
 if nargin<3, N=10; end      % number of subsamples 
 
