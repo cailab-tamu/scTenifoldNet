@@ -1,5 +1,5 @@
 SCC <- 'SCC6'
-setwd(paste0('/data/dcosorioh/manuscript/CTX/', SCC))
+#setwd(paste0('/data/dcosorioh/manuscript/CTX/', SCC))
 library(Matrix)
 library(scTenifoldNet)
 SCC <- 'SCC6'

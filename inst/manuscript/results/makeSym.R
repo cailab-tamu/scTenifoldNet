@@ -4,7 +4,10 @@ makeSymmetric <- function(X,Y, O){
   X <- (X + t(X))/2
   Y <- (Y + t(Y))/2
   set.seed(1)
+  X <- X[!grepl('^RPL|^RPS|^MT',rownames(X), ignore.case = TRUE),!grepl('^RPL|^RPS|^MT',colnames(X), ignore.case = TRUE)]
+  Y <- Y[!grepl('^RPL|^RPS|^MT',rownames(Y), ignore.case = TRUE),!grepl('^RPL|^RPS|^MT',colnames(Y), ignore.case = TRUE)]
   MA <- scTenifoldNet::manifoldAlignment(X,Y)
+  #MA <- MA[!grepl('_RPL|_RPS|_MT',rownames(MA), ignore.case = TRUE),]
   DR <- scTenifoldNet::dRegulation(MA)
   write.csv(DR,file = O)
 }
