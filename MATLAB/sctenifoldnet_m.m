@@ -29,7 +29,7 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
     X0=sc_norm(X0,"type","libsize");
     X1=sc_norm(X1,"type","libsize");
     
-    [XM0,XM1]=i_nc(X0,X1);
+    [XM0,XM1]=i_nc(X0,X1,10);
     [A0,A1]=i_td(XM0,XM1,tdmethod);
     A0=0.5*(A0+A0');
     A1=0.5*(A1+A1');

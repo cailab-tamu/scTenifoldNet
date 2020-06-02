@@ -64,13 +64,11 @@ Here we run **scTenifoldNet** under the H0 (there is no change in the regulation
 ```{r}
 outputH0 <- scTenifoldNet(X = X, Y = X,
                           nc_nNet = 10, nc_nCells = 500,
-                          td_K = 3, qc_minLibSize = 30,
-                          dc_minFC = 0)
+                          td_K = 3, qc_minLibSize = 30)
 
 outputHA <- scTenifoldNet(X = X, Y = Y,
                           nc_nNet = 10, nc_nCells = 500,
-                          td_K = 3, qc_minLibSize = 30,
-                          dc_minFC = 0)
+                          td_K = 3, qc_minLibSize = 30)
 ```
 #### Differential regulation based on manifold alignment distances
 As is shown below, under the H0, none of the genes shown a significative difference in regulatory profiles using an FDR cut-off of 0.1, but under the HA, the 6 genes involved in the perturbation (50, 11, 2, 10, 5, and 3) are identified as perturbed.
