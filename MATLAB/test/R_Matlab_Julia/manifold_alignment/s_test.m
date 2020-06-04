@@ -1,7 +1,7 @@
 load X.txt
 load Y.txt
-% [d,aln0,aln1]=i_manaln(X,Y,"R");
-[d,aln0,aln1]=i_manaln(X,Y,"Julia");
+[d,aln0,aln1]=i_manaln(X,Y,"R");
+%[d,aln0,aln1]=i_manaln(X,Y,"Julia");
 
 
 function [d,aln0,aln1]=i_manaln(A0,A1,type)
@@ -33,14 +33,14 @@ end            % 1.8 hrs (same Julia)  (R version 35 min)
     V=V(:,1:dim);
 
     % startx=find(d>=1e-8, 1);   % filter out eigenvalues that are ~= 0
-    p1=size(W1,1);
+    ng=size(W1,1);
     %p2=size(W2,1);
     %assert(dim <= size(V,2)-startx+1, 'not enough eigenvectors to provide full mapping');
     %i=startx:startx+dim-1;
     %aln0 = V(1:p1,i);
     %aln1 = V(p1+1:p1+p2,i);
-    aln0=V(1:p1,:);
-    aln1=V(p1+1:end,:);
+    aln0=V(1:ng,:);
+    aln1=V(ng+1:end,:);
     d=vecnorm(aln0-aln1,2,2);
 end
 

@@ -11,3 +11,5 @@ library(scTenifoldNet)
 out<-manifoldAlignment(X,Y)
 # rownames(out)
 t(c(out[1,1],out[2,1],out[3,1]))
+out2<-scTenifoldNet::dRegulation(out)
+
