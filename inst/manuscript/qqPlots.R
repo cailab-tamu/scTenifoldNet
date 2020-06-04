@@ -4,6 +4,9 @@ library(scTenifoldNet)
 library(ggplot2)
 library(ggrepel)
 
+# load('datasets/dermalFibroblasts/DF_2.RData')
+# write.csv(DF$diffRegulation, file = 'results/sym10X500DF_Itensor_Dalignment.csv')
+
 fileList <- list.files('results/', pattern = 'sym', full.names = TRUE)
 sID <- c('SCC6','Aging', 'DermalFibroblasts', 'Morphine')
 
@@ -17,10 +20,10 @@ sapply(seq_along(fileList), function(X){
     gList <- c('Ndrg4', 'Celf2', 'Pbx1', 'Gria2', 'Malat1', 'Dclk1', 'Ptpro', 'Camk2b', 'Inpp5j', 'Atp1b1', 'Gad1', 'Meis2', 'Ckb', 'Shisa8', 'Nrxn3', 'Prkca', 'Rps19', 'Itm2b')
   }
   if(sID[X] == 'DermalFibroblasts'){
-    gList <- c('RPS12', 'RPL13', 'RPS18', 'RPLP1', 'RPS14', 'RPL10A', 'RPL10', 'RPL11', 'RPL6', 'RPL3', 'RPS3A', 'RPS4X', 'RPL12', 'RPL13A', 'RPS9', 'RPL15', 'RPS6')
+    gList <- c('EEF1A1', 'SERF2', 'B2M')
   }
   if(sID[X] == 'SCC6'){
-    gList <- NULL
+    gList <- c('H2AFZ', 'DNMT1')
   }
   geneColor[dC$gene %in% gList] <- 'forestgreen'
   genePoint <- (ifelse(dC$p.adj < 0.05, 8, 16))
