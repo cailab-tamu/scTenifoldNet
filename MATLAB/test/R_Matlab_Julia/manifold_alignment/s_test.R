@@ -1,0 +1,13 @@
+X<-read.delim('X.txt',header=0)
+Y<-read.delim('Y.txt',header=0)
+X<-as.matrix(X)
+Y<-as.matrix(Y)
+rownames(X) <- paste0('g', 1:1877)
+rownames(Y) <- paste0('g', 1:1877)
+colnames(X) <- paste0('g', 1:1877)
+colnames(Y) <- paste0('g', 1:1877)
+
+library(scTenifoldNet)
+out<-manifoldAlignment(X,Y)
+# rownames(out)
+t(c(out[1,1],out[2,1],out[3,1]))
