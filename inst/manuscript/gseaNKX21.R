@@ -1,20 +1,34 @@
 library(fgsea)
-gSets <- gmtPathways('https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=BioPlanet_2019')
-reactomeDB <- gmtPathways('https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=Reactome_2016')
-
 library(ggplot2)
 load('datasets/NKX2-1/Nkx21_AT1.RData')
-dC <- O$diffRegulation
-Z <- dC$Z
-names(Z) <- toupper(gsub('MT-','',dC$gene))
+Z <- O$diffRegulation$Z
+names(Z) <- toupper(O$diffRegulation$gene)
 
-E <- fgsea(gSets, stats = Z, nperm = 1e6)
-E2 <- fgsea(reactomeDB, stats = Z, nperm = 1e6)
+CT <- read.csv('datasets/NKX2-1/PanglaoDB_markers_27_Mar_2020.tsv.gz', sep = '\t', stringsAsFactors = FALSE)
+CT <- CT[grepl('Mm',CT$species),]
+ctNames <- unique(CT$cell.type)
+CT <- lapply(ctNames, function(X){
+  unique(CT$official.gene.symbol[CT$cell.type %in% X])
+})
+names(CT) <- ctNames
 
-png(filename = 'figures/p1_DF.png',width = 1000, height = 1000, pointsize = 30, res = 300)
-plotEnrichment(pathway = gSets$`Interferon alpha/beta signaling`, stats = Z) + labs(title='Interferon alpha/beta\nsignaling', subtitle = paste0('P = ',formatC(E$pval[E$pathway == 'Interferon alpha/beta signaling'], digits = 3))) + ylab('Enrichment Score') + xlab('Rank') + theme_bw() + theme(plot.title = element_text(size=20))
+TISSUE <- read.csv('datasets/NKX2-1/PanglaoDB_markers_27_Mar_2020.tsv.gz', sep = '\t', stringsAsFactors = FALSE)
+TISSUE <- TISSUE[grepl('Mm',TISSUE$species),]
+tName <- unique(TISSUE$organ)
+tName <- tName[!is.na(tName)]
+TISSUE <- lapply(tName, function(X){
+  unique(TISSUE$official.gene.symbol[TISSUE$organ %in% X])
+})
+names(TISSUE) <- tName
+
+EC <- fgseaMultilevel(CT, Z)
+ET <- fgseaMultilevel(TISSUE, Z)
+
+png(filename = 'figures/p1_NKX21.png',width = 1000, height = 1000, pointsize = 20, res = 300)
+plotEnrichment(CT$`Pulmonary alveolar type I cells`,Z) + labs(title='Pulmonary alveolar\ntype I cells', subtitle = paste0('P = ',formatC(EC$pval[EC$pathway == 'Pulmonary alveolar type I cells'], digits = 3))) + ylab('Enrichment Score') + xlab('Rank') + theme_bw() + theme(plot.title = element_text(size=20))
 dev.off()
 
-png(filename = 'figures/p2_DF.png',width = 1000, height = 1000, pointsize = 20, res = 300)
-plotEnrichment(pathway = gSets$`Translation`, stats = Z) + labs(title='Translation', subtitle = paste0('P = ',formatC(E$pval[E$pathway == 'Translation'], digits = 3))) + ylab('Enrichment Score') + xlab('Rank') + theme_bw() + theme(plot.title = element_text(size=20))
+png(filename = 'figures/p2_NKX21.png',width = 1000, height = 1000, pointsize = 20, res = 300)
+plotEnrichment(TISSUE[['GI tract']],Z) + labs(title='GI tract', subtitle = paste0('P = ',formatC(ET$pval[ET$pathway == 'GI tract'], digits = 3))) + ylab('Enrichment Score') + xlab('Rank') + theme_bw() + theme(plot.title = element_text(size=20))
 dev.off()
+

@@ -29,7 +29,7 @@ sapply(seq_along(fileList), function(X){
     gList <- c('H2AFZ', 'DNMT1')
   }
   if(sID[X] == 'NKX21'){
-    gList <- NULL
+    gList <- c('Tpt1')
   }
   geneColor[dC$gene %in% gList] <- 'forestgreen'
   genePoint <- (ifelse(dC$p.adj < 0.05, 8, 16))
