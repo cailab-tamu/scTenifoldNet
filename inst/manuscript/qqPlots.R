@@ -7,8 +7,11 @@ library(ggrepel)
 # load('datasets/dermalFibroblasts/DF_2.RData')
 # write.csv(DF$diffRegulation, file = 'results/sym10X500DF_Itensor_Dalignment.csv')
 
+# load('datasets/NKX2-1/Nkx21_AT1.RData')
+# write.csv(O$diffRegulation, file = 'results/sym10X500NKX21_Itensor_Dalignment.csv')
+
 fileList <- list.files('results/', pattern = 'sym', full.names = TRUE)
-sID <- c('SCC6','Aging', 'DermalFibroblasts', 'Morphine')
+sID <- c('SCC6','Aging', 'DermalFibroblasts', 'Morphine', 'NKX21')
 
 sapply(seq_along(fileList), function(X){
   dC <- read.csv(fileList[X], row.names = 1, stringsAsFactors = FALSE)
@@ -24,6 +27,9 @@ sapply(seq_along(fileList), function(X){
   }
   if(sID[X] == 'SCC6'){
     gList <- c('H2AFZ', 'DNMT1')
+  }
+  if(sID[X] == 'NKX21'){
+    gList <- NULL
   }
   geneColor[dC$gene %in% gList] <- 'forestgreen'
   genePoint <- (ifelse(dC$p.adj < 0.05, 8, 16))
