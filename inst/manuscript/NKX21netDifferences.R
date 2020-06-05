@@ -2,14 +2,13 @@ library(Matrix)
 library(igraph)
 library(scTenifoldNet)
 library(Seurat)
-dC <- read.csv('results/sym10X500DF_Itensor_Dalignment.csv', row.names = 1)
+dC <- read.csv('results/sym10X500NKX21_Itensor_Dalignment.csv', row.names = 1)
 plot(-log10(pchisq(seq(1,0,length.out = nrow(dC)),df = 1, lower.tail = FALSE)), -log10(dC$p.value))
 dC <- dC$gene[dC$p.adj < 0.1]
 
-load('datasets/dermalFibroblasts/DF_2.RData')
-Y <- DF$tensorNetworks$X
-O <- DF$tensorNetworks$Y
-gList <- readLines('results/tensorOutput/genes_10X500DF_Itensor.mtx')
+load('datasets/NKX2-1/Nkx21_AT1.RData')
+Y <- O$tensorNetworks$X
+O <- O$tensorNetworks$Y
 
 Y <- as.matrix(Y)
 O <- as.matrix(O)
@@ -27,59 +26,62 @@ O <- O[degree(O) > 0,degree(O) > 0]
 Y <- graph_from_adjacency_matrix(Y, weighted = TRUE, diag = FALSE)
 O <- graph_from_adjacency_matrix(O, weighted = TRUE, diag = FALSE)
 
-gID <- 'TPT1'
-sY <- make_ego_graph(Y, nodes = gID, order = 2)[[1]]
+gID <- 'Ager'
+sY <- make_ego_graph(Y, nodes = gID, order = 1)[[1]]
 sO <- make_ego_graph(O, nodes = gID, order = 2)[[1]]
 
-mO <- Read10X('datasets/dermalFibroblasts/stimulated/')
-mY <- Read10X('datasets/dermalFibroblasts/unstimulated/')
+mY <- readMM('datasets/NKX2-1/wtAT1.mtx')
+rownames(mY) <- readLines('datasets/NKX2-1/genes_koAT1.txt')
 
+mO <- readMM('datasets/NKX2-1/koAT1.mtx')
+rownames(mO) <- readLines('datasets/NKX2-1/genes_koAT1.txt')
+   
 mO <- scQC(mO)
 mO <- cpmNormalization(mO)
 
 mY <- scQC(mY)
 mY <- cpmNormalization(mY)
 
-png('figures/ANXA2-TPT1.png', width = 2000, height = 1000, res = 300)
+png('figures/AGER-BCAM.png', width = 2000, height = 1000, res = 300)
 par(mfrow=c(1,2), mar = c(3,3,1,1), mgp=c(1.5,0.5,0))
-cY <- cbind(mY['TPT1',], mY['ANXA2',])
-plot(cY, col = densCols(cY), pch = 20, xlab = 'TPT1 (CPM)', ylab = 'ANXA2 (CPM)')
-abline(lm(mY['ANXA2',]~mY['TPT1',]), col = 'red', lwd = 2, lty = 2)
+cY <- cbind(mY['Ager',], mY['Bcam',])
+plot(cY, col = densCols(cY), pch = 20, xlab = 'Ager (CPM)', ylab = 'Bcam (CPM)')
+abline(lm(mY['Bcam',]~mY['Ager',]), col = 'red', lwd = 2, lty = 2)
 legend('topright',legend = parse(text = paste0('rho == ',round(cor(cY, method = 'sp')[2,1],2))), bty = 'n')
-cO <- cbind(mO['TPT1',], mO['ANXA2',])
-plot(cO, col = densCols(cO), pch = 20, xlab = 'TPT1 (CPM)', ylab = 'ANXA2 (CPM)')
-abline(lm(mO['ANXA2',]~mO['TPT1',]), col = 'red', lwd = 2, lty = 2)
-legend('topright',legend = parse(text = paste0('rho == ',round(cor(cO, method = 'sp')[2,1],2))), bty = 'n')
-dev.off()
-
-png('figures/SERF2-EEF1A1.png', width = 2000, height = 1000, res = 300)
-par(mfrow=c(1,2), mar = c(3,3,1,1), mgp=c(1.5,0.5,0))
-cY <- cbind(mY['SERF2',], mY['EEF1A1',])
-plot(cY, col = densCols(cY), pch = 20, xlab = 'H3F3B (CPM)', ylab = 'TNFRSF12A (CPM)')
-lmWeights <- function(X){
-   X <- cbind(1,X)
-   X <- X %*% solve((t(X)%*%X)) %*% t(X)
-   X <-  diag(X)
-   return(X)
-}
-abline(lm(mY['EEF1A1',]~ mY['SERF2',], weights = lmWeights(mY['H3F3B',])), col = 'red', lwd = 2, lty = 2)
-legend('topright',legend = parse(text = paste0('rho == ',round(cor(cY, method = 'sp')[2,1],2))), bty = 'n')
-cO <- cbind(mO['SERF2',], mO['EEF1A1',])
-plot(cO, col = densCols(cO), pch = 20, xlab = 'H3F3B (CPM)', ylab = 'TNFRSF12A (CPM)')
-abline(lm(mO['EEF1A1',]~mO['SERF2',],weights = lmWeights(mO['H3F3B',])), col = 'red', lwd = 2, lty = 2)
+cO <- cbind(mO['Ager',], mO['Bcam',])
+plot(cO, col = densCols(cO), pch = 20, xlab = 'Ager (CPM)', ylab = 'Tpt1 (CPM)')
+abline(lm(mO['Bcam',]~mO['Ager',]), col = 'red', lwd = 2, lty = 2)
 legend('topright',legend = parse(text = paste0('rho == ',round(cor(cO, method = 'sp')[2,1],2))), bty = 'n')
 dev.off()
 # 
-# plot(mY['H3F3B',], mY['TNFRSF12A',], col = 'blue')
-# cor(mY['H3F3B',], mY['TNFRSF12A',], method = 'sp')
-# plot(mO['H3F3B',], mO['TNFRSF12A',], col = 'red')
-# cor(mO['H3F3B',], mO['TNFRSF12A',], method = 'sp')
-
+# png('figures/SERF2-EEF1A1.png', width = 2000, height = 1000, res = 300)
+# par(mfrow=c(1,2), mar = c(3,3,1,1), mgp=c(1.5,0.5,0))
+# cY <- cbind(mY['SERF2',], mY['EEF1A1',])
+# plot(cY, col = densCols(cY), pch = 20, xlab = 'H3F3B (CPM)', ylab = 'TNFRSF12A (CPM)')
+# lmWeights <- function(X){
+#    X <- cbind(1,X)
+#    X <- X %*% solve((t(X)%*%X)) %*% t(X)
+#    X <-  diag(X)
+#    return(X)
+# }
+# abline(lm(mY['EEF1A1',]~ mY['SERF2',], weights = lmWeights(mY['H3F3B',])), col = 'red', lwd = 2, lty = 2)
+# legend('topright',legend = parse(text = paste0('rho == ',round(cor(cY, method = 'sp')[2,1],2))), bty = 'n')
+# cO <- cbind(mO['SERF2',], mO['EEF1A1',])
+# plot(cO, col = densCols(cO), pch = 20, xlab = 'H3F3B (CPM)', ylab = 'TNFRSF12A (CPM)')
+# abline(lm(mO['EEF1A1',]~mO['SERF2',],weights = lmWeights(mO['H3F3B',])), col = 'red', lwd = 2, lty = 2)
+# legend('topright',legend = parse(text = paste0('rho == ',round(cor(cO, method = 'sp')[2,1],2))), bty = 'n')
+# dev.off()
+# # 
+# # plot(mY['H3F3B',], mY['TNFRSF12A',], col = 'blue')
+# # cor(mY['H3F3B',], mY['TNFRSF12A',], method = 'sp')
+# # plot(mO['H3F3B',], mO['TNFRSF12A',], col = 'red')
+# # cor(mO['H3F3B',], mO['TNFRSF12A',], method = 'sp')
+# 
 library(reshape2)
 
 mY <- as.data.frame(as.matrix(t(mY[names(V(sY)),])))
 mO <- as.data.frame(as.matrix(t(mO[names(V(sO)),])))
- 
+
 assignDirectionNetworK <- function(igraphNetwork, countMatrix, bootR= 10){
    set.seed(1)
    bnModel <- bnlearn::boot.strength(countMatrix, algorithm = 'hc', R = bootR)
@@ -145,7 +147,7 @@ add.vertex.shape("fcircle", clip=igraph.shape.noclip,plot=myCircle, parameters=l
 gO <- rownames(sO[])
 gY <- rownames(sY[])
 
-png('figures/dfDiffNetworks.png', width = 8000, height = 4000, res = 300, pointsize = 20, bg = NA)
+png('figures/nkx21DiffNetworks.png', width = 5000, height = 2500, res = 300, pointsize = 20, bg = NA)
 par(mfrow=c(1,2), mar=c(1,1,1,1))
 fColor <- ifelse(gY %in% gO, 'darkgoldenrod', NA)
 fColor[(gY %in% dC) & fColor == 'darkgoldenrod'] <- 'forestgreen'
