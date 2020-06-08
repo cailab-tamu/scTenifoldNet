@@ -10,8 +10,11 @@ library(ggrepel)
 # load('datasets/NKX2-1/Nkx21_AT1.RData')
 # write.csv(O$diffRegulation, file = 'results/sym10X500NKX21_Itensor_Dalignment.csv')
 
+# load('datasets/WTAD/WTAD.RData')
+# write.csv(WTAD$diffRegulation, file = 'results/sym10X500WTAD_Itensor_Dalignment.csv')
+
 fileList <- list.files('results/', pattern = 'sym', full.names = TRUE)
-sID <- c('SCC6','Aging', 'DermalFibroblasts', 'Morphine', 'NKX21')
+sID <- c('SCC6','Aging', 'DermalFibroblasts', 'Morphine', 'NKX21', 'WTAD')
 
 sapply(seq_along(fileList), function(X){
   dC <- read.csv(fileList[X], row.names = 1, stringsAsFactors = FALSE)
@@ -30,6 +33,9 @@ sapply(seq_along(fileList), function(X){
   }
   if(sID[X] == 'NKX21'){
     gList <- c('Tpt1')
+  }
+  if(sID[X] == 'WTAD'){
+    gList <- NULL
   }
   geneColor[dC$gene %in% gList] <- 'forestgreen'
   genePoint <- (ifelse(dC$p.adj < 0.05, 8, 16))
