@@ -17,8 +17,12 @@ if nargin<3, N=10; end      % number of subsamples
             Xrep=X0(:,i);
         else     % jackknife
             Xrep=X0(:,randperm(n0));
-            Xrep(:,1:500);
-        end        
+            Xrep=Xrep(:,1:500);
+        end    
+        
+        if any(sum(Xrep,1)==0)||any(sum(Xrep,2)==0)
+            Xrep=i_goodrep(X0,usingboot);
+        end
         A=sc_pcnetpar(Xrep,ncom,false);
         A=A./max(abs(A(:)));        
         XM0(:,:,k)=A.*(abs(A)>quantile(abs(A(:)),0.95));
@@ -29,10 +33,30 @@ if nargin<3, N=10; end      % number of subsamples
             Xrep=X1(:,i);
         else     % jackknife
             Xrep=X1(:,randperm(n1));
-            Xrep(:,1:500);
-        end                
+            Xrep=Xrep(:,1:500);
+        end
+        if any(sum(Xrep,1)==0)||any(sum(Xrep,2)==0)
+            Xrep=i_goodrep(X1,usingboot);
+        end
         A=sc_pcnetpar(Xrep,ncom,false);
         A=A./max(abs(A(:)));
         XM1(:,:,k)=A.*(abs(A)>quantile(abs(A(:)),0.95));
+    end
+end
+
+function Xrep=i_goodrep(X,usingboot)
+    disp('using i_goodrep');
+    c=0;
+    Xrep=0;
+    n=size(X,2);
+    while (any(sum(Xrep,1)==0)||any(sum(Xrep,2)==0))&&c<100
+        if usingboot
+            i=randi(n,1,500);
+            Xrep=X(:,i);
+        else
+            Xrep=X(:,randperm(n));
+            Xrep=Xrep(:,1:500);
+        end
+            c=c+1;
     end
 end
