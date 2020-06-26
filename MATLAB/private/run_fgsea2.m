@@ -1,4 +1,4 @@
-function [Tp,Tn]=run_fgsea(genelist,generank,dbfile)
+function [Tp,Tn]=run_fgsea2(genelist,generank,dbfile)
 oldpth=pwd;
 pw1=fileparts(which(mfilename));
 pth=fullfile(pw1,'thirdparty/fgsea');

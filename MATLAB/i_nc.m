@@ -1,6 +1,6 @@
 function  [XM0,XM1]=i_nc(X0,X1,N,ncom,usingboot)
 
-if nargin<5, usingboot=false; end   % using m-out-of-n bootstrap (false by default)
+if nargin<5, usingboot=true; end   % using m-out-of-n bootstrap (false by default)
 % using jackknife (true by default)
 if nargin<4, ncom=3; end    % number of components
 if nargin<3, N=10; end      % number of subsamples 
@@ -20,9 +20,10 @@ if nargin<3, N=10; end      % number of subsamples
             Xrep=Xrep(:,1:500);
         end    
         
-        if any(sum(Xrep,1)==0)||any(sum(Xrep,2)==0)
-            Xrep=i_goodrep(X0,usingboot);
-        end
+        %if any(sum(Xrep,1)==0)||any(sum(Xrep,2)==0)
+        %    Xrep=i_goodrep(X0,usingboot);
+        %end
+        
         A=sc_pcnetpar(Xrep,ncom,false);
         A=A./max(abs(A(:)));        
         XM0(:,:,k)=A.*(abs(A)>quantile(abs(A(:)),0.95));
@@ -35,9 +36,9 @@ if nargin<3, N=10; end      % number of subsamples
             Xrep=X1(:,randperm(n1));
             Xrep=Xrep(:,1:500);
         end
-        if any(sum(Xrep,1)==0)||any(sum(Xrep,2)==0)
-            Xrep=i_goodrep(X1,usingboot);
-        end
+        %if any(sum(Xrep,1)==0)||any(sum(Xrep,2)==0)
+        %    Xrep=i_goodrep(X1,usingboot);
+        %end
         A=sc_pcnetpar(Xrep,ncom,false);
         A=A./max(abs(A(:)));
         XM1(:,:,k)=A.*(abs(A)>quantile(abs(A(:)),0.95));
@@ -59,4 +60,5 @@ function Xrep=i_goodrep(X,usingboot)
         end
             c=c+1;
     end
+	fprintf('......%d\n',c);
 end
