@@ -7,9 +7,13 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
     
    p = inputParser;
    addOptional(p,'qqplot',false,@islogical);
+   % i_nc usingboot (resampling methods: bootstrap vs jackknife): FALSE (defult)
+   addOptional(p,'usingboot',false,@islogical);
+   % i_td tdmethod (tensor decomp methods): 1 - CP; 2 - Tucker
    addOptional(p,'tdmethod',1,@(x) ismember(x,[1 2]));
-   parse(p,varargin{:});   
+   parse(p,varargin{:});
    doqqplot=p.Results.qqplot;
+   usingboot=p.Results.usingboot;
    tdmethod=p.Results.tdmethod;
     if size(X0,1)~=size(X1,1)
         error('X0 and X1 need the same number of rows.');
@@ -29,7 +33,7 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
     X0=sc_norm(X0,"type","libsize");
     X1=sc_norm(X1,"type","libsize");
     
-    [XM0,XM1]=i_nc(X0,X1,10);
+    [XM0,XM1]=i_nc(X0,X1,10,3,usingboot);
     [A0,A1]=i_td(XM0,XM1,tdmethod);
     A0=0.5*(A0+A0');
     A1=0.5*(A1+A1');
