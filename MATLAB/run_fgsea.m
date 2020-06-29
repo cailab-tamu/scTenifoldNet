@@ -13,7 +13,7 @@ writetable(T,'input.txt');
 RunRcode('script.R');
 pause(1);
 if exist('output.txt','file')
-    s=readtable('output.txt');
+    s=readtable('output.txt',"Delimiter",',');
 else
     s=[];
 end
