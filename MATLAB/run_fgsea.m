@@ -8,7 +8,7 @@ pw1=fileparts(which(mfilename));
 pth=fullfile(pw1,'thirdparty/fgsea');
 cd(pth);
 if exist('output.txt','file'), delete('output.txt'); end
-T.genelist=upper(T.genelist);
+T.genelist=upper(string(T.genelist));
 writetable(T,'input.txt');
 RunRcode('script.R');
 pause(1);
