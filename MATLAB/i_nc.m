@@ -1,7 +1,7 @@
 function  [XM0,XM1]=i_nc(X0,X1,N,ncom,usingboot)
 
-if nargin<5, usingboot=true; end   % using m-out-of-n bootstrap (false by default)
-% using jackknife (true by default)
+if nargin<5, usingboot=false; end   % using m-out-of-n bootstrap (false by default)
+                                    % using jackknife (by default)
 if nargin<4, ncom=3; end    % number of components
 if nargin<3, N=10; end      % number of subsamples 
 
@@ -11,7 +11,7 @@ if nargin<3, N=10; end      % number of subsamples
     for k=1:N
         fprintf('network...%d of %d\n',k,N);
         
-        n0=size(X0,2);        
+        n0=size(X0,2);
         if usingboot % bootstrap 
             i=randi(n0,1,500);
             Xrep=X0(:,i);
