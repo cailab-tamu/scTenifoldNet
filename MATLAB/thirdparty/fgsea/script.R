@@ -1,5 +1,5 @@
 MS <- read.csv('input.txt', row.names = 1)
-BC <- MASS::boxcox(MS$drdist~1)
+BC <- MASS::boxcox(MS$drdist~1,plotit=FALSE)
 Z <- MS$drdist^abs(BC$x[which.max(BC$y)])
 names(Z) <- MS$genelist
 
