@@ -4,6 +4,6 @@ X1=readmatrix("Y.txt");
 t=readtable("genelist.txt","ReadVariableNames",false);
 genelist=string(t.Var1);
 tic;
-T=sctenifoldnet_m(X0,X1,genelist,true);
+T=sctenifoldnet_m(X0,X1,genelist,"qqplot",true);
 toc;
 T2=sctenifoldnet_p(X0,X1,genelist,true);

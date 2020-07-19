@@ -1,0 +1,15 @@
+{
+"sctenifoldnet_m":
+{
+	"inputs":
+	[
+		{"name":"X0", "kind":"required", "type":"numeric"},
+        {"name":"X1", "kind":"required", "type":"numeric"},
+        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"qqplot", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"},
+        {"name":"usebootstrp", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"},
+        {"name":"nsubsmpl", "kind":"namevalue", "type":["scalar"],"purpose":"Option"},
+        {"name":"tdmethod", "kind":"namevalue","type":["scalar", "choices={1,2}"],"purpose":"Option"}
+	]
+}
+}
