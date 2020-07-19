@@ -37,10 +37,13 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
     X1=sc_norm(X1,"type","libsize");
     
     [XM0,XM1]=i_nc(X0,X1,nsubsmpl,3,usebootstrp);
+    
     [A0,A1]=i_td(XM0,XM1,tdmethod);
     A0=0.5*(A0+A0');
     A1=0.5*(A1+A1');
     [aln0,aln1]=i_ma(A0,A1);
+    
+    % [aln0,aln1]=i_mashup(XM0,XM1);
     T=i_dr(aln0,aln1,genelist,doqqplot);
 end
 

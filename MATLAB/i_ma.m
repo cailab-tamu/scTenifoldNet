@@ -1,6 +1,6 @@
-function [aln0,aln1]=i_ma(A0,A1,dim)
+function [aln0,aln1]=i_ma(A0,A1,ndim)
 
-if nargin<3, dim=30; end
+if nargin<3, ndim=30; end
 mu=0.9;
 
 W1=A0+1;
@@ -13,12 +13,12 @@ W = [W1 mu*W12; mu*W12' W2];
 D=sum(abs(W));
 L=diag(D)-W;
 
-[V,D] = eigs(L,dim*2,'smallestreal'); d=diag(D);
+[V,D] = eigs(L,ndim*2,'smallestreal'); d=diag(D);
 % [V,d] = eig(L,'vector');
 [d,ind] = sort(d);
 V=V(:,ind);
 V=V(:,d>=1e-8);
-V=V(:,1:dim);
+V=V(:,1:ndim);
 
 p1=size(W1,1);
 aln0=V(1:p1,:);
