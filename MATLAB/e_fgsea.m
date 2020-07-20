@@ -1,4 +1,4 @@
-function [s]=run_fgsea(T)
+function [s]=e_fgsea(T)
 if isempty(FindRpath)
    error('Rscript.ext is not found.');
 end

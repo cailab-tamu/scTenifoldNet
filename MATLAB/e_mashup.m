@@ -1,4 +1,4 @@
-function [aln0,aln1]=i_mashup(XM0,XM1,ndim)
+function [aln0,aln1]=e_mashup(XM0,XM1,ndim)
     if nargin<3, ndim=30; end
     
     nsubsmpl=size(XM0,3);

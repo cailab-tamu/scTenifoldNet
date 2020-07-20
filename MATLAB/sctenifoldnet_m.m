@@ -16,7 +16,7 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
    nsubsmpl=p.Results.nsubsmpl;
    smplmethod=p.Results.smplmethod;
    
-   switch upper(tdmedthod)
+   switch upper(tdmethod)
        case "CP"
            tdmethod=1;
        case "TUCKER"
