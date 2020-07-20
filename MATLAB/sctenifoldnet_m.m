@@ -7,16 +7,27 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
     
    p = inputParser;
    addOptional(p,'qqplot',false,@islogical);
-   % i_nc usebootstrp (resampling methods: bootstrap vs jackknife): FALSE (defult)
-   addOptional(p,'usebootstrp',false,@islogical);
-   % i_td tdmethod (tensor decomp methods): 1 - CP; 2 - Tucker
-   addOptional(p,'tdmethod',1,@(x) ismember(x,[1 2]));
+   addOptional(p,'smplmethod',"Jackknife",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["jackknife","bootstrap"]));
+   addOptional(p,'tdmethod',"CP",@(x) (isstring(x)|ischar(x))&ismember(upper(string(x)),["CP","TUCKER"]));
    addOptional(p,'nsubsmpl',10,@(x) fix(x)==x & x>0);
    parse(p,varargin{:});
    doqqplot=p.Results.qqplot;
-   usebootstrp=p.Results.usebootstrp;
    tdmethod=p.Results.tdmethod;
    nsubsmpl=p.Results.nsubsmpl;
+   smplmethod=p.Results.smplmethod;
+   
+   switch upper(tdmedthod)
+       case "CP"
+           tdmethod=1;
+       case "TUCKER"
+           tdmethod=2;
+   end
+   switch lower(smplmethod)
+       case "jackknife"
+           usebootstrp=false;
+       case "bootstrap"
+           usebootstrp=true;
+   end
    
     if size(X0,1)~=size(X1,1)
         error('X0 and X1 need the same number of rows.');
