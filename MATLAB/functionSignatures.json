@@ -8,8 +8,9 @@
         {"name":"genelist", "kind":"required", "type":["string"]},
         {"name":"qqplot", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"},
         {"name":"smplmethod", "kind":"namevalue","type":["string", "choices={'Jackknife','Bootstrap'}"],"purpose":"Option"},
-        {"name":"nsubsmpl", "kind":"namevalue", "type":["scalar", "choices={10,20}"],"purpose":"Option"},
-        {"name":"tdmethod", "kind":"namevalue","type":["string", "choices={'CP','Tucker'}"],"purpose":"Option"}
+        {"name":"nsubsmpl", "kind":"namevalue", "type":["scalar", "choices={10,20}"],"purpose":"nsubsmpl"},
+        {"name":"csubsmpl", "kind":"namevalue", "type":["scalar", "choices={500}"],"purpose":"csubsmpl"},
+        {"name":"tdmethod", "kind":"namevalue","type":["string", "choices={'CP','Tucker'}"],"purpose":"tdmethod"}
 	]
 }
 }

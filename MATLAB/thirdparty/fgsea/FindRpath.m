@@ -4,6 +4,16 @@ function Rpath=FindRpath
 % e.g.:
 % Rpath=FindPathR
 % >> 'C:\Program Files\R\R-3.1.1\bin'
+if isunix
+    [a,b]=system('which R');
+    if a==0
+    Rpath=deblank(b);
+    else
+        Rpath='';
+    end
+return;
+end
+
 sep = filesep; env=myGetEnv; 
 a=FindWhich(env(:,1),'ProgramFiles');
 b=FindWhich(env(:,1),'ProgramW6432'); 
@@ -13,7 +23,7 @@ n=[a;b;c]; isfound=0;
      programPath=env{n(i),2};
      D=dir([programPath filesep 'R']);
      if ~isempty(D)
-         A={D.name}; B=find(cell2mat(cellfun(@(s) ~isempty(strfind(s,'R-')),A,'uniformoutput',0)),1);
+         A={D.name}; B=find(cell2mat(cellfun(@(s) contains(s,'R-'),A,'uniformoutput',0)),1);
          if ~isempty(B),  isfound=1;Rpath=[programPath sep 'R' sep A{B} sep 'bin'];break; end
      end%
  end
