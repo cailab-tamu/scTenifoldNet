@@ -1,5 +1,3 @@
-
-
 n=size(Tf.leadingEdge,1);
 A=zeros(n);
 for i=1:n-1

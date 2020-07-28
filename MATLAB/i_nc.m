@@ -1,5 +1,6 @@
-function  [XM0,XM1]=i_nc(X0,X1,nsubsmpl,ncom,usebootstrp)
+function  [XM0,XM1]=i_nc(X0,X1,nsubsmpl,ncom,usebootstrp,csubsmpl)
 
+if nargin<6, csubsmpl=500; end       % number of cells in subsamples
 if nargin<5, usebootstrp=false; end   % using m-out-of-n bootstrap (false by default)
                                     % using jackknife (by default)
 if nargin<4, ncom=3; end    % number of components
@@ -13,11 +14,11 @@ if nargin<3, nsubsmpl=10; end      % number of subsamples
         
         n0=size(X0,2);
         if usebootstrp % bootstrap 
-            i=randi(n0,1,500);
+            i=randi(n0,1,csubsmpl);
             Xrep=X0(:,i);
         else     % jackknife
             Xrep=X0(:,randperm(n0));
-            Xrep=Xrep(:,1:500);
+            Xrep=Xrep(:,1:csubsmpl);
         end    
         
         %if any(sum(Xrep,1)==0)||any(sum(Xrep,2)==0)
@@ -30,11 +31,11 @@ if nargin<3, nsubsmpl=10; end      % number of subsamples
 
         n1=size(X1,2);        
         if usebootstrp % bootstrap 
-            i=randi(n1,1,500);
+            i=randi(n1,1,csubsmpl);
             Xrep=X1(:,i);
         else     % jackknife
             Xrep=X1(:,randperm(n1));
-            Xrep=Xrep(:,1:500);
+            Xrep=Xrep(:,1:csubsmpl);
         end
         %if any(sum(Xrep,1)==0)||any(sum(Xrep,2)==0)
         %    Xrep=i_goodrep(X1,usingboot);
@@ -52,11 +53,11 @@ function Xrep=i_goodrep(X,usingboot)
     n=size(X,2);
     while (any(sum(Xrep,1)==0)||any(sum(Xrep,2)==0))&&c<100
         if usingboot
-            i=randi(n,1,500);
+            i=randi(n,1,csubsmpl);
             Xrep=X(:,i);
         else
             Xrep=X(:,randperm(n));
-            Xrep=Xrep(:,1:500);
+            Xrep=Xrep(:,1:csubsmpl);
         end
             c=c+1;
     end

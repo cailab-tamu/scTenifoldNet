@@ -10,10 +10,12 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
    addOptional(p,'smplmethod',"Jackknife",@(x) (isstring(x)|ischar(x))&ismember(lower(string(x)),["jackknife","bootstrap"]));
    addOptional(p,'tdmethod',"CP",@(x) (isstring(x)|ischar(x))&ismember(upper(string(x)),["CP","TUCKER"]));
    addOptional(p,'nsubsmpl',10,@(x) fix(x)==x & x>0);
+   addOptional(p,'csubsmpl',500,@(x) fix(x)==x & x>0);
    parse(p,varargin{:});
    doqqplot=p.Results.qqplot;
    tdmethod=p.Results.tdmethod;
    nsubsmpl=p.Results.nsubsmpl;
+   csubsmpl=p.Results.csubsmpl;
    smplmethod=p.Results.smplmethod;
    
    switch upper(tdmethod)
@@ -38,7 +40,7 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
     pw0=pwd;
     pw1=fileparts(which(mfilename));
     cd(pw1);
-    addpath('thirdparty\tensor_toolbox-v3.1\');
+    addpath('thirdparty/tensor_toolbox-v3.1');
     cd(pw0);
     if exist('sc_pcnet.m','file')~=2
         error('Need sc_pcnet.m in the scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
@@ -47,7 +49,7 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
     X0=sc_norm(X0,"type","libsize");
     X1=sc_norm(X1,"type","libsize");
     
-    [XM0,XM1]=i_nc(X0,X1,nsubsmpl,3,usebootstrp);
+    [XM0,XM1]=i_nc(X0,X1,nsubsmpl,3,usebootstrp,csubsmpl);
     
     [A0,A1]=i_td(XM0,XM1,tdmethod);
     A0=0.5*(A0+A0');
