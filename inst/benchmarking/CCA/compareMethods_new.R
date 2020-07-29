@@ -24,7 +24,7 @@ ggplot(ALL, aes(MA, CCA30)) +
   theme_bw() + 
   xlab(Z-score~(Manifold~Distance)) + 
   ylab(Z-score~(CCA~Distance)) + 
-  labs(title = 'CCA vs. MA', subtitle = parse(text = cV)) +
+  labs(title = 'CCA Distance vs. Manifold Distance', subtitle = parse(text = cV)) +
   theme(plot.title = element_text(face = 2))
 dev.off()
 
