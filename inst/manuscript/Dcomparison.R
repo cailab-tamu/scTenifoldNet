@@ -48,7 +48,7 @@ A <- ggplot(DF, mapping = aes(D, MA)) +
   labs(title = 'Expression Distance vs. Manifold Distance', subtitle = parse(text = paste0('rho == ', round(cor(DF$D, DF$MA, method = 'sp'),3)))) +
   theme(plot.title = element_text(face = 2)) + coord_flip()
 
-png('DComparison.png', width = 1300, height = 1300, res = 300)
+png('DComparison.png', width = 1500, height = 1500, res = 300)
 A
 dev.off()
 
@@ -96,6 +96,6 @@ A <- ggplot(DF, mapping = aes(D, MA)) +
   labs(title = 'Expression Distance vs. Manifold Distance', subtitle = parse(text = paste0('rho == ', round(cor(DF$D, DF$MA, method = 'sp'),3)))) +
   theme(plot.title = element_text(face = 2)) + coord_flip()
 
-png('NComparison.png', width = 1300, height = 1300, res = 300)
+png('NComparison.png', width = 1500, height = 1500, res = 300)
 A
 dev.off()
