@@ -66,6 +66,6 @@ B <- ggplot(cV, aes(Cells, SP)) + theme_bw() +
   labs(title = 'SCTENIFOLDNET') +
   theme(plot.title = element_text(face = 2))
 
-png('DegreeExpression.png', width = 800, height = 2000, res = 300)
+png('DegreeExpression.png', width = 1200, height = 2000, res = 300)
 A / B
 dev.off()
