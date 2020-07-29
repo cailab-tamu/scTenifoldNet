@@ -59,6 +59,7 @@ C <- ggplot(DF, mapping = aes(eX, Z)) +
   ylab(expression(log[10](Distance)))
 D <- ggplot(DF, mapping = aes(eY, Z)) + geom_point(col = densCols(DF$eY, DF$Z, colramp = hcl.colors), cex = 0.5) + 
   theme_bw() + 
+  labs(subtitle = parse(text = paste0('rho == ', round(cor(DF$eY, DF$Z, method = 'sp'),3)))) +
   xlab(expression(log(Average~Expression + 1))) + 
   ylab(expression(log[10](Distance)))
 
