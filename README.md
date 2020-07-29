@@ -101,7 +101,7 @@ head(outputHA$diffRegulation, n = 10)
 ```
 
 #### Plotting the results
-Results can be easily displayed using quantile-quantile plots. Here we labeled in red the identified perturbed genes with FDR < 0.05.
+Results can be easily displayed using quantile-quantile plots. Here we labeled in red the identified perturbed genes with FDR < 0.1.
 ![Example](https://raw.githubusercontent.com/cailab-tamu/scTenifoldNet/master/inst/readmeExample.png)
 ```{r}
 par(mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(1.5,0.5,0))
