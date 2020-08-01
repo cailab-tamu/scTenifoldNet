@@ -9,6 +9,6 @@ inst/manuscript/datasets/morphineNeurons/morphine/morphine.mtx
 inst/manuscript/datasets/morphineNeurons/mock/control.mtx
 .Rproj.user
 inst/manuscript/reactomeDB2019.txt
-*.mtx
+inst/manuscript/datasets/
 MATLAB/thirdparty/fgsea/Rplots.pdf
 
