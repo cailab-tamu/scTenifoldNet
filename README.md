@@ -121,12 +121,14 @@ par(mfrow=c(2,1), mar=c(3,3,1,1), mgp=c(1.5,0.5,0))
 set.seed(1)
 qChisq <- rchisq(100,1)
 geneColor <- rev(ifelse(outputH0$diffRegulation$p.adj < 0.1, 10,1))
-qqplot(qChisq, outputH0$diffRegulation$FC, pch = 16, main = 'H0', col = geneColor, xlab = expression(X^2~Quantiles), ylab = 'FC', xlim=c(0,8), ylim=c(0,13))
+qqplot(qChisq, outputH0$diffRegulation$FC, pch = 16, main = 'H0', col = geneColor, 
+       xlab = expression(X^2~Quantiles), ylab = 'FC', xlim=c(0,8), ylim=c(0,13))
 qqline(qChisq)
 legend('bottomright', legend = c('FDR < 0.1'), pch = 16, col = 'red', bty='n', cex = 0.7)
 
 geneColor <- rev(ifelse(outputHA$diffRegulation$p.adj < 0.1, 'red', 'black'))
-qqplot(qChisq, outputHA$diffRegulation$FC, pch = 16, main = 'HA', col = geneColor, xlab = expression(X^2~Quantiles), ylab = 'FC', xlim=c(0,8), ylim=c(0,13))
+qqplot(qChisq, outputHA$diffRegulation$FC, pch = 16, main = 'HA', col = geneColor, 
+       xlab = expression(X^2~Quantiles), ylab = 'FC', xlim=c(0,8), ylim=c(0,13))
 qqline(qChisq)
 legend('bottomright', legend = c('FDR < 0.1'), pch = 16, col = 'red', bty='n', cex = 0.7)
 ```
