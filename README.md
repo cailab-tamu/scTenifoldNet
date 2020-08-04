@@ -42,7 +42,13 @@ The output of **scTenifoldNet** is a list with 3 slots as follows:
     * **X**: The constructed network for the _X_ sample.
     * **Y**: The constructed network for the _Y_ sample.
   * **manifoldAlignment**: The generated low-dimensional features result of the non-linear manifold alignment. It is a data frame with _genes_ in the rows and _d_ (default= 30) dimensions in the columns
-  * **diffRegulation**: The results of the differential regulation analysis.
+  * **diffRegulation**: The results of the differential regulation analysis. It is a data frame with 5 columns as follows:
+    * **gene**: A character vector with the gene id identified from the manifoldAlignment output.
+    * **distance**: A numeric vector of the Euclidean distance computed between the coordinates of the same gene in both conditions.
+    * **Z**: A numeric vector of the Z-scores computed after Box-Cox power transformation.
+    * **FC**: A numeric vector of the FC computed with respect to the expectation.
+    * **p.value**: A numeric vector of the p-values associated to the fold-changes, probabilities are asigned as P[X > x] using the Chi-square distribution with one degree of freedom.
+    * **p.adj**: A numeric vector of adjusted p-values using Benjamini & Hochberg (1995) FDR correction.
 
 Example:
 --------
