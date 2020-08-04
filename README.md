@@ -38,10 +38,10 @@ The required input for **scTenifoldNet** is an expression matrix with genes in t
 Output:
 --------
 The output of **scTenifoldNet** is a list with 3 slots as follows: 
-  * **tensorNetworks**: The computed weight-averaged denoised gene regulatory networks after CANDECOMP/PARAFAC (CP) Tensor Decomposition. It includes two slots with:
+  * **tensorNetworks**: The computed weight-averaged denoised gene regulatory networks after CANDECOMP/PARAFAC (CP) tensor decomposition. It includes two slots with:
     * **X**: The constructed network for the _X_ sample.
     * **Y**: The constructed network for the _Y_ sample.
-  * **manifoldAlignment**: The generated low-dimensional features result of the non-linear manifold alignment.
+  * **manifoldAlignment**: The generated low-dimensional features result of the non-linear manifold alignment. It is a data frame with _genes_ in the rows and _d_ (default= 30) dimensions in the columns
   * **diffRegulation**: The results of the differential regulation analysis.
 
 Example:
