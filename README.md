@@ -31,6 +31,19 @@ Available functions:
 |dRegulation|Evaluates gene differential regulation based on manifold alignment distances|
 |scTenifoldNet|Construct and compare single-cell gene regulatory networks (scGRNs) using single-cell RNA-seq (scRNA-seq) data sets collected from different conditions based on principal component regression, tensor decomposition, and manifold alignment.|
 
+Input:
+--------
+The required input for **scTenifoldNet** is an expression matrix with genes in the rows and cells (barcodes) in the columns. Data is expected to be _not normalized_ if the main **scTenifoldNet** function is used. Given the modular structure of the package, users are free to include modifications in each step to perform their analysis.
+
+Output:
+--------
+The output of **scTenifoldNet** is a list with 3 slots as follows: 
+  * **tensorNetworks**: The computed weight-averaged denoised gene regulatory networks after CANDECOMP/PARAFAC (CP) Tensor Decomposition. It includes two slots with:
+    * **X**: The constructed network for the _X_ sample.
+    * **Y**: The constructed network for the _Y_ sample.
+  * **manifoldAlignment**: The generated low-dimensional features result of the non-linear manifold alignment.
+  * **diffRegulation**: The results of the differential regulation analysis.
+
 Example:
 --------
 #### Loading scTenifoldNet
