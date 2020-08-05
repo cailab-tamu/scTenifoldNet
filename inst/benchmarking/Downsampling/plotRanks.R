@@ -4,6 +4,8 @@ library(GGally)
 library(UpSetR)
 library(patchwork)
 library(ggrepel)
+library(circlize)
+colSCC = colorRamp2(c(0, 0.5, 1), c("blue", "white", "red"))
 
 load('DM100.RData')
 J100 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
@@ -16,6 +18,54 @@ J200 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
 n200 <- nrow(O$diffRegulation)
 z200 <- O$diffRegulation$Z
 names(z200) <- O$diffRegulation$gene
+
+load('DM300.RData')
+J300 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n300 <- nrow(O$diffRegulation)
+z300 <- O$diffRegulation$Z
+names(z300) <- O$diffRegulation$gene
+
+load('DM400.RData')
+J400 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n400 <- nrow(O$diffRegulation)
+z400 <- O$diffRegulation$Z
+names(z400) <- O$diffRegulation$gene
+
+load('DM500.RData')
+J500 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n500 <- nrow(O$diffRegulation)
+z500 <- O$diffRegulation$Z
+names(z500) <- O$diffRegulation$gene
+
+load('DM600.RData')
+J600 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n600 <- nrow(O$diffRegulation)
+z600 <- O$diffRegulation$Z
+names(z600) <- O$diffRegulation$gene
+
+load('DM700.RData')
+J700 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n700 <- nrow(O$diffRegulation)
+z700 <- O$diffRegulation$Z
+names(z700) <- O$diffRegulation$gene
+
+load('DM800.RData')
+J800 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n800 <- nrow(O$diffRegulation)
+z800 <- O$diffRegulation$Z
+names(z800) <- O$diffRegulation$gene
+
+load('DM900.RData')
+J900 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n900 <- nrow(O$diffRegulation)
+z900 <- O$diffRegulation$Z
+names(z900) <- O$diffRegulation$gene
+
+load('DM1000.RData')
+J1000 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n1000 <- nrow(O$diffRegulation)
+z1000 <- O$diffRegulation$Z
+names(z1000) <- O$diffRegulation$gene
 
 load('DM2000.RData')
 J2000 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
@@ -53,30 +103,124 @@ n7000 <- nrow(O$diffRegulation)
 z7000 <- O$diffRegulation$Z
 names(z7000) <- O$diffRegulation$gene
 
+load('DM7000x200.RData')
+J7000X200 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n7000X200 <- nrow(O$diffRegulation)
+z7000X200 <- O$diffRegulation$Z
+names(z7000X200) <- O$diffRegulation$gene
+
+load('DM7000x400.RData')
+J7000X400 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n7000X400 <- nrow(O$diffRegulation)
+z7000X400 <- O$diffRegulation$Z
+names(z7000X400) <- O$diffRegulation$gene
+
+load('DM7000x600.RData')
+J7000X600 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n7000X600 <- nrow(O$diffRegulation)
+z7000X600 <- O$diffRegulation$Z
+names(z7000X600) <- O$diffRegulation$gene
+
+load('DM7000x800.RData')
+J7000X800 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n7000X800 <- nrow(O$diffRegulation)
+z7000X800 <- O$diffRegulation$Z
+names(z7000X800) <- O$diffRegulation$gene
+
+load('DM7000x1000.RData')
+J7000X1000 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n7000X1000 <- nrow(O$diffRegulation)
+z7000X1000 <- O$diffRegulation$Z
+names(z7000X1000) <- O$diffRegulation$gene
+
+load('DM7000x2000.RData')
+J7000X2000 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n7000X2000 <- nrow(O$diffRegulation)
+z7000X2000 <- O$diffRegulation$Z
+names(z7000X2000) <- O$diffRegulation$gene
+
+load('DM7000x3000.RData')
+J7000X3000 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n7000X3000 <- nrow(O$diffRegulation)
+z7000X3000 <- O$diffRegulation$Z
+names(z7000X3000) <- O$diffRegulation$gene
+
+load('DM7000x4000.RData')
+J7000X4000 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n7000X4000 <- nrow(O$diffRegulation)
+z7000X4000 <- O$diffRegulation$Z
+names(z7000X4000) <- O$diffRegulation$gene
+
+load('DM7000x5000.RData')
+J7000X5000 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n7000X5000 <- nrow(O$diffRegulation)
+z7000X5000 <- O$diffRegulation$Z
+names(z7000X5000) <- O$diffRegulation$gene
+
+# load('DM7000x6000.RData')
+# J7000X6000 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+# n7000X6000 <- nrow(O$diffRegulation)
+# z7000X6000 <- O$diffRegulation$Z
+# names(z7000X6000) <- O$diffRegulation$gene
+
+load('DM7000x7000.RData')
+J7000X7000 <- O$diffRegulation$gene[O$diffRegulation$p.adj < 0.05]
+n7000X7000 <- nrow(O$diffRegulation)
+z7000X7000 <- O$diffRegulation$Z
+names(z7000X7000) <- O$diffRegulation$gene
+
 sGenes <- intersect(names(z100), names(z200))
+sGenes <- intersect(sGenes, names(z300))
+sGenes <- intersect(sGenes, names(z400))
+sGenes <- intersect(sGenes, names(z500))
+sGenes <- intersect(sGenes, names(z600))
+sGenes <- intersect(sGenes, names(z700))
+sGenes <- intersect(sGenes, names(z800))
+sGenes <- intersect(sGenes, names(z900))
+sGenes <- intersect(sGenes, names(z1000))
 sGenes <- intersect(sGenes, names(z2000))
 sGenes <- intersect(sGenes, names(z3000))
 sGenes <- intersect(sGenes, names(z4000))
 sGenes <- intersect(sGenes, names(z5000))
 sGenes <- intersect(sGenes, names(z6000))
 sGenes <- intersect(sGenes, names(z7000))
+sGenes <- intersect(sGenes, names(z7000X200))
+sGenes <- intersect(sGenes, names(z7000X400))
+sGenes <- intersect(sGenes, names(z7000X600))
+sGenes <- intersect(sGenes, names(z7000X800))
+sGenes <- intersect(sGenes, names(z7000X1000))
+sGenes <- intersect(sGenes, names(z7000X2000))
+sGenes <- intersect(sGenes, names(z7000X3000))
+sGenes <- intersect(sGenes, names(z7000X4000))
+sGenes <- intersect(sGenes, names(z7000X5000))
+sGenes <- intersect(sGenes, names(z7000X7000))
 
-allZ <- data.frame(c100 = z100[sGenes], c200 = z200[sGenes], c2000 = z2000[sGenes], c3000 = z3000[sGenes], c4000 = z4000[sGenes], c5000 = z5000[sGenes], c6000 = z6000[sGenes], c7000 = z7000[sGenes])
 
-PCA <- prcomp(t(allZ))$x
+allZ <- data.frame(c100 = z100[sGenes], c200 = z200[sGenes], c300 = z300[sGenes], c400 = z400[sGenes], c500 = z500[sGenes], 
+                   c600 = z600[sGenes], c700 = z700[sGenes], c800 = z800[sGenes], c900 = z900[sGenes],
+                   c1000 = z1000[sGenes], c2000 = z2000[sGenes], c3000 = z3000[sGenes], c4000 = z4000[sGenes], 
+                   c5000 = z5000[sGenes], c6000 = z6000[sGenes], c7000 = z7000[sGenes], c7000x200 = z7000X200[sGenes],
+                   c7000x400 = z7000X400[sGenes], c7000x600 = z7000X600[sGenes], c7000x800 = z7000X800[sGenes], 
+                   c7000x1000 = z7000X1000[sGenes], c7000x2000 = z7000X2000[sGenes], c7000x3000 = z7000X3000[sGenes],
+                   c7000x4000 = z7000X4000[sGenes], c7000x5000 = z7000X5000[sGenes], c7000x7000 = z7000X7000[sGenes],)
+
+rZ <- apply(allZ,2,rank)
+PCA <- prcomp(t(rZ))$x
 PCA <- as.data.frame(PCA)
 PCA$Cells <- gsub('c','',rownames(PCA))
 A <- ggplot(PCA, aes(PC1,PC2, label=Cells)) + geom_point() + geom_text_repel() + theme_bw()
-
+A
 
 cValues <- cor(allZ, method = 'sp')
 diag(cValues) <- NA
-rownames(cValues) <- colnames(cValues) <- c('100', '200', '2000', '3000', '4000', '5000', '6000', '7000')
-cValues <- reshape2::melt(cValues)
-cValues$Var1 <- as.factor(cValues$Var1)
-cValues$Var2 <- as.factor(cValues$Var2)
-colnames(cValues)[3] <- 'SCC'
-B <- ggplot(cValues, aes(Var1, Var2, fill=SCC)) + geom_tile() + theme_minimal() + xlab('Number of Cells') + ylab('Number of Cells')
+#cValues <- cValues/max(abs(cValues), na.rm = TRUE)
+rownames(cValues) <- colnames(cValues) <- gsub('c','',colnames(allZ))
+ComplexHeatmap::Heatmap(cValues, name = 'SCC', col = colSCC, row_order = seq_len(ncol(allZ)), column_order = seq_len(ncol(allZ)))
+# cValues <- reshape2::melt(cValues)
+# cValues$Var1 <- as.factor(cValues$Var1)
+# cValues$Var2 <- as.factor(cValues$Var2)
+# colnames(cValues)[3] <- 'SCC'
+# B <- ggplot(cValues, aes(Var1, Var2, fill=SCC)) + geom_tile() + theme_minimal() + xlab('Number of Cells') + ylab('Number of Cells')
 
 
 allJ <- fromList(list(c100 = J100, c200 = J200, c2000 = J2000, c3000 = J3000, c4000 = J4000, c5000 = J5000, c6000 = J6000, c7000 = J7000))
