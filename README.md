@@ -31,6 +31,25 @@ Available functions:
 |dRegulation|Evaluates gene differential regulation based on manifold alignment distances|
 |scTenifoldNet|Construct and compare single-cell gene regulatory networks (scGRNs) using single-cell RNA-seq (scRNA-seq) data sets collected from different conditions based on principal component regression, tensor decomposition, and manifold alignment.|
 
+Input:
+--------
+The required input for **scTenifoldNet** is an expression matrix with genes in the rows and cells (barcodes) in the columns. Data is expected to be _not normalized_ if the main **scTenifoldNet** function is used. Given the modular structure of the package, users are free to include modifications in each step to perform their analysis.
+
+Output:
+--------
+The output of **scTenifoldNet** is a list with 3 slots as follows: 
+  * **tensorNetworks**: The computed weight-averaged denoised gene regulatory networks after CANDECOMP/PARAFAC (CP) tensor decomposition. It includes two slots with:
+    * **X**: The constructed network for the _X_ sample.
+    * **Y**: The constructed network for the _Y_ sample.
+  * **manifoldAlignment**: The generated low-dimensional features result of the non-linear manifold alignment. It is a data frame with _genes_ in the rows and _d_ (default= 30) dimensions in the columns
+  * **diffRegulation**: The results of the differential regulation analysis. It is a data frame with 6 columns as follows:
+    * **gene**: A character vector with the gene id identified from the manifoldAlignment output.
+    * **distance**: A numeric vector of the Euclidean distance computed between the coordinates of the same gene in both conditions.
+    * **Z**: A numeric vector of the Z-scores computed after Box-Cox power transformation.
+    * **FC**: A numeric vector of the FC computed with respect to the expectation.
+    * **p.value**: A numeric vector of the p-values associated to the fold-changes, probabilities are asigned as P[X > x] using the Chi-square distribution with one degree of freedom.
+    * **p.adj**: A numeric vector of adjusted p-values using Benjamini & Hochberg (1995) FDR correction.
+
 Example:
 --------
 #### Loading scTenifoldNet
@@ -104,16 +123,20 @@ head(outputHA$diffRegulation, n = 10)
 Results can be easily displayed using quantile-quantile plots. Here we labeled in red the identified perturbed genes with FDR < 0.1.
 ![Example](https://raw.githubusercontent.com/cailab-tamu/scTenifoldNet/master/inst/readmeExample.png)
 ```{r}
-par(mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(1.5,0.5,0))
-geneColor <- ifelse(outputH0$diffRegulation$p.adj < 0.05, 'red', 'black')
-qqnorm(outputH0$diffRegulation$Z, pch = 16, main = 'H0', col = geneColor)
-qqline(outputH0$diffRegulation$Z)
-legend('bottomright', legend = c('FDR < 0.05'), pch = 16, col = 'red', bty='n', cex = 0.7)
+par(mfrow=c(2,1), mar=c(3,3,1,1), mgp=c(1.5,0.5,0))
+set.seed(1)
+qChisq <- rchisq(100,1)
+geneColor <- rev(ifelse(outputH0$diffRegulation$p.adj < 0.1, 10,1))
+qqplot(qChisq, outputH0$diffRegulation$FC, pch = 16, main = 'H0', col = geneColor, 
+       xlab = expression(X^2~Quantiles), ylab = 'FC', xlim=c(0,8), ylim=c(0,13))
+qqline(qChisq)
+legend('bottomright', legend = c('FDR < 0.1'), pch = 16, col = 'red', bty='n', cex = 0.7)
 
-geneColor <- ifelse(outputHA$diffRegulation$p.adj < 0.05, 'red', 'black')
-qqnorm(outputHA$diffRegulation$Z, pch = 16, main = 'HA', col = geneColor)
-qqline(outputHA$diffRegulation$Z)
-legend('bottomright', legend = c('FDR < 0.05'), pch = 16, col = 'red', bty='n', cex = 0.7)
+geneColor <- rev(ifelse(outputHA$diffRegulation$p.adj < 0.1, 'red', 'black'))
+qqplot(qChisq, outputHA$diffRegulation$FC, pch = 16, main = 'HA', col = geneColor, 
+       xlab = expression(X^2~Quantiles), ylab = 'FC', xlim=c(0,8), ylim=c(0,13))
+qqline(qChisq)
+legend('bottomright', legend = c('FDR < 0.1'), pch = 16, col = 'red', bty='n', cex = 0.7)
 ```
 
 Citation

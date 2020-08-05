@@ -10,7 +10,9 @@ for i=1:n-1
 end
 %%
 nodenames=Tf.pathway;
+nodenamesfull=Tf.pathway;
 for k=1:n
+    nodenamesfull{k}=sprintf('%d_%s',k,Tf.pathway{k});
     a=sprintf('%d\\_%s',k,Tf.pathway{k});
     a=extractBefore(a,min(20,length(a)));
     nodenames{k}=a;
@@ -30,3 +32,11 @@ p.MarkerSize = 7;
 p.Marker = 's';
 p.NodeColor = 'r';
 
+%%
+bins = conncomp(G);
+for k=1:max(bins)
+    fprintf('Group %d ---------------\n',k);
+    fprintf('%s\n',nodenamesfull{bins==k});
+    
+end
+fprintf('---------------\n');
