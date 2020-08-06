@@ -183,7 +183,7 @@ outputH0$manifoldAlignment[c('X_ng59', 'y_ng59'),]
 # X_ng59 -0.001367369 0.0005338275 -0.02513881 -0.03530511 -0.0008437941
 # Y_ng59 -0.001367369 0.0005338275 -0.02513881 -0.03530511 -0.0008437941
 ```
-Euclidean distance is computed for each pair of coordinates and used to perform the differential regulation test.
+The Euclidean distance is computed for each pair of coordinates (representing a gene in each sample) and all the distances together are used to perform the differential regulation test.
 ```{r}
 dist(outputH0$manifoldAlignment[c('X_ng59', 'y_ng59'),])
 #           X_ng59
