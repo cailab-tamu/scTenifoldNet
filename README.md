@@ -92,7 +92,7 @@ outputHA <- scTenifoldNet(X = X, Y = Y,
 The output of **sctTenifoldNet** is a list with 3 slots containing: **tensorNetworks:** The computed weight-averaged denoised gene regulatory networks after CANDECOMP/PARAFAC (CP) tensor decomposition, **manifoldAlignment**: The generated low-dimensional features result of the non-linear manifold alignment, and **diffRegulation**: The results of the differential regulation analysis.
 
 #### Accessing the computed weight-averaged denoised gene regulatory networks
-Networks are provided as matrices of class *dgCMatrix* that can be easily converted into an [igraph](https://igraph.org/r/#docs) object as follows:
+Networks are provided as matrices of class *dgCMatrix* that can be easily converted into an [igraph](https://igraph.org/r) object as follows:
  ```{r}
  # Network for sample X
  igraph::graph_from_adjacency_matrix(adjmatrix = outputH0$tensorNetworks$X, weighted = TRUE)
