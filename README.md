@@ -89,6 +89,42 @@ outputHA <- scTenifoldNet(X = X, Y = Y,
                           nc_nNet = 10, nc_nCells = 500,
                           td_K = 3, qc_minLibSize = 30)
 ```
+The output of **sctTenifoldNet** is a list with 3 slots containing: **tensorNetworks:** The computed weight-averaged denoised gene regulatory networks after CANDECOMP/PARAFAC (CP) tensor decomposition, **manifoldAlignment**: The generated low-dimensional features result of the non-linear manifold alignment, and **diffRegulation**: The results of the differential regulation analysis.
+
+#### Accessing the computed weight-averaged denoised gene regulatory networks
+ ```{r}
+ # Network for sample X
+ igraph::graph_from_adjacency_matrix(adjmatrix = outputH0$tensorNetworks$X, weighted = TRUE)
+# IGRAPH 28b1d49 DNW- 100 2836 -- 
+#   + attr: name (v/c), weight (e/n)
+# + edges from 28b1d49 (vertex names):
+#   [1] ng6 ->ng1 ng12->ng1 ng14->ng1 ng24->ng1 ng28->ng1 ng31->ng1 ng42->ng1 ng44->ng1 ng49->ng1 ng55->ng1
+# [11] ng56->ng1 ng59->ng1 ng62->ng1 ng63->ng1 ng72->ng1 ng73->ng1 ng74->ng1 ng77->ng1 ng80->ng1 ng82->ng1
+# [21] ng83->ng1 ng87->ng1 ng89->ng1 mt-1->ng1 mt-5->ng1 mt-7->ng1 ng27->ng3 ng28->ng3 ng31->ng3 ng32->ng3
+# [31] ng44->ng3 ng59->ng3 ng62->ng3 ng72->ng3 ng73->ng3 ng74->ng3 ng77->ng3 ng82->ng3 ng87->ng3 ng89->ng3
+# [41] mt-5->ng3 mt-7->ng3 ng28->ng4 ng59->ng4 ng74->ng4 ng6 ->ng6 ng12->ng6 ng14->ng6 ng16->ng6 ng17->ng6
+# [51] ng19->ng6 ng21->ng6 ng23->ng6 ng24->ng6 ng27->ng6 ng28->ng6 ng31->ng6 ng32->ng6 ng33->ng6 ng38->ng6
+# [61] ng39->ng6 ng42->ng6 ng46->ng6 ng47->ng6 ng49->ng6 ng51->ng6 ng54->ng6 ng55->ng6 ng56->ng6 ng60->ng6
+# [71] ng62->ng6 ng63->ng6 ng65->ng6 ng73->ng6 ng77->ng6 ng78->ng6 ng80->ng6 ng83->ng6 ng86->ng6 mt-1->ng6
+# + ... omitted several edges
+ 
+ # Network for sample Y
+ igraph::graph_from_adjacency_matrix(outputH0$tensorNetworks$Y,weighted = TRUE)
+# IGRAPH 4b81093 DNW- 100 2836 -- 
+#   + attr: name (v/c), weight (e/n)
+# + edges from 4b81093 (vertex names):
+#   [1] ng6 ->ng1 ng12->ng1 ng14->ng1 ng24->ng1 ng28->ng1 ng31->ng1 ng42->ng1 ng44->ng1 ng49->ng1 ng55->ng1
+# [11] ng56->ng1 ng59->ng1 ng62->ng1 ng63->ng1 ng72->ng1 ng73->ng1 ng74->ng1 ng77->ng1 ng80->ng1 ng82->ng1
+# [21] ng83->ng1 ng87->ng1 ng89->ng1 mt-1->ng1 mt-5->ng1 mt-7->ng1 ng27->ng3 ng28->ng3 ng31->ng3 ng32->ng3
+# [31] ng44->ng3 ng59->ng3 ng62->ng3 ng72->ng3 ng73->ng3 ng74->ng3 ng77->ng3 ng82->ng3 ng87->ng3 ng89->ng3
+# [41] mt-5->ng3 mt-7->ng3 ng28->ng4 ng59->ng4 ng74->ng4 ng6 ->ng6 ng12->ng6 ng14->ng6 ng16->ng6 ng17->ng6
+# [51] ng19->ng6 ng21->ng6 ng23->ng6 ng24->ng6 ng27->ng6 ng28->ng6 ng31->ng6 ng32->ng6 ng33->ng6 ng38->ng6
+# [61] ng39->ng6 ng42->ng6 ng46->ng6 ng47->ng6 ng49->ng6 ng51->ng6 ng54->ng6 ng55->ng6 ng56->ng6 ng60->ng6
+# [71] ng62->ng6 ng63->ng6 ng65->ng6 ng73->ng6 ng77->ng6 ng78->ng6 ng80->ng6 ng83->ng6 ng86->ng6 mt-1->ng6
+# + ... omitted several edges
+ ```
+
+
 #### Differential regulation based on manifold alignment distances
 As is shown below, under the H0, none of the genes shown a significative difference in regulatory profiles using an FDR cut-off of 0.1, but under the HA, the 6 genes involved in the perturbation (50, 11, 2, 10, 5, and 3) are identified as perturbed.
 ```
