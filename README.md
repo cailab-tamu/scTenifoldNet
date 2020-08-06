@@ -35,7 +35,7 @@ Input:
 --------
 The required input for **scTenifoldNet** is an expression matrix with genes in the rows and cells (barcodes) in the columns. Data is expected to be _not normalized_ if the main **scTenifoldNet** function is used. Given the modular structure of the package, users are free to include modifications in each step to perform their analysis.
 
-Running time:
+[Running time:](#running-time)
 --------
 The running time of scTenifoldNet is largely dependent on how long it takes to construct scGRNs from subsampled expression matrices. Time increases proportional to the number of cells and genes in the dataset used as input. Below is a table of running times under different scenarios:
 
