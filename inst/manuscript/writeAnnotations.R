@@ -11,19 +11,34 @@ hsaKEGG <- gmtPathways('https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=t
 BIOP <- gmtPathways('https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=BioPlanet_2019')
 REACTOME <- gmtPathways('https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=Reactome_2016')
 
+
+#### Morphine Neurons ####
 mmuNeuron <- read.csv('results/sym10X500morphineNeuron_Itensor_Dalignment.csv', row.names = 1)
 mmuNeuron <- mmuNeuron[!grepl('^RPL|^RPS|^RP[[:digit:]]', mmuNeuron$gene, ignore.case = TRUE),]
 zNeuron <- mmuNeuron$Z
 names(zNeuron) <- toupper(mmuNeuron$gene)
 
 E1 <- fgseaMultilevel(mmuKEGG, zNeuron)
-E1 <- E1[E1$NES > 0 & E1$padj < 0.05,]
-E1 <- E1[order(E1$NES, decreasing = TRUE),]
+writeE(E1, 'mmuKEGG_morphineNeurons.csv')
 
 E2 <- fgseaMultilevel(BIOP, zNeuron)
-E2 <- E2[E2$NES > 0 & E2$padj < 0.05,]
-E2 <- E2[order(E2$NES, decreasing = TRUE),]
+writeE(E2, 'bioplanet_morphineNeurons.csv')
 
 E3 <- fgseaMultilevel(REACTOME, zNeuron)
-E3 <- E3[E3$NES > 0 & E3$padj < 0.05,]
-E3 <- E3[order(E3$NES, decreasing = TRUE),]
+writeE(E3, 'reactome_morphineNeurons.csv')
+
+
+#### Dermal Fibroblasts ####
+hsaDF <- read.csv('results/sym10X500DF_Itensor_Dalignment.csv', row.names = 1)
+hsaDF <- hsaDF[!grepl('^RPL|^RPS|^RP[[:digit:]]', hsaDF$gene, ignore.case = TRUE),]
+zDF <- hsaDF$Z
+names(zDF) <- toupper(hsaDF$gene)
+
+E1 <- fgseaMultilevel(mmuKEGG, zNeuron)
+writeE(E1, 'mmuKEGG_morphineNeurons.csv')
+
+E2 <- fgseaMultilevel(BIOP, zNeuron)
+writeE(E2, 'bioplanet_morphineNeurons.csv')
+
+E3 <- fgseaMultilevel(REACTOME, zNeuron)
+writeE(E3, 'reactome_morphineNeurons.csv')
