@@ -1,4 +1,5 @@
 library(fgsea)
+set.seed(1)
 
 writeE <- function(X, outFile){
   X <- X[X$NES > 0 & X$padj < 0.05,]
@@ -18,7 +19,7 @@ mmuNeuron <- mmuNeuron[!grepl('^RPL|^RPS|^RP[[:digit:]]', mmuNeuron$gene, ignore
 zNeuron <- mmuNeuron$Z
 names(zNeuron) <- toupper(mmuNeuron$gene)
 
-E1 <- fgseaMultilevel(mmuKEGG, zNeuron)
+E1 <- fgsea(mmuKEGG, zNeuron, nperm = 1e6)
 writeE(E1, 'mmuKEGG_morphineNeurons.csv')
 
 E2 <- fgseaMultilevel(BIOP, zNeuron)
@@ -34,11 +35,57 @@ hsaDF <- hsaDF[!grepl('^RPL|^RPS|^RP[[:digit:]]', hsaDF$gene, ignore.case = TRUE
 zDF <- hsaDF$Z
 names(zDF) <- toupper(hsaDF$gene)
 
-E1 <- fgseaMultilevel(mmuKEGG, zNeuron)
-writeE(E1, 'mmuKEGG_morphineNeurons.csv')
+E1 <- fgseaMultilevel(hsaKEGG, zDF)
+writeE(E1, 'hsaKEGG_DF.csv')
 
-E2 <- fgseaMultilevel(BIOP, zNeuron)
-writeE(E2, 'bioplanet_morphineNeurons.csv')
+E2 <- fgseaMultilevel(BIOP, zDF)
+writeE(E2, 'bioplanet_DF.csv')
 
-E3 <- fgseaMultilevel(REACTOME, zNeuron)
-writeE(E3, 'reactome_morphineNeurons.csv')
+E3 <- fgsea(REACTOME, zDF, nperm = 1e6)
+writeE(E3, 'reactome_DF.csv')
+
+#### NKX21 ####
+mmuNKX21 <- read.csv('results/sym10X500NKX21_Itensor_Dalignment.csv', row.names = 1)
+mmuKX21 <- mmuNKX21[!grepl('^RPL|^RPS|^RP[[:digit:]]', mmuNKX21$gene, ignore.case = TRUE),]
+zNKX21 <- mmuNKX21$Z
+names(zNKX21) <- toupper(mmuNKX21$gene)
+
+E1 <- fgseaMultilevel(mmuKEGG, zNKX21)
+writeE(E1, 'mmuKEGG_NKX21.csv')
+
+E2 <- fgseaMultilevel(BIOP, zNKX21)
+writeE(E2, 'bioplanet_NKX21.csv')
+
+E3 <- fgseaMultilevel(REACTOME, zNKX21)
+writeE(E3, 'reactome_NKX21.csv')
+
+
+#### CETUXIMAB ####
+hsaSCC <- read.csv('results/sym10x500SCC6_Itensor_Dalignment.csv', row.names = 1)
+hsaSCC <- hsaSCC[!grepl('^RPL|^RPS|^RP[[:digit:]]', hsaSCC$gene, ignore.case = TRUE),]
+zSCC <- hsaSCC$Z
+names(zSCC) <- toupper(hsaSCC$gene)
+
+E1 <- fgseaMultilevel(hsaKEGG, zSCC)
+writeE(E1, 'hsaKEGG_SCC.csv')
+
+E2 <- fgseaMultilevel(BIOP, zSCC)
+writeE(E2, 'bioplanet_SCC.csv')
+
+E3 <- fgseaMultilevel(REACTOME, zSCC)
+writeE(E3, 'reactome_SCC.csv')
+
+#### AD ####
+mmuAD <- read.csv('results/sym10X500WTAD_Itensor_Dalignment.csv', row.names = 1)
+mmuAD <- mmuAD[!grepl('^RPL|^RPS|^RP[[:digit:]]', mmuAD$gene, ignore.case = TRUE),]
+zAD <- mmuAD$Z
+names(zAD) <- toupper(mmuAD$gene)
+
+E1 <- fgseaMultilevel(hsaKEGG, zAD)
+writeE(E1, 'hsaKEGG_AD.csv')
+
+E2 <- fgseaMultilevel(BIOP, zAD)
+writeE(E2, 'bioplanet_AD.csv')
+
+E3 <- fgseaMultilevel(REACTOME, zAD)
+writeE(E3, 'reactome_SCC.csv')
