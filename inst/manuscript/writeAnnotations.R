@@ -22,10 +22,10 @@ names(zNeuron) <- toupper(mmuNeuron$gene)
 E1 <- fgsea(mmuKEGG, zNeuron, nperm = 1e6)
 writeE(E1, 'mmuKEGG_morphineNeurons.csv')
 
-E2 <- fgseaMultilevel(BIOP, zNeuron)
+E2 <- fgsea(BIOP, zNeuron, nperm = 1e6)
 writeE(E2, 'bioplanet_morphineNeurons.csv')
 
-E3 <- fgseaMultilevel(REACTOME, zNeuron)
+E3 <- fgsea(REACTOME, zNeuron, nperm = 1e6)
 writeE(E3, 'reactome_morphineNeurons.csv')
 
 
@@ -35,10 +35,10 @@ hsaDF <- hsaDF[!grepl('^RPL|^RPS|^RP[[:digit:]]', hsaDF$gene, ignore.case = TRUE
 zDF <- hsaDF$Z
 names(zDF) <- toupper(hsaDF$gene)
 
-E1 <- fgseaMultilevel(hsaKEGG, zDF)
+E1 <- fgsea(hsaKEGG, zDF, nperm = 1e6)
 writeE(E1, 'hsaKEGG_DF.csv')
 
-E2 <- fgseaMultilevel(BIOP, zDF)
+E2 <- fgsea(BIOP, zDF, nperm = 1e6)
 writeE(E2, 'bioplanet_DF.csv')
 
 E3 <- fgsea(REACTOME, zDF, nperm = 1e6)
@@ -50,13 +50,13 @@ mmuKX21 <- mmuNKX21[!grepl('^RPL|^RPS|^RP[[:digit:]]', mmuNKX21$gene, ignore.cas
 zNKX21 <- mmuNKX21$Z
 names(zNKX21) <- toupper(mmuNKX21$gene)
 
-E1 <- fgseaMultilevel(mmuKEGG, zNKX21)
+E1 <- fgsea(mmuKEGG, zNKX21, nperm = 1e6)
 writeE(E1, 'mmuKEGG_NKX21.csv')
 
-E2 <- fgseaMultilevel(BIOP, zNKX21)
+E2 <- fgsea(BIOP, zNKX21, nperm = 1e6)
 writeE(E2, 'bioplanet_NKX21.csv')
 
-E3 <- fgseaMultilevel(REACTOME, zNKX21)
+E3 <- fgsea(REACTOME, zNKX21, nperm = 1e6)
 writeE(E3, 'reactome_NKX21.csv')
 
 
@@ -66,13 +66,13 @@ hsaSCC <- hsaSCC[!grepl('^RPL|^RPS|^RP[[:digit:]]', hsaSCC$gene, ignore.case = T
 zSCC <- hsaSCC$Z
 names(zSCC) <- toupper(hsaSCC$gene)
 
-E1 <- fgseaMultilevel(hsaKEGG, zSCC)
+E1 <- fgsea(hsaKEGG, zSCC, nperm = 1e6)
 writeE(E1, 'hsaKEGG_SCC.csv')
 
-E2 <- fgseaMultilevel(BIOP, zSCC)
+E2 <- fgsea(BIOP, zSCC, nperm = 1e6)
 writeE(E2, 'bioplanet_SCC.csv')
 
-E3 <- fgseaMultilevel(REACTOME, zSCC)
+E3 <- fgsea(REACTOME, zSCC, nperm = 1e6)
 writeE(E3, 'reactome_SCC.csv')
 
 #### AD ####
@@ -81,11 +81,11 @@ mmuAD <- mmuAD[!grepl('^RPL|^RPS|^RP[[:digit:]]', mmuAD$gene, ignore.case = TRUE
 zAD <- mmuAD$Z
 names(zAD) <- toupper(mmuAD$gene)
 
-E1 <- fgseaMultilevel(hsaKEGG, zAD)
+E1 <- fgsea(hsaKEGG, zAD, nperm = 1e6)
 writeE(E1, 'hsaKEGG_AD.csv')
 
-E2 <- fgseaMultilevel(BIOP, zAD)
+E2 <- fgsea(BIOP, zAD, nperm = 1e6)
 writeE(E2, 'bioplanet_AD.csv')
 
-E3 <- fgseaMultilevel(REACTOME, zAD)
+E3 <- fgsea(REACTOME, zAD, nperm = 1e6)
 writeE(E3, 'reactome_SCC.csv')
