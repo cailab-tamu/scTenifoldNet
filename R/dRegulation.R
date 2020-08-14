@@ -4,7 +4,7 @@
 #' @title Evaluates gene differential regulation based on manifold alignment distances. 
 #' @description Using the output of the non-linear manifold alignment, this function computes the Euclidean distance between the coordinates for the same gene in both conditions. Calculated distances are then transformed using Box-Cox power transformation, and standardized to ensure normality. P-values are assigned following the chi-square distribution over the fold-change of the squared distance computed with respect to the expectation. 
 #' @param manifoldOutput A matrix. The output of the non-linear manifold alignment,  a labeled matrix with two times the number of shared genes as rows (X_ genes followed by Y_ genes in the same order) and \code{d} number of columns.
-#' @return A data frame with 5 columns as follows: \itemize{
+#' @return A data frame with 6 columns as follows: \itemize{
 #' \item \code{gene} A character vector with the gene id identified from the \code{manifoldAlignment} output.
 #' \item \code{distance} A numeric vector of the Euclidean distance computed between the coordinates of the same gene in both conditions.
 #' \item \code{Z} A numeric vector of the Z-scores computed after Box-Cox power transformation.
