@@ -10,7 +10,7 @@ dRegulation(manifoldOutput)
 \item{manifoldOutput}{A matrix. The output of the non-linear manifold alignment,  a labeled matrix with two times the number of shared genes as rows (X_ genes followed by Y_ genes in the same order) and \code{d} number of columns.}
 }
 \value{
-A data frame with 5 columns as follows: \itemize{
+A data frame with 6 columns as follows: \itemize{
 \item \code{gene} A character vector with the gene id identified from the \code{manifoldAlignment} output.
 \item \code{distance} A numeric vector of the Euclidean distance computed between the coordinates of the same gene in both conditions.
 \item \code{Z} A numeric vector of the Z-scores computed after Box-Cox power transformation.
