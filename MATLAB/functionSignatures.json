@@ -12,5 +12,14 @@
         {"name":"csubsmpl", "kind":"namevalue", "type":["scalar", "choices={500}"],"purpose":"csubsmpl"},
         {"name":"tdmethod", "kind":"namevalue","type":["string", "choices={'CP','Tucker'}"],"purpose":"tdmethod"}
 	]
+},
+"i_ma":
+{
+	"inputs":
+	[
+		{"name":"A0", "kind":"required", "type":["numeric", "size=N,N"]},
+        {"name":"A1", "kind":"required", "type":["numeric", "size=N,N"]},
+        {"name":"ndim", "kind":"ordered", "type":["numeric","size=1,1","choices=[30,50]"]}
+	]
 }
 }
