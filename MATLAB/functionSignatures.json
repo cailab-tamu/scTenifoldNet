@@ -5,7 +5,7 @@
 	[
 		{"name":"X0", "kind":"required", "type":"numeric"},
         {"name":"X1", "kind":"required", "type":"numeric"},
-        {"name":"genelist", "kind":"required", "type":["string"]},
+        {"name":"genelist", "kind":"required", "type":["string","vector"]},
         {"name":"qqplot", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"},
         {"name":"smplmethod", "kind":"namevalue","type":["string", "choices={'Jackknife','Bootstrap'}"],"purpose":"Option"},
         {"name":"nsubsmpl", "kind":"namevalue", "type":["scalar", "choices={10,20}"],"purpose":"nsubsmpl"},
@@ -17,9 +17,18 @@
 {
 	"inputs":
 	[
-		{"name":"A0", "kind":"required", "type":["numeric", "size=N,N"]},
-        {"name":"A1", "kind":"required", "type":["numeric", "size=N,N"]},
-        {"name":"ndim", "kind":"ordered", "type":["numeric","size=1,1","choices=[30,50]"]}
+		{"name":"A0", "kind":"required", "type":["numeric","square","size=N,N"]},
+        {"name":"A1", "kind":"required", "type":["numeric","square","size=N,N"]},
+        {"name":"ndim", "kind":"positional", "type":["numeric","scalar","choices=[30,50]"]}
+	]
+},
+"e_fgsea":
+{
+	"inputs":
+	[
+		{"name":"T", "kind":"required", "type":["table"]},
+        {"name":"rmribo","kind":"positional","type":["logical","scalar"]},
+        {"name":"dbfile","kind":"positional","type":["string","char","choices={'all','bp','mf'}"]}
 	]
 }
 }

@@ -1,4 +1,3 @@
-# setwd("Z:/Cailab/aging_mouse_brain/addon_gsea")
 library(data.table)
 library(fgsea)
 library(ggplot2)

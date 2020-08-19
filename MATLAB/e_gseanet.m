@@ -1,3 +1,4 @@
+function [G]=e_gseanet(Tf)
 n=size(Tf.leadingEdge,1);
 A=zeros(n);
 for i=1:n-1
@@ -35,8 +36,7 @@ p.NodeColor = 'r';
 %%
 bins = conncomp(G);
 for k=1:max(bins)
-    fprintf('Group %d ---------------\n',k);
-    fprintf('%s\n',nodenamesfull{bins==k});
-    
+    fprintf('\nGroup %d ---------------\n',k);
+    fprintf('%s\n',nodenamesfull{bins==k});    
 end
 fprintf('---------------\n');
