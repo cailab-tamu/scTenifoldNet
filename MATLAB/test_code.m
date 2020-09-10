@@ -15,7 +15,8 @@ X0=sc_norm(X0,"type","libsize");
 X1=sc_norm(X1,"type","libsize");
 
 addpath('thirdparty\tensor_toolbox-v3.1\');
-[XM0,XM1]=i_nc(X0,X1);  % s1_network_constr;
+[XM0]=i_nc(X0);  % s0_network_constr;
+[XM1]=i_nc(X1);  % s1_network_constr;
 [A0,A1]=i_td(XM0,XM1);    % s2_tensor_decomp;
 
 %A0=0.5*(A0+A0');

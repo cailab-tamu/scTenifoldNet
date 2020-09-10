@@ -13,7 +13,8 @@ W = [W1 mu*W12; mu*W12' W2];
 D=sum(abs(W));
 L=diag(D)-W;
 
-[V,D] = eigs(L,ndim*2,'smallestreal'); d=diag(D);
+[V,D] = eigs(L,ndim*2,'smallestreal');
+d=diag(D);
 % [V,d] = eig(L,'vector');
 [d,ind] = sort(d);
 V=V(:,ind);

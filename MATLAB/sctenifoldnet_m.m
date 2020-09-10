@@ -49,7 +49,8 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
     X0=sc_norm(X0,"type","libsize");
     X1=sc_norm(X1,"type","libsize");
     
-    [XM0,XM1]=i_nc(X0,X1,nsubsmpl,3,usebootstrp,csubsmpl);
+    [XM0]=i_nc(X0,nsubsmpl,3,csubsmpl,usebootstrp);
+    [XM1]=i_nc(X1,nsubsmpl,3,csubsmpl,usebootstrp);
     
     [A0,A1]=i_td(XM0,XM1,tdmethod);
     A0=0.5*(A0+A0');

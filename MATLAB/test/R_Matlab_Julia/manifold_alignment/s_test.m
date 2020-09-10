@@ -12,7 +12,7 @@ W1=A0+1;
 W2=A1+1;
 
 W12=eye(size(W1,2),size(W2,2));
-mu = mu*(sum(W1(:))+sum(W2(:))/(2*sum(W12(:))));
+mu = mu*(sum(W1(:))+sum(W2(:)))/(2*sum(W12(:)));
 W = [W1 mu*W12; mu*W12' W2];
 % [~,L] = sbe_laplacian_matrix(W); to keep code consistency with python
 % version, we use raw L below, instead of normalized L

@@ -1,4 +1,5 @@
-function a=e_transf(a)
-    a=a./max(abs(a(:)));
-    a=a.*(abs(a)>quantile(abs(a(:)),0.95));
+function A=e_transf(A)
+% A - adjacency matrix
+    A=A./max(abs(A(:)));
+    A=A.*(abs(A)>quantile(abs(A(:)),0.95));
 end
