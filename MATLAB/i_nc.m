@@ -23,7 +23,7 @@ if nargin<2, nsubsmpl=10; end        % number of subsamples
             Xrep=X(:,randperm(n0));
             Xrep=Xrep(:,1:csubsmpl);
         end        
-        A=sc_pcnetpar(Xrep,ncom,false);
+        A=sc_pcnetpar(Xrep,ncom,true);
         XM(:,:,k)=e_transf(A);        
     end
 end

@@ -30,7 +30,7 @@ end
     for k=1:nsubsmpl
         fprintf('network...%d of %d\n',k,nsubsmpl);
         Xrep=X(:,startptx(k):startptx(k)+winsize);
-        A=sc_pcnetpar(Xrep,ncom,false);
+        A=sc_pcnetpar(Xrep,ncom,true);
         XM(:,:,k)=e_transf(A);        
     end
 end
