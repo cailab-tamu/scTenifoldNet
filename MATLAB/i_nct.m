@@ -19,7 +19,7 @@ if m<csubsmpl*1.5, error('Too few cells.'); end
 r=round(m/nsubsmpl);
 winsize=max([r,csubsmpl]);
 startptx=1:r:m;
-while startptx(end)+winsize>m && r>50
+while startptx(end)+winsize>m && r>1
     r=r-1;
     winsize=max([r,csubsmpl]);
     startptx=1:r:m;
