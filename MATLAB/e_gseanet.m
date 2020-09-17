@@ -1,4 +1,4 @@
-function [G]=e_gseanet(Tf)
+function e_gseanet(Tf)
 n=size(Tf.leadingEdge,1);
 A=zeros(n);
 for i=1:n-1
@@ -35,8 +35,17 @@ p.NodeColor = 'r';
 
 %%
 bins = conncomp(G);
+
+tmpName=[tempname,'.txt'];
+fid=fopen(tmpName,'w');
 for k=1:max(bins)
-    fprintf('\nGroup %d ---------------\n',k);
-    fprintf('%s\n',nodenamesfull{bins==k});    
+    fprintf(fid,'\nEnriched Function Group %d ---------------\n',k);
+    fprintf(fid,'%s\n',nodenamesfull{bins==k});    
 end
-fprintf('---------------\n');
+fprintf(fid,'---------------\n');
+fclose(fid);
+[status]=system(['notepad "' tmpName '" &']);
+if status~=0
+   edit(tmpName);
+end
+
