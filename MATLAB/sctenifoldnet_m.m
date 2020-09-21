@@ -1,5 +1,8 @@
 function T=sctenifoldnet_m(X0,X1,genelist,varargin)
-    % X0 and X1 are gene x cell matrices
+% T=sctenifoldnet_m(X0,X1);
+%
+% X0 and X1 are gene x cell matrices
+%
     if nargin<2
         error(sprintf('USAGE: T=sctenifoldnet_m(X0,X1);\n       T=sctenifoldnet_m(X0,X1,genelist,''qqplot'',true);'));
     end
@@ -11,12 +14,14 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
    addOptional(p,'tdmethod',"CP",@(x) (isstring(x)|ischar(x))&ismember(upper(string(x)),["CP","TUCKER"]));
    addOptional(p,'nsubsmpl',10,@(x) fix(x)==x & x>0);
    addOptional(p,'csubsmpl',500,@(x) fix(x)==x & x>0);
+   addOptional(p,'savegrn',false,@islogical);   
    parse(p,varargin{:});
    doqqplot=p.Results.qqplot;
    tdmethod=p.Results.tdmethod;
    nsubsmpl=p.Results.nsubsmpl;
    csubsmpl=p.Results.csubsmpl;
    smplmethod=p.Results.smplmethod;
+   savegrn=p.Results.savegrn;
    
    switch upper(tdmethod)
        case "CP"
@@ -53,6 +58,11 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
     [XM1]=i_nc(X1,nsubsmpl,3,csubsmpl,usebootstrp);
     
     [A0,A1]=i_td(XM0,XM1,tdmethod);
+    if savegrn
+        tstr=matlab.lang.makeValidName(datestr(datetime));
+        save(sprintf('A0_%s',tstr),A0,'-v7.3');
+        save(sprintf('A1_%s',tstr),A1,'-v7.3');
+    end    
     A0=0.5*(A0+A0');
     A1=0.5*(A1+A1');
     [aln0,aln1]=i_ma(A0,A1);
