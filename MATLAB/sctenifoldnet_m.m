@@ -56,15 +56,12 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
     
     [XM0]=i_nc(X0,nsubsmpl,3,csubsmpl,usebootstrp);
     [XM1]=i_nc(X1,nsubsmpl,3,csubsmpl,usebootstrp);
-    
     [A0,A1]=i_td(XM0,XM1,tdmethod);
     if savegrn
-        tic;
         tstr=matlab.lang.makeValidName(datestr(datetime));
-        save(sprintf('A0_%s',tstr),'A0','-v7.3');
-        save(sprintf('A1_%s',tstr),'A1','-v7.3');
-        toc;
-    end    
+        save(sprintf('A0_%s',tstr),'A0','genelist','-v7.3');
+        save(sprintf('A1_%s',tstr),'A1','genelist','-v7.3');
+    end
     A0=0.5*(A0+A0');
     A1=0.5*(A1+A1');
     [aln0,aln1]=i_ma(A0,A1);
