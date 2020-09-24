@@ -176,7 +176,7 @@ tensorDecomposition <- function(xList, yList = NULL, K = 5, maxError = 1e-5, max
   }
   tX <- tX/nNet
   tX <- tX/max(abs(tX))
-  tX <- round(tX,1)
+  tX <- round(tX,3)
   tX <- as(tX, 'dgCMatrix')
   rownames(tX) <- colnames(tX) <- sGenes
   
@@ -190,7 +190,7 @@ tensorDecomposition <- function(xList, yList = NULL, K = 5, maxError = 1e-5, max
     }
     tY <- tY/nNet
     tY <- tY/max(abs(tY))
-    tY <- round(tY,1)
+    tY <- round(tY,3)
     tY <- as(tY, 'dgCMatrix')  
     rownames(tY) <- colnames(tY) <- sGenes
   }
