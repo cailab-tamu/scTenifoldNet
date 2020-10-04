@@ -45,7 +45,7 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
     pw0=pwd;
     pw1=fileparts(which(mfilename));
     cd(pw1);
-    addpath('thirdparty/tensor_toolbox-v3.1');
+    addpath('thirdparty/tensor_toolbox');
     cd(pw0);
     if exist('sc_pcnet.m','file')~=2
         error('Need sc_pcnet.m in the scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
