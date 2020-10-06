@@ -1,8 +1,8 @@
 function T=sctenifoldnet_m(X0,X1,genelist,varargin)
-% T=sctenifoldnet_m(X0,X1);
+% T=sctenifoldnet_m(X0,X1,genelist);
 %
 % X0 and X1 are gene x cell matrices
-%
+% 
     if nargin<2
         error(sprintf('USAGE: T=sctenifoldnet_m(X0,X1);\n       T=sctenifoldnet_m(X0,X1,genelist,''qqplot'',true);'));
     end
