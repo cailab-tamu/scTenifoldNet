@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Getting Started with the Tensor Toolbox</title>
+    <link rel="stylesheet" href="ttb.css">
+  </head>
+  
+  <body>
+    <div class="banner">
+      <a href="index.html"><img src="Tensor-Toolbox-for-MATLAB-Banner.png"></a>
+    </div>
+    <div class="content">
+      <h1 id="home">Getting Started</h1>
+
+
+
+      <h2 id="getting-started">Getting Started</h2>
+      
+      <h3 id="download">Download</h3>
+      
+      <p>The software has recently moved to GITLAB:
+	<a href="http://gitlab.com/tensors/tensor_toolbox"
+	   >http://gitlab.com/tensors/tensor_toolbox</a>.
+       Official releases can be obtained by visiting the <a href="https://gitlab.com/tensors/tensor_toolbox/releases">Releases</a> page.
+	The latest development realease can be obtained by
+	cloning or downloading from the main GITLAB page.  
+    Version 2.6 and earlier can be obtained
+	<a href="http://www.sandia.gov/~tgkolda/TensorToolbox/index-2.6.html"
+	   >here</a>.</p>
+      
+      <h3 id="installation">Installation</h3>
+      
+      <ol>
+	<li>Unpack the files, if necessary</li>
+	
+	<li>Start MATLAB</li>
+	
+	<li>Within MATLAB, navigate to the <tt>tensor_toolbox</tt>
+	directory and execute the following commands:
+
+	  <ol>
+	    <li><tt>addpath(pwd)</tt></li>
+	    
+	    <li><tt>savepath</tt></li></ol>
+	</li>
+      </ol>
+      
+      <h3 id="gettinghelp">Getting help</h3>
+
+      <p>At any time, type <tt>help tensor_toolbox</tt> for help on classes or functions. 
+	You can also find a getting started guide via MATLAB's help system. Launch help
+	by pressing the question mark button and look for Tensor Toolbox under supplemental
+	software, as highlighted in the image below.</p>
+      
+      <p class="center"><img src="helpscreen.PNG" alt="Navigating
+      MATLAB Help Screen" title="Navigating MATLAB Help Screen" /></p>
+
+      <h3 id="whats-new">What's new in Version 3.1?</h3>
+      
+      <p>Version 3.1 adds</p>
+      
+      <ul>
+          <li>New location on GITLAB plus open source BSD licence.
+              <li>New classes and functions for symmetric
+              tensors: <tt>symtensor</tt>, <tt>symktensor</tt>, <tt>cp_sym</tt>, <tt>tucker_sym</tt></li>
+              <li>New class for sums of different tensor types: <tt>sumtensor</tt></li>	
+              <li>Function to compute HOSVD and ST-HOSVD: <tt>hosvd</tt></li>
+          <li>New function for CP with alternating <em>randomized</em> least squares(also known as CPRAND): <tt>cp_arls</tt></li> 
+          <li>New generalized CP, including stochastic version: <tt>gcp_opt</tt></li>
+          <li>New method for creating binary problems where the nonnegative model tensor represents the <em>odds</em> of seeing a one: <tt>create_problem_binary</tt>
+          <li>Added methods to create all-ones sparse tensor that has the same pattern as a given sparse tensor: <tt>sptensor/spones</tt></li>
+          <li>New function to vizualize CP-decompoised Kruskal tensors: <tt>ktensor/viz</tt> </li>
+      </ul>
+      
+      <p>We have also fixed many bugs. View the
+	<a href="https://gitlab.com/tensors/tensor_toolbox/blob/master/RELEASE_NOTES.txt"
+	   >RELEASE_NOTES.txt</a> file for details.</p>
+
+      
+    <div class="footer">
+      <p>Copyright 2017, Sandia Corporation.</p>
+    </div>
+  </body>
+</html>

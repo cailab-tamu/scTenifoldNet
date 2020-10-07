@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!-- $Revision: 1.1 $ $Date: 2006/08/30 23:22:37 $ -->
+
+<toc version="3.1">
+
+<tocitem target="index.html" >Tensor Toolbox
+
+<tocitem  target="tensor_types.html" >Tensor Types
+    <tocitem target="tensor_doc.html">Dense Tensors</tocitem>
+    <tocitem target="sptensor_doc.html">Sparse Tensors</tocitem>
+    <tocitem target="symtensor_doc.html">Symmetric Tensors</tocitem>
+    <tocitem target="ktensor_doc.html">Kruskal Tensors</tocitem>
+    <tocitem target="ttensor_doc.html">Tucker Tensors</tocitem>
+    <tocitem target="symktensor_doc.html">Symmetric Kruskal Tensors</tocitem>
+    <tocitem target="sumtensor_doc.html">Sums of Structured Tensors</tocitem>
+</tocitem>
+<tocitem target="converting.html">Converting Tensors and Matrices
+    <tocitem target="tenmat_doc.html">Dense Case</tocitem>
+    <tocitem target="sptenmat_doc.html">Sparse Case</tocitem>
+</tocitem>
+<tocitem target="working.html">Working with Tensors
+    <tocitem target="multiply_doc.html">Multiplying Tensors</tocitem>
+    <tocitem target="nvecs_doc.html">Mode-n Vectors</tocitem>
+    <tocitem target="collapse_scale_doc.html">Collapsing and Scaling Tensors</tocitem>
+    <tocitem target="test_problems_doc.html">Creating Test Problems</tocitem>
+    <tocitem target="identities_doc.html">Identities</tocitem>
+</tocitem>
+<tocitem target="cp.html">CP Decompositions
+    <tocitem target="cp_als_doc.html">Alternating Least Squares (ALS)</tocitem>
+    <tocitem target="cp_arls_doc.html">Alternating Randomized Least Squares (ARLS)</tocitem>
+    <tocitem target="cp_opt_doc.html">All-at-once Optimization (OPT)</tocitem>
+    <tocitem target="cp_wopt_doc.html">Incomplete Data (WOPT)</tocitem>
+    <tocitem target="cp_apr_doc.html">Alternating Poisson Regression (APR)</tocitem>
+    <tocitem target="gcp_opt_doc.html">Generalized CP Decomposition (GCP-OPT)</tocitem>
+</tocitem>
+<tocitem target="tucker.html">Tucker Decompositions
+    <tocitem target="hosvd_doc.html">Higher-order SVD (HOSVD)</tocitem>
+    <tocitem target="tucker_als_doc.html">Alternating Least Squares (ALS)</tocitem>
+</tocitem>
+<tocitem target="eigen.html">Eigenproblem
+    <tocitem target="sshopm_doc.html">Shifted Symmetric Higher-order Power Method</tocitem>
+</tocitem>
+</tocitem>
+</toc>
