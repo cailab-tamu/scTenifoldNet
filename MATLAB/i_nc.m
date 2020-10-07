@@ -13,7 +13,7 @@ if nargin<2, nsubsmpl=10; end        % number of subsamples
     n=size(X,1);
     XM=zeros(n,n,nsubsmpl);
     for k=1:nsubsmpl
-        fprintf('network...%d of %d\n',k,nsubsmpl);
+        fprintf('Building network...%d of %d\n',k,nsubsmpl);
         
         n0=size(X,2);
         if usebootstrp % bootstrap 

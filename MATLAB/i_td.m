@@ -1,13 +1,17 @@
 function [A0,A1]=i_td(XM0,XM1,methodid)
 
 if nargin<3, methodid=1; end
-    
-pw0=pwd;
-pw1=fileparts(which(mfilename));
-cd(pw1);
-addpath('thirdparty/tensor_toolbox');
-cd(pw0);
-    
+if exist('tensor.m','file')~=2
+    pw0=pwd;
+    pw1=fileparts(which(mfilename));
+    cd(pw1);
+    addpath('thirdparty/tensor_toolbox');
+    cd(pw0);
+end
+if exist('tensor.m','file')~=2
+    error('Need thirdparty/tensor_toolbox');
+end
+
 switch methodid
     case 1
         Xhat0=do_td_cp(XM0);
