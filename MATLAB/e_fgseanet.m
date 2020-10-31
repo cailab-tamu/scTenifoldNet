@@ -1,4 +1,7 @@
-function e_gseanet(Tf)
+function e_fgseanet(Tf,jaccd)
+% Merge similar gene sets (Jaccard index > 0.8) in fGSEA report
+if nargin<2, jaccd=0.8; end
+
 n=size(Tf.leadingEdge,1);
 A=zeros(n);
 for i=1:n-1
@@ -14,14 +17,15 @@ nodenames=Tf.pathway;
 nodenamesfull=Tf.pathway;
 for k=1:n
     % nodenamesfull{k}=sprintf('%d_%s',k,Tf.pathway{k});
-    nodenamesfull{k}=sprintf('%s',Tf.pathway{k});
-    a=sprintf('%d\\_%s',k,Tf.pathway{k});
-    a=extractBefore(a,min(20,length(a)));
-    nodenames{k}=a;
+    % nodenamesfull{k}=sprintf('%s',Tf.pathway{k});
+    nodenamesfull{k}=sprintf('%d_%s',k,Tf.pathway{k});
+    %a=sprintf('%d\\_%s',k,Tf.pathway{k});
+    %a=extractBefore(a,min(20,length(a)));
+    nodenames{k}=sprintf('%d',k);
 end
 %%
 %B=A.*(abs(A)>quantile(abs(A(:)),0.95));
-B=A.*(A>0.8);
+B=A.*(A>jaccd);
 % G=digraph(A,Tf.pathway);
 G=digraph(B,nodenames);
 LWidths=abs(5*G.Edges.Weight/max(G.Edges.Weight));
@@ -38,13 +42,14 @@ p.Marker = 's';
 p.NodeColor = 'r';
 
 %%
-bins = conncomp(G);
+[bins,binsizes] = conncomp(G);
+[~,idx]=sort(binsizes,'descend');
 
 tmpName=[tempname,'.txt'];
 fid=fopen(tmpName,'w');
 for k=1:max(bins)
     fprintf(fid,'\nEnriched Function Group %d\n',k);
-    fprintf(fid,'\t%s\n',nodenamesfull{bins==k});    
+    fprintf(fid,'\t%s\n',nodenamesfull{bins==idx(k)});    
 end
 %fprintf(fid,'---------------\n');
 fclose(fid);

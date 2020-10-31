@@ -1,5 +1,5 @@
-function [s]=e_fgsea(T,rmribo,dbfile)
-
+function [s]=e_fgsearun(T,rmribo,dbfile)
+% Run fast GSEA (fGSEA) analysis in R
 if nargin<2, rmribo=false; end
 if nargin<3, dbfile='all'; end   % bp mf
 

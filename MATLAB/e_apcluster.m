@@ -1,4 +1,5 @@
 function [C,GS]=e_apcluster(aln0,genelist)
+% Affinity Propagation Clustering
 
 if nargin<2, genelist=[]; end
 

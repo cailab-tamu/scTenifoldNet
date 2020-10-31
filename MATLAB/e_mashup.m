@@ -1,6 +1,10 @@
 function [aln0,aln1]=e_mashup(XM0,XM1,ndim)
+% Mashup for obtaining high-quality, compact topological 
+% feature representations of genes from one or more interaction
+% networks constructed from heterogeneous data types.
+%
+% ref: doi: 10.1016/j.cels.2016.10.017
     if nargin<3, ndim=30; end
-    
     nsubsmpl=size(XM0,3);
     ngene=size(XM0,1);
     aln0=i_mashup_code(XM0,nsubsmpl,ngene,ndim)';
