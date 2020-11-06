@@ -33,7 +33,10 @@ end
         Xrep=X(:,startptx(k):startptx(k)+winsize);
         A=sc_pcnetpar(Xrep,ncom,true);
         if savegrn
-            [~,b]=fileparts(tempname);
+            [~,b]=fileparts(tempname);            
+            if ~exist(sprintf('A%d_%s.mat',k,b(1:10)),'file')
+                b=b(1:10);
+            end
             save(sprintf('A%d_%s',k,b),'A');
         end
         XM(:,:,k)=e_transf(A);        
