@@ -1,6 +1,9 @@
 function e_fgseanet(Tf,jaccd)
 % Merge similar gene sets (Jaccard index > 0.8) in fGSEA report
 if nargin<2, jaccd=0.8; end
+if size(Tf,1)<5
+    error('fGSEA output table is too short.')
+end
 
 n=size(Tf.leadingEdge,1);
 A=zeros(n);
