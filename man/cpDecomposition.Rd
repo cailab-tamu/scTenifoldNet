@@ -4,8 +4,7 @@
 \alias{cpDecomposition}
 \title{Canonical Polyadic Decomposition}
 \usage{
-cpDecomposition(tnsr, num_components = NULL, max_iter = 25,
-  tol = 1e-05)
+cpDecomposition(tnsr, num_components = NULL, max_iter = 25, tol = 1e-05)
 }
 \arguments{
 \item{tnsr}{Tensor with K modes}

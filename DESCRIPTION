@@ -1,20 +1,20 @@
 Package: scTenifoldNet
 Type: Package
 Title: Construct and Compare scGRN from Single-Cell Transcriptomic Data
-Version: 1.2.3
+Version: 1.2.4
 Authors@R: c(person(given = "Daniel", family = "Osorio", email = "dcosorioh@tamu.edu", role = c("aut","cre"), comment = c(ORCID = '0000-0003-4424-8422')),
              person(given = "Yan", family = "Zhong", role = c("aut","ctb")),
              person(given = "Guanxun", family = "Li", role = c("aut","ctb")),
              person(given = "Jianhua", family = "Huang", role = c("aut","ctb")),
              person(given = "James", family = "Cai", role = c("aut", "ctb", "ths"), comment = c(ORCID = '0000-0002-8081-6725'))
              )
-Description: A workflow based on machine learning methods to construct and compare single-cell gene regulatory networks (scGRN) using single-cell RNA-seq (scRNA-seq) data collected from different conditions. Uses principal component regression, tensor decomposition, and manifold alignment, to accurately identify even subtly shifted gene expression programs.
+Description: A workflow based on machine learning methods to construct and compare single-cell gene regulatory networks (scGRN) using single-cell RNA-seq (scRNA-seq) data collected from different conditions. Uses principal component regression, tensor decomposition, and manifold alignment, to accurately identify even subtly shifted gene expression programs. See <doi:10.1016/j.patter.2020.100139> for more details.
 URL: https://github.com/cailab-tamu/scTenifoldNet
 BugReports: https://github.com/cailab-tamu/scTenifoldNet/issues
 License: GPL (>=2)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 biocViews:
 Imports: pbapply,
          RSpectra,
