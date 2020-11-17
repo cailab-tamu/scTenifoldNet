@@ -1,0 +1,17 @@
+citHeader("To cite scTenifoldNet in publications, please use:")
+citEntry(entry = "article",
+  author = personList(c(
+  person(given = "Daniel", family = "Osorio"),
+  person(given = "Yan", family = "Zhong"),
+  person(given = "Guanxun", family = "Li"),
+  person(given = "Jianhua Z.", family = "Huang"),
+  person(given = "James J.", family = "Cai"))),
+  title = "scTenifoldNet: A Machine Learning Workflow for Constructing and Comparing Transcriptome-wide Gene Regulatory Networks from Single-Cell Data",
+  journal = "Patterns",
+  year = "2020",
+  issn = "2666-3899",
+  volume = "1",
+  number = "100139",
+  pages = "1-18",
+  textVersion = "Osorio, Daniel, Yan Zhong, Guanxun Li, Jianhua Z. Huang, and James J. Cai. 2020. 'scTenifoldNet: A Machine Learning Workflow for Constructing and Comparing Transcriptome-Wide Gene Regulatory Networks from Single-Cell Data.' Patterns, 1, 100139."
+)

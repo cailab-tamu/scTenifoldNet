@@ -4,6 +4,7 @@
 #' @description Generate weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition. The \code{tensorDecomposition} function takes one or two lists of gene regulatory matrices, if two list are provided, the shared genes are selected and the CP tensor decomposition is performed independently for each list (3d-tensor). The tensor decomposed matrices are then averaged to generate weight-averaged denoised networks.
 #' @param xList A list of gene regulatory networks.
 #' @param yList Optional. A list of gene regulatory networks.
+#' @param nDecimal An integer value indicating the number of decimal places to be used.
 #' @param K The number of rank-one tensors used to approximate the data using CANDECOMP/PARAFAC (CP) Tensor Decomposition,
 #' @param maxError A decimal value between 0 and 1. Defines the relative Frobenius norm error tolerance
 #' @param maxIter An integer value. Defines the maximum number of iterations if error stay above \code{maxError}.
@@ -60,7 +61,7 @@
 #' tdOutput[[1]][1:10,1:10]
 
 
-tensorDecomposition <- function(xList, yList = NULL, K = 5, maxError = 1e-5, maxIter = 1e3){
+tensorDecomposition <- function(xList, yList = NULL, nDecimal = 1, K = 5, maxError = 1e-5, maxIter = 1e3){
   xNets <- length(xList)
   if(!is.null(yList)){
     yNets <- length(yList)
@@ -176,7 +177,7 @@ tensorDecomposition <- function(xList, yList = NULL, K = 5, maxError = 1e-5, max
   }
   tX <- tX/nNet
   tX <- tX/max(abs(tX))
-  tX <- round(tX,3)
+  tX <- round(tX, nDecimal)
   tX <- as(tX, 'dgCMatrix')
   rownames(tX) <- colnames(tX) <- sGenes
   
@@ -190,7 +191,7 @@ tensorDecomposition <- function(xList, yList = NULL, K = 5, maxError = 1e-5, max
     }
     tY <- tY/nNet
     tY <- tY/max(abs(tY))
-    tY <- round(tY,3)
+    tY <- round(tY, nDecimal)
     tY <- as(tY, 'dgCMatrix')  
     rownames(tY) <- colnames(tY) <- sGenes
   }

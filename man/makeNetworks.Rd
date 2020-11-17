@@ -4,8 +4,15 @@
 \alias{makeNetworks}
 \title{Computes gene regulatory networks for subsamples of cells based on principal component regression.}
 \usage{
-makeNetworks(X, nNet = 10, nCells = 500, nComp = 3,
-  scaleScores = TRUE, symmetric = FALSE, q = 0.95)
+makeNetworks(
+  X,
+  nNet = 10,
+  nCells = 500,
+  nComp = 3,
+  scaleScores = TRUE,
+  symmetric = FALSE,
+  q = 0.95
+)
 }
 \arguments{
 \item{X}{A filtered and normlized gene expression matrix with cells as columns and genes as rows.}

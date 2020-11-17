@@ -4,8 +4,13 @@
 \alias{scQC}
 \title{Performs single-cell data quality control}
 \usage{
-scQC(X, minLibSize = 1000, removeOutlierCells = TRUE, minPCT = 0.05,
-  maxMTratio = 0.1)
+scQC(
+  X,
+  minLibSize = 1000,
+  removeOutlierCells = TRUE,
+  minPCT = 0.05,
+  maxMTratio = 0.1
+)
 }
 \arguments{
 \item{X}{Raw counts matrix with cells as columns and genes (symbols) as rows.}

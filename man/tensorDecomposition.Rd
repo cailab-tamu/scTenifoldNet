@@ -4,13 +4,21 @@
 \alias{tensorDecomposition}
 \title{Performs CANDECOMP/PARAFAC (CP) Tensor Decomposition.}
 \usage{
-tensorDecomposition(xList, yList = NULL, K = 5, maxError = 1e-05,
-  maxIter = 1000)
+tensorDecomposition(
+  xList,
+  yList = NULL,
+  nDecimal = 1,
+  K = 5,
+  maxError = 1e-05,
+  maxIter = 1000
+)
 }
 \arguments{
 \item{xList}{A list of gene regulatory networks.}
 
 \item{yList}{Optional. A list of gene regulatory networks.}
+
+\item{nDecimal}{An integer value indicating the number of decimal places to be used.}
 
 \item{K}{The number of rank-one tensors used to approximate the data using CANDECOMP/PARAFAC (CP) Tensor Decomposition,}
 

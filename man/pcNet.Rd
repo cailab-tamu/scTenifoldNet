@@ -4,8 +4,14 @@
 \alias{pcNet}
 \title{Computes a gene regulatory network based on principal component regression}
 \usage{
-pcNet(X, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0,
-  verbose = TRUE)
+pcNet(
+  X,
+  nComp = 3,
+  scaleScores = TRUE,
+  symmetric = FALSE,
+  q = 0,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{X}{A filtered and normalized gene expression matrix with cells as columns and genes as rows.}
