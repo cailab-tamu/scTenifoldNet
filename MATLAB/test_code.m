@@ -8,8 +8,11 @@ X1=X0;
 X1(10,:)=X1(50,:);
 X1(2,:)=X1(11,:);
 
-genelist=strings(NGENES,1);
-for k=1:NGENES, genelist(k)=sprintf("g%d",k); end
+%genelist=strings(NGENES,1);
+%for k=1:NGENES, genelist(k)=sprintf("g%d",k); end
+%sprintfc('%d',A); strsplit(num2str(A))
+%
+genelist=string(compose('g%d',1:NGENES)');
 
 X0=sc_norm(X0,"type","libsize");
 X1=sc_norm(X1,"type","libsize");
