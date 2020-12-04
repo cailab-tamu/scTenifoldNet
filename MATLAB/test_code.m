@@ -17,7 +17,7 @@ genelist=string(compose('g%d',1:NGENES)');
 X0=sc_norm(X0,"type","libsize");
 X1=sc_norm(X1,"type","libsize");
 
-addpath('thirdparty\tensor_toolbox-v3.1\');
+addpath('thirdparty\tensor_toolbox\');
 [XM0]=i_nc(X0);  % s0_network_constr;
 [XM1]=i_nc(X1);  % s1_network_constr;
 [A0,A1]=i_td(XM0,XM1);    % s2_tensor_decomp;
@@ -31,6 +31,6 @@ T=i_dr(aln0,aln1,genelist,true);   % diff regulatory gene detection
 
 return;
 %%
-figure;
-T2=sctenifoldnet_p(X0,X1,genelist,true);
+% figure;
+% T2=sctenifoldnet_p(X0,X1,genelist,true);
 

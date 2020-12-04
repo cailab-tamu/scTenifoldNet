@@ -38,7 +38,7 @@ end
                 b=b(1:10);
             end
             save(sprintf('A%d_%s',k,b),'A');
-        end
+        end        
         XM(:,:,k)=e_transf(A);        
     end
 end

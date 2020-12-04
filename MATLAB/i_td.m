@@ -32,20 +32,3 @@ A1=mean(Xhat1,3);
 A0=e_transf(A0);
 A1=e_transf(A1);
 end
-
-function Xhat0=do_td_cp(XM0)
-    T0=tensor(XM0);
-    % Use HOSVD initial guess    
-    M = cp_als(T0,5,'init','nvecs','printitn',1,'maxiters',200);
-    % Xhat0=double(M);
-    fM0=full(M);
-    Xhat0=fM0.data;    
-end
-
-function Xhat0=do_td_tucker(XM0)
-    T0=tensor(XM0);
-    M=tucker_als(T0,5,'printitn',1);
-    % Xhat0=double(M);
-    fM0=full(M);
-    Xhat0=fM0.data;
-end
