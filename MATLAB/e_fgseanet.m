@@ -35,14 +35,16 @@ LWidths=abs(5*G.Edges.Weight/max(G.Edges.Weight));
 LWidths(LWidths==0)=1e-5;
 %%
 figure;
-plot(G,'NodeLabel',nodenames,'NodeFontAngle','normal',...
-    'NodeFontSize',12);
-if ~isempty(LWidths)
-    p.LWidth=LWidths;
-end
-p.MarkerSize = 7;
-p.Marker = 's';
-p.NodeColor = 'r';
+p=plot(G,'NodeLabel',nodenames,'NodeLabelMode','auto'); 
+
+% p=plot(G,'NodeLabel',nodenames,'NodeFontAngle','normal',...
+%     'NodeFontSize',12);
+% if ~isempty(LWidths)
+%     p.LineWidth=LWidths;
+% end
+% p.MarkerSize = 7;
+% p.Marker = 's';
+% p.NodeColor = 'r';
 
 %%
 [bins,binsizes] = conncomp(G);
