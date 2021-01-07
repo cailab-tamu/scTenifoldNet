@@ -1,6 +1,6 @@
 function [s]=e_fgsearun(T,rmribo,dbfile)
 % Run fast GSEA (fGSEA) analysis in R
-if nargin<2, rmribo=false; end
+if nargin<2, rmribo=true; end
 if nargin<3, dbfile='all'; end   % bp mf
 
 if isempty(FindRpath)
@@ -16,7 +16,7 @@ fprintf('CURRENTWDIR = "%s"\n',pth);
 if exist('output.txt','file'), delete('output.txt'); end
 T.genelist=upper(string(T.genelist));
 if rmribo
-    [gribo]=get_ribosomalgenes;
+    [gribo]=pkg.i_get_ribosomalgenes;  % a scGEAToolbox function
     i=~ismember(T.genelist,gribo);
     T=T(i,:);
 end
