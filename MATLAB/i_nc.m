@@ -16,6 +16,9 @@ if nargin<2, nsubsmpl=10; end        % number of subsamples
         fprintf('Building network...%d of %d\n',k,nsubsmpl);
         
         n0=size(X,2);
+        if n0<csubsmpl*1.15
+            usebootstrp=true;
+        end
         if usebootstrp % bootstrap 
             i=randi(n0,1,csubsmpl);
             Xrep=X(:,i);
