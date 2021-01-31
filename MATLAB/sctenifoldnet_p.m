@@ -11,9 +11,18 @@ function T=sctenifoldnet_p(X0,X1,genelist,doplot)
     end    
     a0=sc_pcnetpar(X0,3,false);
     a1=sc_pcnetpar(X1,3,false);
-    [U,S,V]=svds(a0,50);
+    if exist('svdsketch.m','file')
+        [U,S,V]=svdsketch(a0);
+    else
+        [U,S,V]=svds(a0,50);
+    end
     A0=U*S*V';
-    [U,S,V]=svds(a1,50);
+    
+    if exist('svdsketch.m','file')
+        [U,S,V]=svdsketch(a1);
+    else
+        [U,S,V]=svds(a1,50);
+    end    
     A1=U*S*V';
     [aln0,aln1]=i_ma(A0,A1);
     drdist=vecnorm(aln0-aln1,2,2);
