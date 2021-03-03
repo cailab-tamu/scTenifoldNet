@@ -54,7 +54,16 @@ tmpName=[tempname,'.txt'];
 fid=fopen(tmpName,'w');
 for k=1:max(bins)
     fprintf(fid,'\nEnriched Function Group %d\n',k);
-    fprintf(fid,'\t%s\n',nodenamesfull{bins==idx(k)});    
+    vi=find(bins==idx(k));
+    Gx=[];
+    for kk=1:length(vi)
+        a=strsplit(Tf.leadingEdge{vi(kk)},";");
+        Gx=[Gx a];
+    end
+    Gx=unique(Gx,'stable');
+    fprintf(fid,'%s ',string(Gx));
+    fprintf(fid,'\n');
+    fprintf(fid,'\t%s\n',nodenamesfull{bins==idx(k)});
 end
 %fprintf(fid,'---------------\n');
 fclose(fid);
