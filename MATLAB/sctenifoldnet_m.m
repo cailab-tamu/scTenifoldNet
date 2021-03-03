@@ -55,8 +55,10 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
     end    
     
     
-    X0=sc_norm(X0,"type","libsize");
-    X1=sc_norm(X1,"type","libsize");
+    %X0=sc_norm(X0,"type","libsize");
+    %X1=sc_norm(X1,"type","libsize");
+    X0=sc_transform(X0);
+    X1=sc_transform(X1);    
     tic
     disp('Sample 1/2 ...')
     [XM0]=i_nc(X0,nsubsmpl,3,csubsmpl,usebootstrp);
