@@ -42,10 +42,11 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
     if size(X0,1)~=length(genelist)
         error('Length of genelist should be the same as the number of rows of X0 or X1.');
     end
-    pw0=pwd;
-    pw1=fileparts(which(mfilename));
+    pw0=pwd;    
+    pw1=fileparts(mfilename('fullpath'));
     cd(pw1);
-    addpath('thirdparty/tensor_toolbox');
+    pth=fullfile(pw1,'thirdparty','tensor_toolbox');
+    addpath(pth);
     cd(pw0);
     if exist('tensor.m','file')~=2
         error('Need thirdparty/tensor_toolbox');
