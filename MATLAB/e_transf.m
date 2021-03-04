@@ -6,7 +6,7 @@ if numel(dim)==2
     a=max(abs(A(:)));
     if a>0
         A=A./a;
-        A=A.*(abs(A)>quantile(abs(A(:)),q));        
+        A=A.*(abs(A)>quantile(abs(nonzeros(A)),q));
     end
 elseif numel(dim)==3
     for k=1:dim(3)

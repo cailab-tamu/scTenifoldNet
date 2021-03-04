@@ -14,7 +14,7 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
    addOptional(p,'tdmethod',"CP",@(x) (isstring(x)|ischar(x))&ismember(upper(string(x)),["CP","TUCKER"]));
    addOptional(p,'nsubsmpl',10,@(x) fix(x)==x & x>0);
    addOptional(p,'csubsmpl',500,@(x) fix(x)==x & x>0);
-   addOptional(p,'savegrn',false,@islogical);   
+   addOptional(p,'savegrn',true,@islogical);
    parse(p,varargin{:});
    doqqplot=p.Results.qqplot;
    tdmethod=p.Results.tdmethod;
