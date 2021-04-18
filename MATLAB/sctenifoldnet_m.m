@@ -86,5 +86,8 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
     
     % [aln0,aln1]=i_mashup(XM0,XM1);
     T=i_dr(aln0,aln1,genelist,doqqplot);
+%         pd = makedist('Gamma','a',0.5,'b',2);
+%         qqplot(FC,pd);
 end
+
 
