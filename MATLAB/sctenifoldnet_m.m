@@ -52,14 +52,14 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
         error('Need thirdparty/tensor_toolbox');
     end
     if exist('sc_pcnet.m','file')~=2
-        error('Need sc_pcnet.m in the scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
+        error('Need sc_pcnet.m in scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
     end    
     
     
-    %X0=sc_norm(X0,"type","libsize");
-    %X1=sc_norm(X1,"type","libsize");
-    X0=sc_transform(X0);
-    X1=sc_transform(X1);    
+    X0=sc_norm(X0,"type","libsize");
+    X1=sc_norm(X1,"type","libsize");
+    %X0=sc_transform(X0);
+    %X1=sc_transform(X1);
     tic
     disp('Sample 1/2 ...')
     [XM0]=i_nc(X0,nsubsmpl,3,csubsmpl,usebootstrp);
