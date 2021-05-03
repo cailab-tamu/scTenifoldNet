@@ -1,4 +1,4 @@
-function T=sctenifoldnet_m(X0,X1,genelist,varargin)
+function [T,A0,A1]=sctenifoldnet_m(X0,X1,genelist,varargin)
 % T=sctenifoldnet_m(X0,X1,genelist);
 %
 % X0 and X1 are gene x cell matrices
@@ -77,11 +77,11 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
         save(sprintf('A0_%s',tstr),'A0','genelist','-v7.3');
         save(sprintf('A1_%s',tstr),'A1','genelist','-v7.3');
     end
-    A0=0.5*(A0+A0');
-    A1=0.5*(A1+A1');
+    A0sym=0.5*(A0+A0');
+    A1sym=0.5*(A1+A1');
     tic
     disp('Manifold alignment')
-    [aln0,aln1]=i_ma(A0,A1);
+    [aln0,aln1]=i_ma(A0sym,A1sym);
     toc
     
     % [aln0,aln1]=i_mashup(XM0,XM1);
