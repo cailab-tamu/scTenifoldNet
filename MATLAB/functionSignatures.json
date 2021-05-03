@@ -38,7 +38,8 @@
 	[
 		{"name":"T", "kind":"required", "type":["table"]},
         {"name":"JaccardCutoff", "kind":"namevalue", "type":["scalar"],"purpose":"Option"},
-        {"name":"PlotNetwork", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"}
+        {"name":"PlotNetwork", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"},
+        {"name":"ShowNotepad", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"}
 	]
 }
 }

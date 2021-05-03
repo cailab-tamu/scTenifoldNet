@@ -2,12 +2,13 @@ function [OUT]=e_fgseanet(Tf,varargin)
 % Merge similar gene sets (Jaccard index > cutoff) in fGSEA report
 
    p = inputParser;
-   addOptional(p,'PlotNetwork',false,@islogical);
    addOptional(p,'JaccardCutoff',0.5,@(x) x>0 & x<1)
+   addOptional(p,'PlotNetwork',false,@islogical);
+   addOptional(p,'ShowNotepad',true,@islogical);      
    parse(p,varargin{:});
-   plotnetwork=p.Results.PlotNetwork;
    jaccardcutoff=p.Results.JaccardCutoff;
-
+   plotnetwork=p.Results.PlotNetwork;
+   shownotepad=p.Results.ShowNotepad;
 if size(Tf,1)<5
     error('fGSEA output table is too short.')
 end
@@ -38,12 +39,12 @@ end
 B=A.*(A>jaccardcutoff);
 % G=digraph(A,Tf.pathway);
 G=digraph(B,nodenames);
-LWidths=abs(5*G.Edges.Weight/max(G.Edges.Weight));
-LWidths(LWidths==0)=1e-5;
+% LWidths=abs(5*G.Edges.Weight/max(G.Edges.Weight));
+% LWidths(LWidths==0)=1e-5;
 
 if plotnetwork
-figure;
-p=plot(G,'NodeLabel',nodenames,'NodeLabelMode','auto'); 
+    figure;
+    p=plot(G,'NodeLabel',nodenames,'NodeLabelMode','auto'); 
 end
 
 % p=plot(G,'NodeLabel',nodenames,'NodeFontAngle','normal',...
@@ -58,8 +59,8 @@ end
 %%
 [bins,binsizes] = conncomp(G);
 [~,idx]=sort(binsizes,'descend');
-
 OUT=cell(max(bins),2);
+
 
 tmpName=[tempname,'.txt'];
 fid=fopen(tmpName,'w');
@@ -79,11 +80,13 @@ for k=1:max(bins)
     fprintf(fid,'\t%s\n',nodenamesfull{bins==idx(k)});
     OUT{k,2}=deblank(sprintf('%s\n',nodenamesfull{bins==idx(k)}));
 end
-
 %fprintf(fid,'---------------\n');
 fclose(fid);
-[status]=system(['notepad "' tmpName '" &']);
-if status~=0
-   edit(tmpName);
+
+if shownotepad
+    [status]=system(['notepad "' tmpName '" &']);
+    if status~=0
+       edit(tmpName);
+    end
 end
 end
