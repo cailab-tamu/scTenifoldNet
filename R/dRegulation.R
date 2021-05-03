@@ -98,12 +98,16 @@ dRegulation <- function(manifoldOutput){
   ### BOX-COX
   lambdaValues <- seq(-2,2,length.out = 1000)
   lambdaValues <- lambdaValues[lambdaValues != 0]
-  BC <- MASS::boxcox(dMetric~1, plot=FALSE, lambda = lambdaValues)
-  BC <- BC$x[which.max(BC$y)]
-  if(BC < 0){
-    nD <- 1/(dMetric ^ BC)
+  BC <- try(MASS::boxcox(dMetric~1, plot=FALSE, lambda = lambdaValues), silent = TRUE)
+  if(class(BC) == 'try-error'){
+    nD <- dMetric
   } else {
-    nD <- dMetric ^ BC
+    BC <- BC$x[which.max(BC$y)]
+    if(BC < 0){
+      nD <- 1/(dMetric ^ BC)
+    } else {
+      nD <- dMetric ^ BC
+    }
   }
   Z <- scale(nD)
   E <- mean(dMetric^2)
