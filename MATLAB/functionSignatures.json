@@ -23,13 +23,22 @@
         {"name":"ndim", "kind":"positional", "type":["numeric","scalar","choices=[30,50]"]}
 	]
 },
-"e_fgsea":
+"e_fgsearun":
 {
 	"inputs":
 	[
 		{"name":"T", "kind":"required", "type":["table"]},
         {"name":"rmribo","kind":"positional","type":["logical","scalar"]},
         {"name":"dbfile","kind":"positional","type":["string","char","choices={'all','bp','mf'}"]}
+	]
+},
+"e_fgseanet":
+{
+	"inputs":
+	[
+		{"name":"T", "kind":"required", "type":["table"]},
+        {"name":"JaccardCutoff", "kind":"namevalue", "type":["scalar"],"purpose":"Option"},
+        {"name":"PlotNetwork", "kind":"namevalue", "type":["logical","scalar"],"purpose":"Option"}
 	]
 }
 }

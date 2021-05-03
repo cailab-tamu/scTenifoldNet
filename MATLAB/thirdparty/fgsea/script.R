@@ -10,13 +10,13 @@ GOBP <- gmtPathways('https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text
 REACTOME <- gmtPathways('https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=Reactome_2016')
 
 set.seed(1)
-eKEGG <- fgseaMultilevel(KEGG, Z)
+eKEGG <- fgseaMultilevel(KEGG, Z, scoreType = "pos")
 set.seed(1)
-eBIOP <- fgseaMultilevel(BIOP, Z)
+eBIOP <- fgseaMultilevel(BIOP, Z, scoreType = "pos")
 set.seed(1)
-eGOBP <- fgseaMultilevel(GOBP, Z)
+eGOBP <- fgseaMultilevel(GOBP, Z, scoreType = "pos")
 set.seed(1)
-eREACTOME <- fgseaMultilevel(REACTOME, Z)
+eREACTOME <- fgseaMultilevel(REACTOME, Z, scoreType = "pos")
 
 eKEGG <- eKEGG[eKEGG$ES > 0 & eKEGG$padj < 0.05,]
 eBIOP <- eBIOP[eBIOP$ES > 0 & eBIOP$padj < 0.05,]

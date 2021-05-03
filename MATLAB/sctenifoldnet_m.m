@@ -1,4 +1,4 @@
-function T=sctenifoldnet_m(X0,X1,genelist,varargin)
+function [T,A0,A1]=sctenifoldnet_m(X0,X1,genelist,varargin)
 % T=sctenifoldnet_m(X0,X1,genelist);
 %
 % X0 and X1 are gene x cell matrices
@@ -52,14 +52,14 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
         error('Need thirdparty/tensor_toolbox');
     end
     if exist('sc_pcnet.m','file')~=2
-        error('Need sc_pcnet.m in the scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
+        error('Need sc_pcnet.m in scGEAToolbox https://github.com/jamesjcai/scGEAToolbox');
     end    
     
     
-    %X0=sc_norm(X0,"type","libsize");
-    %X1=sc_norm(X1,"type","libsize");
-    X0=sc_transform(X0);
-    X1=sc_transform(X1);    
+    X0=sc_norm(X0,"type","libsize");
+    X1=sc_norm(X1,"type","libsize");
+    %X0=sc_transform(X0);
+    %X1=sc_transform(X1);
     tic
     disp('Sample 1/2 ...')
     [XM0]=i_nc(X0,nsubsmpl,3,csubsmpl,usebootstrp);
@@ -77,14 +77,17 @@ function T=sctenifoldnet_m(X0,X1,genelist,varargin)
         save(sprintf('A0_%s',tstr),'A0','genelist','-v7.3');
         save(sprintf('A1_%s',tstr),'A1','genelist','-v7.3');
     end
-    A0=0.5*(A0+A0');
-    A1=0.5*(A1+A1');
+    A0sym=0.5*(A0+A0');
+    A1sym=0.5*(A1+A1');
     tic
     disp('Manifold alignment')
-    [aln0,aln1]=i_ma(A0,A1);
+    [aln0,aln1]=i_ma(A0sym,A1sym);
     toc
     
     % [aln0,aln1]=i_mashup(XM0,XM1);
     T=i_dr(aln0,aln1,genelist,doqqplot);
+%         pd = makedist('Gamma','a',0.5,'b',2);
+%         qqplot(FC,pd);
 end
+
 
