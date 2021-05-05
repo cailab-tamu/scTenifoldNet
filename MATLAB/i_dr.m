@@ -1,6 +1,6 @@
-function [T]=i_dr(aln0,aln1,genelist,doplot)
+function [T]=i_dr(aln0,aln1,genelist,doplot,dosort)
 % DR - differential regulatory gene identification 
-
+    if nargin<5, dosort=true; end
     if nargin<4, doplot=false; end
     if nargin<3, genelist=string(num2cell(1:size(aln0,1)))'; end
     drdist=vecnorm(aln0-aln1,2,2).^2;
@@ -12,7 +12,9 @@ function [T]=i_dr(aln0,aln1,genelist,doplot)
     sortid=(1:length(genelist))';
     if size(genelist,2)>1, genelist=genelist'; end
     T=table(sortid,genelist,drdist,FC,pValues,pAdjusted);
-    T = sortrows(T,'drdist','descend');
+    if dosort
+        T = sortrows(T,'drdist','descend');
+    end
     if doplot
         pd = makedist('Gamma','a',0.5,'b',2);
         qqplot(FC,pd);
