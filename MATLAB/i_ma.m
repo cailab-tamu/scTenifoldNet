@@ -1,4 +1,5 @@
 function [aln0,aln1]=i_ma(A0,A1,ndim)
+% MA - manifold alignment
 
 if nargin<3, ndim=30; end
 mu=0.9;

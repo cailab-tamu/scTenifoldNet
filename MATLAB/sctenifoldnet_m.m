@@ -70,13 +70,17 @@ function [T,A0,A1]=sctenifoldnet_m(X0,X1,genelist,varargin)
     toc
     tic
     disp('Tensor decomposition')
-    [A0,A1]=i_td(XM0,XM1,tdmethod);
+    [A0,A1]=i_td2(XM0,XM1,tdmethod);
     toc
     if savegrn
         tstr=matlab.lang.makeValidName(datestr(datetime));
         save(sprintf('A0_%s',tstr),'A0','genelist','-v7.3');
         save(sprintf('A1_%s',tstr),'A1','genelist','-v7.3');
     end
+    
+    A0=e_filtadjc(A0);
+    A1=e_filtadjc(A1);
+    
     A0sym=0.5*(A0+A0');
     A1sym=0.5*(A1+A1');
     tic
@@ -85,9 +89,10 @@ function [T,A0,A1]=sctenifoldnet_m(X0,X1,genelist,varargin)
     toc
     
     % [aln0,aln1]=i_mashup(XM0,XM1);
-    T=i_dr(aln0,aln1,genelist,doqqplot);
-%         pd = makedist('Gamma','a',0.5,'b',2);
-%         qqplot(FC,pd);
+    T=i_dr(aln0,aln1,genelist);
+    if doqqplot
+        e_mkqqplot(T);
+    end
 end
 
 

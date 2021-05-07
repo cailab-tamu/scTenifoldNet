@@ -1,4 +1,8 @@
 function [A0]=i_td1(XM0,methodid)
+% TD - tensor decomposition for denoising
+%
+% input:  XM0 - k multi-layer network array (n x n x k)
+% output: A0 - n x n adjacency matrix of denoised network
 
 if nargin<2, methodid=1; end
     
@@ -15,7 +19,7 @@ switch methodid
         Xhat0=do_td_tucker(XM0);    
 end
 A0=mean(Xhat0,3);
-A0=e_transf(A0);
+% A0=e_filtadjc(A0);
 end
 
 

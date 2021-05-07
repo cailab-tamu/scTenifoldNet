@@ -1,5 +1,4 @@
-function A=e_transf(A,q)
-error('This function is obsolete. Use E_FILTADJC instead');
+function A=e_filtadjc(A,q)
 % A - adjacency matrix
 if nargin<2, q=0.95; end
 dim=size(A);

@@ -1,4 +1,10 @@
-function [A0,A1]=i_td(XM0,XM1,methodid)
+function [A0,A1]=i_td2(XM0,XM1,methodid)
+% TD - tensor decomposition for denoising
+%
+% inputs:  XM0 - k multi-layer network array (n x n x k)
+%          XM1 - k multi-layer network array (n x n x k)
+% outputs: A0 - n x n adjacency matrix of denoised network
+%          A1 - n x n adjacency matrix of denoised network
 
 if nargin<3, methodid=1; end
 if exist('tensor.m','file')~=2
@@ -28,7 +34,4 @@ switch methodid
 end
 A0=mean(Xhat0,3);
 A1=mean(Xhat1,3);
-
-A0=e_transf(A0);
-A1=e_transf(A1);
 end
