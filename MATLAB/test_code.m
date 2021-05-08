@@ -1,6 +1,7 @@
 NCELLS=2000;
 NGENES=400;
 
+rng(123);
 X0=nbinrnd(20,0.98,NGENES,NCELLS);
 X0=X0(:,sum(X0)>120);
 X1=X0;
@@ -20,15 +21,15 @@ X1=sc_norm(X1,"type","libsize");
 addpath('thirdparty\tensor_toolbox\');
 [XM0]=i_nc(X0);  % s0_network_constr;
 [XM1]=i_nc(X1);  % s1_network_constr;
-[A0,A1]=i_td(XM0,XM1);    % s2_tensor_decomp;
+[A0,A1]=i_td2(XM0,XM1);    % s2_tensor_decomp;
 
 %A0=0.5*(A0+A0');
 %A1=0.5*(A1+A1');
 
-[aln0,aln1]=i_ma(A0,A1);  % s3_manifold_algn;
+[aln0,aln1]=i_ma(A0,A1);            % s3_manifold_algn;
+T=i_dr(aln0,aln1,genelist,true);    % diff regulatory gene detection
 figure;
-T=i_dr(aln0,aln1,genelist,true);   % diff regulatory gene detection
-
+e_mkqqplot(T);
 return;
 %%
 % figure;

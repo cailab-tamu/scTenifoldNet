@@ -10,7 +10,7 @@ if numel(dim)==2
     end
 elseif numel(dim)==3
     for k=1:dim(3)
-        A(:,:,k)=e_transf(A(:,:,k),q);
+        A(:,:,k)=e_filtadjc(A(:,:,k),q);
     end
 end
 end

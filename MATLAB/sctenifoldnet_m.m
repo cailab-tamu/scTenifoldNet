@@ -60,6 +60,8 @@ function [T,A0,A1]=sctenifoldnet_m(X0,X1,genelist,varargin)
     X1=sc_norm(X1,"type","libsize");
     %X0=sc_transform(X0);
     %X1=sc_transform(X1);
+    
+    rng('default');
     tic
     disp('Sample 1/2 ...')
     [XM0]=i_nc(X0,nsubsmpl,3,csubsmpl,usebootstrp);
