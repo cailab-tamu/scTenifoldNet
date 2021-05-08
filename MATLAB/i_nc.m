@@ -27,8 +27,8 @@ if nargin<2, nsubsmpl=10; end        % number of subsamples
             Xrep=Xrep(:,1:csubsmpl);
         end        
         A=sc_pcnetpar(Xrep,ncom,true);
-        XM(:,:,k)=e_filtadjc(A);
-        %a=max(abs(A(:)));
-        %XM(:,:,k)=A./a;
+        %XM(:,:,k)=e_filtadjc(A);
+        a=max(abs(A(:)));
+        XM(:,:,k)=A./a;
     end
 end
