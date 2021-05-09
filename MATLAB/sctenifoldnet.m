@@ -70,6 +70,7 @@ function [T,A0,A1]=sctenifoldnet(X0,X1,genelist,varargin)
     tic
     disp('Tensor decomposition')
     [A0]=i_td1(XM,tdmethod);
+    [A0]=e_filtadjc(A0);
     toc
     if savegrn
         tic
@@ -84,7 +85,8 @@ function [T,A0,A1]=sctenifoldnet(X0,X1,genelist,varargin)
     toc
     tic
     disp('Tensor decomposition')
-    [A1]=i_td1(XM,tdmethod);
+    A1=i_td1(XM,tdmethod);
+    A1=e_filtadjc(A1); 
     toc
     if savegrn
         tic
@@ -92,8 +94,8 @@ function [T,A0,A1]=sctenifoldnet(X0,X1,genelist,varargin)
         save(sprintf('A1_%s',tstr),'A1','genelist','-v7.3');
         toc
     end    
-    A0=e_filtadjc(A0);
-    A1=e_filtadjc(A1);    
+
+       
     A0sym=0.5*(A0+A0');
     A1sym=0.5*(A1+A1');
     tic
