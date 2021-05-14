@@ -3,6 +3,9 @@ function [T,A0,A1]=sctenifoldnet_m(X0,X1,genelist,varargin)
 %
 % X0 and X1 are gene x cell matrices
 % 
+error('This function is obslete. Use SCTENIFOLD instead')
+
+
     if nargin<2
         error(sprintf('USAGE: T=sctenifoldnet_m(X0,X1);\n       T=sctenifoldnet_m(X0,X1,genelist,''qqplot'',true);'));
     end
