@@ -78,7 +78,7 @@ function [T,A0,A1]=sctenifoldnet(X0,X1,genelist,varargin)
         tstr=matlab.lang.makeValidName(datestr(datetime));
         save(sprintf('A0_%s',tstr),'A0','genelist','-v7.3');
         toc
-    end    
+    end
     tic
     disp('Sample 2/2 ...')
     [XM]=i_nc(X1,nsubsmpl,3,csubsmpl,usebootstrp);
@@ -86,7 +86,7 @@ function [T,A0,A1]=sctenifoldnet(X0,X1,genelist,varargin)
     tic
     disp('Tensor decomposition')
     A1=i_td1(XM,tdmethod);
-    A1=e_filtadjc(A1); 
+    A1=e_filtadjc(A1);
     toc
     if savegrn
         tic

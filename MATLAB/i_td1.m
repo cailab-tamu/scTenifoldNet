@@ -19,7 +19,6 @@ switch methodid
         Xhat0=do_td_tucker(XM0);    
 end
 A0=mean(Xhat0,3);
-% A0=e_filtadjc(A0);
 end
 
 
