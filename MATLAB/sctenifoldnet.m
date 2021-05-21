@@ -93,9 +93,8 @@ function [T,A0,A1]=sctenifoldnet(X0,X1,genelist,varargin)
         disp('Saving scGRN network 2/2')
         save(sprintf('A1_%s',tstr),'A1','genelist','-v7.3');
         toc
-    end    
-
-       
+    end
+    
     A0sym=0.5*(A0+A0');
     A1sym=0.5*(A1+A1');
     tic
