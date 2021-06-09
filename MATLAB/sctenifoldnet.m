@@ -4,7 +4,7 @@ function [T,A0,A1]=sctenifoldnet(X0,X1,genelist,varargin)
 % X0 and X1 are gene x cell matrices
 % 
     if nargin<2
-        error(sprintf('USAGE: T=sctenifoldnet_m(X0,X1);\n       T=sctenifoldnet_m(X0,X1,genelist,''qqplot'',true);'));
+        error(sprintf('USAGE: T=sctenifoldnet(X0,X1);\n       T=sctenifoldnet(X0,X1,genelist,''qqplot'',true);'));
     end
     if nargin<3, genelist=string(num2cell(1:size(X0,1)))'; end
     
