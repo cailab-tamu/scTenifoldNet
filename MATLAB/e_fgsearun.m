@@ -9,7 +9,7 @@ end
 
 oldpth=pwd;
 pw1=fileparts(which(mfilename));
-pth=fullfile(pw1,'thirdparty/fgsea');
+pth=fullfile(pw1,'thirdparty','fgsea');
 cd(pth);
 fprintf('CURRENTWDIR = "%s"\n',pth);
 
