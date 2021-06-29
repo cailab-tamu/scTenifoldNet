@@ -58,6 +58,8 @@ function [T,A0,A1]=sctenifoldnet(X0,X1,genelist,varargin)
     
     X0=sc_norm(X0,"type","libsize");
     X1=sc_norm(X1,"type","libsize");
+    X0=log(X0+1);
+    X1=log(X1+1);
     %X0=sc_transform(X0);
     %X1=sc_transform(X1);
     

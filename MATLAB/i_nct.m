@@ -31,6 +31,8 @@ end
     for k=1:nsubsmpl
         fprintf('network...%d of %d\n',k,nsubsmpl);
         Xrep=X(:,startptx(k):startptx(k)+winsize);
+        Xrep=sc_norm(Xrep,'type','libsize');
+        Xrep=log(Xrep+1);
         A=sc_pcnetpar(Xrep,ncom,true);
         if savegrn
             [~,b]=fileparts(tempname);            
