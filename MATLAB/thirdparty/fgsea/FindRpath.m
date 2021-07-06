@@ -2,7 +2,7 @@ function Rpath=FindRpath
 % This function finds the path for the installed R (Project for Statistical Computing) in Windows environment.
 % Only works in Windows environments.
 % e.g.:
-% Rpath=FindPathR
+% Rpath=FindRpath
 % >> 'C:\Program Files\R\R-3.1.1\bin'
 if isunix
     [a,b]=system('which R');
