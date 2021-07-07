@@ -52,6 +52,6 @@ if exist('output.txt','file')
 else
     s=[];
 end
-%if exist('input.txt','file'), delete('input.txt'); end
+if exist('input.txt','file'), delete('input.txt'); end
 if exist('output.txt','file'), delete('output.txt'); end
 cd(oldpth);
