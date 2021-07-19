@@ -1,13 +1,14 @@
 cd(dirname(@__FILE__))
 
-include("ScTenifoldNet.jl")
-using .ScTenifoldNet
+include("ScTenifoldNet2.jl")
+using .ScTenifoldNet2
 X0=rand(100,1000);
 X1=copy(X0)
 X1[4,:].=0.0
 
 
-d,fc,p,adjp=ScTenifoldNet.sctenifoldnet(X0,X1,donorm=false)
+@time d,fc,p,adjp=ScTenifoldNet.sctenifoldnet(X0,X1,donorm=false);
+@time d,fc,p,adjp=ScTenifoldNet2.sctenifoldnet(X0,X1,donorm=false);
 
 #@show Threads.nthreads()
 #@time Z0=ScTenifoldNet.tenrnet(X0, donorm=false)
