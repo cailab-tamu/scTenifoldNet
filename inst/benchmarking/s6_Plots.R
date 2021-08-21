@@ -73,7 +73,7 @@ arrows(x0 = SC_PCR$nCells, x1 = SC_PCR$nCells, y0 = SC_PCR$recallLB, y1 = SC_PCR
 points(SC_PC$nCells, SC_PC$recall, ylim=c(0.15,1), type='b', col = pColors[6],
        ylab = '', xlab = '', pch = 15)
 arrows(x0 = SC_PC$nCells, x1 = SC_PC$nCells, y0 = SC_PC$recallLB, y1 = SC_PC$recallUB,
-       length = 0.03, code = 3, angle = 90, col = pColors[5])
+       length = 0.03, code = 3, angle = 90, col = pColors[6])
 legend('bottomright', legend = c('PCR','SCC', 'MI', 'GENIE3', 'SC+PCR', 'SC+PC'), bty = 'n',
        cex = 0.7, ncol = 2, pch = 15:18, col = pColors)
 dev.off()
