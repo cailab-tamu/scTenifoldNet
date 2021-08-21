@@ -2,22 +2,23 @@ PCR <- read.csv('metrics/PCR.csv')
 SCC <- read.csv('metrics/SCC.csv')
 MI <- read.csv('metrics/MI.csv')
 GENIE3 <- read.csv('metrics/GENIE3.csv')
-
+SC_PCR <- read.csv('metrics/SUPERCELL_PCR.csv')
 
 
 PCR <- PCR[PCR$q == 0,]
 SCC <- SCC[SCC$q == 0,]
 MI <- MI[MI$q == 0,]
 GENIE3 <- GENIE3[GENIE3$q == 0,]
+SC_PCR <- SC_PCR[SC_PCR$q == 0,]
 
 library(RColorBrewer)
-pColors <- RColorBrewer::brewer.pal(4,'Dark2')
+pColors <- RColorBrewer::brewer.pal(5,'Dark2')
 #par(xpd = T, mar = par()$mar + c(0,0,0,1))
 
 png('figures/ACC.png', width = 900, height = 900, res = 300, pointsize = 10)
 #layout(matrix(c(1,1,1,1,2,2,2,2,2), 1, 9, byrow = TRUE))
 par(mar=c(3.5,3.5,1,1), mgp=c(2.4,0.5,0), las = 1)
-plot(PCR$nCells, PCR$acc, ylim=c(0.5,0.8), type='b', col = pColors[1],
+plot(PCR$nCells, PCR$acc, ylim=c(0.5,0.85), type='b', col = pColors[1],
      ylab = '', xlab = '', pch = 15,)
 mtext('Number of Cells', side = 1, line = 1.6)
 mtext('Accuracy', side = 2, line = 2.5, las = 3)
@@ -32,7 +33,11 @@ arrows(x0 = MI$nCells, x1 = MI$nCells, y0 = MI$accLB, y1 = MI$accUB,
 points(GENIE3$nCells, GENIE3$acc, col = pColors[4], type='b', pch = 18)
 arrows(x0 = GENIE3$nCells, x1 = GENIE3$nCells, y0 = GENIE3$accLB, y1 = GENIE3$accUB,
        length = 0.03, code = 3, angle = 90, col = pColors[4])
-legend('bottomright', legend = c('PCR','SCC', 'MI', 'GENIE3'), bty = 'n',
+points(SC_PCR$nCells, SC_PCR$acc, ylim=c(0.5,0.8), type='b', col = pColors[5],
+     ylab = '', xlab = '', pch = 15,)
+arrows(x0 = SC_PCR$nCells, x1 = SC_PCR$nCells, y0 = SC_PCR$accLB, y1 = SC_PCR$accUB,
+       length = 0.03, code = 3, angle = 90, col = pColors[5])
+legend('bottomright', legend = c('PCR','SCC', 'MI', 'GENIE3', 'SC+PCR'), bty = 'n',
        cex = 0.7, ncol = 2, pch = 15:18, col = pColors)
 dev.off()
 
@@ -54,7 +59,11 @@ arrows(x0 = MI$nCells, x1 = MI$nCells, y0 = MI$recallLB, y1 = MI$recallUB,
 points(GENIE3$nCells, GENIE3$recall, col = pColors[4], type='b', pch = 18)
 arrows(x0 = GENIE3$nCells, x1 = GENIE3$nCells, y0 = GENIE3$recallLB, y1 = GENIE3$recallUB,
        length = 0.03, code = 3, angle = 90, col = pColors[4])
-legend('bottomright', legend = c('PCR','SCC', 'MI', 'GENIE3'), bty = 'n',
+points(SC_PCR$nCells, SC_PCR$recall, ylim=c(0.15,1), type='b', col = pColors[5],
+     ylab = '', xlab = '', pch = 15)
+arrows(x0 = SC_PCR$nCells, x1 = SC_PCR$nCells, y0 = SC_PCR$recallLB, y1 = SC_PCR$recallUB,
+       length = 0.03, code = 3, angle = 90, col = pColors[5])
+legend('bottomright', legend = c('PCR','SCC', 'MI', 'GENIE3', 'SC+PCR'), bty = 'n',
        cex = 0.7, ncol = 2, pch = 15:18, col = pColors)
 dev.off()
 
