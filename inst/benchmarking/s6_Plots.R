@@ -3,6 +3,7 @@ SCC <- read.csv('metrics/SCC.csv')
 MI <- read.csv('metrics/MI.csv')
 GENIE3 <- read.csv('metrics/GENIE3.csv')
 SC_PCR <- read.csv('metrics/SUPERCELL_PCR.csv')
+SC_PC <- read.csv('metrics/SUPERCELL_PC.csv')
 
 
 PCR <- PCR[PCR$q == 0,]
@@ -10,9 +11,10 @@ SCC <- SCC[SCC$q == 0,]
 MI <- MI[MI$q == 0,]
 GENIE3 <- GENIE3[GENIE3$q == 0,]
 SC_PCR <- SC_PCR[SC_PCR$q == 0,]
+SC_PC <- SC_PC[SC_PC$q == 0,]
 
 library(RColorBrewer)
-pColors <- RColorBrewer::brewer.pal(5,'Dark2')
+pColors <- RColorBrewer::brewer.pal(6,'Dark2')
 #par(xpd = T, mar = par()$mar + c(0,0,0,1))
 
 png('figures/ACC.png', width = 900, height = 900, res = 300, pointsize = 10)
@@ -37,7 +39,12 @@ points(SC_PCR$nCells, SC_PCR$acc, ylim=c(0.5,0.8), type='b', col = pColors[5],
      ylab = '', xlab = '', pch = 15,)
 arrows(x0 = SC_PCR$nCells, x1 = SC_PCR$nCells, y0 = SC_PCR$accLB, y1 = SC_PCR$accUB,
        length = 0.03, code = 3, angle = 90, col = pColors[5])
-legend('bottomright', legend = c('PCR','SCC', 'MI', 'GENIE3', 'SC+PCR'), bty = 'n',
+points(SC_PC$nCells, SC_PC$acc, ylim=c(0.5,0.8), type='b', col = pColors[6],
+       ylab = '', xlab = '', pch = 15,)
+arrows(x0 = SC_PC$nCells, x1 = SC_PC$nCells, y0 = SC_PC$accLB, y1 = SC_PC$accUB,
+       length = 0.03, code = 3, angle = 90, col = pColors[6])
+
+legend('bottomright', legend = c('PCR','SCC', 'MI', 'GENIE3', 'SC+PCR' , 'SC+PC'), bty = 'n',
        cex = 0.7, ncol = 2, pch = 15:18, col = pColors)
 dev.off()
 
@@ -63,7 +70,11 @@ points(SC_PCR$nCells, SC_PCR$recall, ylim=c(0.15,1), type='b', col = pColors[5],
      ylab = '', xlab = '', pch = 15)
 arrows(x0 = SC_PCR$nCells, x1 = SC_PCR$nCells, y0 = SC_PCR$recallLB, y1 = SC_PCR$recallUB,
        length = 0.03, code = 3, angle = 90, col = pColors[5])
-legend('bottomright', legend = c('PCR','SCC', 'MI', 'GENIE3', 'SC+PCR'), bty = 'n',
+points(SC_PC$nCells, SC_PC$recall, ylim=c(0.15,1), type='b', col = pColors[6],
+       ylab = '', xlab = '', pch = 15)
+arrows(x0 = SC_PC$nCells, x1 = SC_PC$nCells, y0 = SC_PC$recallLB, y1 = SC_PC$recallUB,
+       length = 0.03, code = 3, angle = 90, col = pColors[5])
+legend('bottomright', legend = c('PCR','SCC', 'MI', 'GENIE3', 'SC+PCR', 'SC+PC'), bty = 'n',
        cex = 0.7, ncol = 2, pch = 15:18, col = pColors)
 dev.off()
 
