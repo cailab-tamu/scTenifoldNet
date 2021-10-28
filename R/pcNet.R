@@ -1,5 +1,6 @@
 #' @export pcNet
 #' @importFrom RSpectra svds
+#' @importFrom RhpcBLASctl omp_set_num_threads blas_set_num_threads
 #' @importFrom Matrix Matrix
 #' @importFrom pbapply pbsapply
 #' @importFrom stats quantile
@@ -11,6 +12,7 @@
 #' @param symmetric A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, the weights matrix returned will be symmetric.
 #' @param q A decimal value between 0 and 1. Defines the cut-off threshold of top q\% relationships to be returned.
 #' @param verbose A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, a progress bar is shown.
+#' @param nCores An integer value. Defines the number of cores to be used.
 #' @return A gene regulatory network in dgCMatrix format.
 #' @references 
 #' \itemize{
@@ -57,7 +59,8 @@ pcNet <- function(X,
                   nComp = 3,
                   scaleScores = TRUE,
                   symmetric = FALSE,
-                  q = 0, verbose = TRUE) {
+                  q = 0, verbose = TRUE,
+                  nCores = parallel::detectCores()) {
   if (!all(Matrix::rowSums(X) > 0)) {
     stop('Quality control has not been applied over the matrix.')
   }
@@ -100,6 +103,9 @@ pcNet <- function(X,
   A <- 1 - diag(n)
   
   # Apply the principal component regression for each gene
+  RhpcBLASctl::omp_set_num_threads(nCores)
+  RhpcBLASctl::blas_set_num_threads(nCores)
+  
   if(verbose){
     B <- pbapply::pbsapply(seq_len(n), pcCoefficients)  
   } else {

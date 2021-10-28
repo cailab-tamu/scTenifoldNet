@@ -7,6 +7,7 @@
 scTenifoldNet(
   X,
   Y,
+  qc = TRUE,
   qc_minLibSize = 1000,
   qc_removeOutlierCells = TRUE,
   qc_minPCT = 0.05,
@@ -21,13 +22,16 @@ scTenifoldNet(
   td_nDecimal = 1,
   td_maxIter = 1000,
   td_maxError = 1e-05,
-  ma_nDim = 30
+  ma_nDim = 30,
+  nCores = parallel::detectCores()
 )
 }
 \arguments{
 \item{X}{Raw counts matrix with cells as columns and genes (symbols) as rows.}
 
 \item{Y}{Raw counts matrix with cells as columns and genes (symbols) as rows.}
+
+\item{qc}{A boolean value (TRUE/FALSE), if TRUE, a quality control is applied over the data.}
 
 \item{qc_minLibSize}{An integer value. Defines the minimum library size required for a cell to be included in the analysis.}
 
@@ -58,6 +62,8 @@ scTenifoldNet(
 \item{td_maxError}{A decimal value between 0 and 1. Defines the relative Frobenius norm error tolerance.}
 
 \item{ma_nDim}{An integer value. Defines the number of dimensions of the low-dimensional feature space to be returned from the non-linear manifold alignment.}
+
+\item{nCores}{An integer value. Defines the number of cores to be used.}
 }
 \value{
 A list with 3 slots as follows: 

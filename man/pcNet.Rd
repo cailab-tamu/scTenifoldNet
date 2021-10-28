@@ -10,7 +10,8 @@ pcNet(
   scaleScores = TRUE,
   symmetric = FALSE,
   q = 0,
-  verbose = TRUE
+  verbose = TRUE,
+  nCores = parallel::detectCores()
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ pcNet(
 \item{q}{A decimal value between 0 and 1. Defines the cut-off threshold of top q\% relationships to be returned.}
 
 \item{verbose}{A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, a progress bar is shown.}
+
+\item{nCores}{An integer value. Defines the number of cores to be used.}
 }
 \value{
 A gene regulatory network in dgCMatrix format.

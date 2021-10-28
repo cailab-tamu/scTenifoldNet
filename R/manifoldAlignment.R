@@ -1,10 +1,12 @@
 #' @export manifoldAlignment
 #' @importFrom RSpectra eigs
+#' @importFrom RhpcBLASctl omp_set_num_threads blas_set_num_threads
 #' @title Performs non-linear manifold alignment of two gene regulatory networks. 
 #' @description Build comparable low-dimensional features for two weight-averaged denoised single-cell gene regulatory networks. Using a non-linear network embedding method \code{manifoldAlignment } aligns two gene regulatory networks and finds the structural similarities between them. This function is a wrapper of the \code{Python} code provided by Vu et al., (2012) at https://github.com/all-umass/ManifoldWarping. 
 #' @param X A gene regulatory network.
 #' @param Y A gene regulatory network.
 #' @param d The dimension of the low-dimensional feature space.
+#' @param nCores An integer value. Defines the number of cores to be used.
 #' @return A low-dimensional projection for two the two gene regulatory networks used as input. The output is a labeled matrix with two times the number of shared genes as rows ( X_ genes followed by Y_ genes in the same order) and \code{d} number of columns.
 #' @references \itemize{
 #' \item Vu, Hoa Trong, Clifton Carey, and Sridhar Mahadevan. "Manifold warping: Manifold alignment over time." Twenty-Sixth AAAI Conference on Artificial Intelligence. 2012.
@@ -67,7 +69,7 @@
 #'        pch = c(16,1), cex = 0.7)
 #' }
 
-manifoldAlignment <- function(X, Y, d = 30){
+manifoldAlignment <- function(X, Y, d = 30, nCores = parallel::detectCores()){
   sharedGenes <- intersect(rownames(X), rownames(Y))
   X <- X[sharedGenes, sharedGenes]
   Y <- Y[sharedGenes, sharedGenes]
@@ -79,6 +81,10 @@ manifoldAlignment <- function(X, Y, d = 30){
   W <- -W
   diag(W) <- 0
   diag(W) <- -apply(W, 2, sum)
+  
+  RhpcBLASctl::omp_set_num_threads(nCores)
+  RhpcBLASctl::blas_set_num_threads(nCores)
+  
   E <- suppressWarnings(RSpectra::eigs(W, d*2, 'SR'))
   E$values <- suppressWarnings(as.numeric(E$values))
   E$vectors <- suppressWarnings(apply(E$vectors,2,as.numeric))

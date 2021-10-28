@@ -4,6 +4,7 @@
 #' @description Construct and compare single-cell gene regulatory networks (scGRNs) using single-cell RNA-seq (scRNA-seq) data sets collected from different conditions based on principal component regression, tensor decomposition, and manifold alignment.
 #' @param X Raw counts matrix with cells as columns and genes (symbols) as rows.
 #' @param Y Raw counts matrix with cells as columns and genes (symbols) as rows.
+#' @param qc A boolean value (TRUE/FALSE), if TRUE, a quality control is applied over the data. 
 #' @param qc_minLibSize An integer value. Defines the minimum library size required for a cell to be included in the analysis.
 #' @param qc_removeOutlierCells A boolean value (TRUE/FALSE), if TRUE, the identified cells with library size greater than 1.58 IQR/sqrt(n) computed from the sample, are removed. For further details see: \code{?boxplot.stats}
 #' @param qc_minPCT A decimal value between 0 and 1. Defines the minimum fraction of cells where the gene needs to be expressed to be included in the analysis.
@@ -19,6 +20,7 @@
 #' @param td_maxIter An integer value. Defines the maximum number of iterations if error stay above \code{td_maxError}.
 #' @param td_maxError A decimal value between 0 and 1. Defines the relative Frobenius norm error tolerance.
 #' @param ma_nDim An integer value. Defines the number of dimensions of the low-dimensional feature space to be returned from the non-linear manifold alignment.
+#' @param nCores An integer value. Defines the number of cores to be used.
 #' @return A list with 3 slots as follows: 
 #' \itemize{
 #' \item{tensorNetworks:} The generated weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition.
@@ -155,14 +157,18 @@
 #' legend('bottomright', legend = c('FDR < 0.1'), pch = 16, col = 'red', bty='n', cex = 0.7)
 #' }
 
-scTenifoldNet <- function(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TRUE,
+scTenifoldNet <- function(X, Y, qc = TRUE, qc_minLibSize = 1000, qc_removeOutlierCells = TRUE,
                           qc_minPCT = 0.05, qc_maxMTratio = 0.1, nc_nNet = 10,
                           nc_nCells = 500, nc_nComp = 3, nc_symmetric = FALSE, nc_scaleScores = TRUE,
-                          nc_q = 0.05, td_K = 3, td_nDecimal = 1, td_maxIter = 1e3, td_maxError = 1e-5, ma_nDim = 30){
+                          nc_q = 0.05, td_K = 3, td_nDecimal = 1, td_maxIter = 1e3, td_maxError = 1e-5, 
+                          ma_nDim = 30, nCores = parallel::detectCores()){
+ 
   # Single-cell Quality Control
-  X <- scQC(X, minLibSize = qc_minLibSize, removeOutlierCells = qc_removeOutlierCells, minPCT = qc_minPCT, maxMTratio = qc_maxMTratio)
-  Y <- scQC(Y, minLibSize = qc_minLibSize, removeOutlierCells = qc_removeOutlierCells, minPCT = qc_minPCT, maxMTratio = qc_maxMTratio)
-  
+  if(isTRUE(qc)){
+    X <- scQC(X, minLibSize = qc_minLibSize, removeOutlierCells = qc_removeOutlierCells, minPCT = qc_minPCT, maxMTratio = qc_maxMTratio)
+    Y <- scQC(Y, minLibSize = qc_minLibSize, removeOutlierCells = qc_removeOutlierCells, minPCT = qc_minPCT, maxMTratio = qc_maxMTratio)
+  }
+
   # Counts per million (CPM) normalization
   X <- cpmNormalization(X)
   Y <- cpmNormalization(Y)
@@ -180,9 +186,9 @@ scTenifoldNet <- function(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TR
   
   # Construction of gene-regulatory networks based on principal component regression (pcNet) and random subsampling.
   set.seed(1)
-  xList <- makeNetworks(X = X, nCells = nc_nCells, nNet = nc_nNet, nComp = nc_nComp, scaleScores = nc_scaleScores, symmetric = nc_symmetric, q = (1-nc_q))
+  xList <- makeNetworks(X = X, nCells = nc_nCells, nNet = nc_nNet, nComp = nc_nComp, scaleScores = nc_scaleScores, symmetric = nc_symmetric, q = (1-nc_q), nCores = nCores)
   set.seed(1)
-  yList <- makeNetworks(X = Y, nCells = nc_nCells, nNet = nc_nNet, nComp = nc_nComp, scaleScores = nc_scaleScores, symmetric = nc_symmetric, q = (1-nc_q))
+  yList <- makeNetworks(X = Y, nCells = nc_nCells, nNet = nc_nNet, nComp = nc_nComp, scaleScores = nc_scaleScores, symmetric = nc_symmetric, q = (1-nc_q), nCores = nCores)
 
   # CANDECOMP/PARAFRAC Tensor Decomposition
       # for(M in c('I','3d','4d')){
@@ -203,7 +209,7 @@ scTenifoldNet <- function(X, Y, qc_minLibSize = 1000, qc_removeOutlierCells = TR
   # Non-linear manifold alignment
       # for(A in c('O','D','P')){
   set.seed(1)
-  mA <- manifoldAlignment(tX , tY, d = ma_nDim)
+  mA <- manifoldAlignment(tX , tY, d = ma_nDim, nCores = nCores)
   rownames(mA) <- c(paste0('X_', sharedGenes),paste0('y_', sharedGenes))
       # outFile <-paste0(id,'_',M,'tensor_',A,'alignment.csv')
       # write.csv(mA, outFile)

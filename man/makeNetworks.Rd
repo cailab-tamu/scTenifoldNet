@@ -11,7 +11,8 @@ makeNetworks(
   nComp = 3,
   scaleScores = TRUE,
   symmetric = FALSE,
-  q = 0.95
+  q = 0.95,
+  nCores = parallel::detectCores()
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ makeNetworks(
 \item{symmetric}{A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, the weights matrix returned will be symmetric.}
 
 \item{q}{A decimal value between 0 and 1. Represent the cut-off threshold of top q\% relationships to be returned.}
+
+\item{nCores}{An integer value. Defines the number of cores to be used.}
 }
 \value{
 A list with \code{nNet} gene regulatory networks in dgCMatrix format. Each one computed from a randomly selected subsample of \code{nCells} cells.

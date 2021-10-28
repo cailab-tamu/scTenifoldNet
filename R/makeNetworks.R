@@ -9,6 +9,7 @@
 #' @param scaleScores A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, the weights will be normalized such that the maximum absolute value is 1.
 #' @param symmetric A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, the weights matrix returned will be symmetric.
 #' @param q A decimal value between 0 and 1. Represent the cut-off threshold of top q\% relationships to be returned.
+#' @param nCores An integer value. Defines the number of cores to be used.
 #' @return A list with \code{nNet} gene regulatory networks in dgCMatrix format. Each one computed from a randomly selected subsample of \code{nCells} cells.
 #' @references 
 #' \itemize{
@@ -67,7 +68,7 @@
 #' mnOutput[[2]][1:10,1:10]
 #' mnOutput[[3]][1:10,1:10]
 
-makeNetworks <- function(X, nNet = 10, nCells = 500, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0.95){
+makeNetworks <- function(X, nNet = 10, nCells = 500, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0.95, nCores = parallel::detectCores()){
   geneList <- rownames(X)
   nGenes <- length(geneList)
   nCol <- ncol(X)
@@ -77,7 +78,7 @@ makeNetworks <- function(X, nNet = 10, nCells = 500, nComp = 3, scaleScores = TR
       Z <- as.matrix(X[,Z])
       Z <- Z[apply(Z,1,sum) > 0,]
       if(nComp > 1 & nComp < nGenes){
-        Z <- pcNet(Z, nComp = nComp, scaleScores = scaleScores, symmetric = symmetric, q = q, verbose = FALSE)  
+        Z <- pcNet(Z, nComp = nComp, scaleScores = scaleScores, symmetric = symmetric, q = q, verbose = FALSE, nCores = nCores)  
       } else {
         stop('nComp should be greater or equal than 2 and lower than the total number of genes')
       }

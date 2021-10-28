@@ -4,7 +4,7 @@
 \alias{manifoldAlignment}
 \title{Performs non-linear manifold alignment of two gene regulatory networks.}
 \usage{
-manifoldAlignment(X, Y, d = 30)
+manifoldAlignment(X, Y, d = 30, nCores = parallel::detectCores())
 }
 \arguments{
 \item{X}{A gene regulatory network.}
@@ -12,6 +12,8 @@ manifoldAlignment(X, Y, d = 30)
 \item{Y}{A gene regulatory network.}
 
 \item{d}{The dimension of the low-dimensional feature space.}
+
+\item{nCores}{An integer value. Defines the number of cores to be used.}
 }
 \value{
 A low-dimensional projection for two the two gene regulatory networks used as input. The output is a labeled matrix with two times the number of shared genes as rows ( X_ genes followed by Y_ genes in the same order) and \code{d} number of columns.

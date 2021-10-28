@@ -140,7 +140,7 @@ Networks are provided as matrices of class *dgCMatrix* that can be easily conver
 # [71] ng62->ng6 ng63->ng6 ng65->ng6 ng73->ng6 ng77->ng6 ng78->ng6 ng80->ng6 ng83->ng6 ng86->ng6 mt-1->ng6
 # + ... omitted several edges
  ```
- [igraph](https://igraph.org/r/) provides functions for the [topological analysis of biological networks](https://www.ebi.ac.uk/training-beta/online/courses/network-analysis-of-protein-interaction-data-an-introduction/introduction-to-graph-theory/graph-theory-network-topology/).
+ [igraph](https://igraph.org/r/) provides functions for the [topological analysis of biological networks](https://www.ebi.ac.uk/training/online/courses/network-analysis-of-protein-interaction-data-an-introduction/introduction-to-graph-theory/graph-theory-network-topology/).
 
 #### Accessing the manifold alignment result
 The generated low-dimensional features result of the non-linear manifold alignment is reported as an object of class *data.frame* with 2 times the number of tested genes and *d* dimensions (by default= 30). The information of the *X* sample is located at the top of the list followed by the one for the *Y* sample.
