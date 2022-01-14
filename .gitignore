@@ -10,4 +10,3 @@ inst/manuscript/datasets/morphineNeurons/mock/control.mtx
 inst/manuscript/reactomeDB2019.txt
 inst/manuscript/datasets/
 MATLAB/*.*
-MATLAB/private/FindRpath.m
