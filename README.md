@@ -39,16 +39,16 @@ Running time:
 --------
 The running time of scTenifoldNet is largely dependent on how long it takes to construct scGRNs from subsampled expression matrices. Time increases proportional to the number of cells and genes in the dataset used as input. Below is a table of running times under different scenarios:
 
-| Number of Cells | Number of Genes | Running Time |
-|-----------------|-----------------|--------------|
-| 300             | 1000            | 3.45 min     |
-| 1000            | 1000            | 4.25 min     |
-| 1000            | 5000            | 171.88 min (2 h 51.6 min) |
-| 2500            | 5000            | 175.29 min (2 h 55.3 min) |
-| 5000            | 5000            | 188.88 min (3 h 8.9 min) |
-| 5000            | 7500            | 189.51 min (3 h 9.5 min)  |
-| 7500            | 5000            | 615.45 min (10 h 15.5 min) |
-| 7500            | 7500            | 616.12 min (10 h 16.1 min)  |
+| Number of Cells | Number of Genes | Running Time | Memory Required |
+|-----------------|-----------------|--------------|-----------------|
+| 300             | 1000            | 3.45 min     | 0.38 GB |
+| 1000            | 1000            | 4.25 min     | 0.4 GB |
+| 1000            | 5000            | 171.88 min (2 h 51.6 min) | 9.16 GB |
+| 2500            | 5000            | 175.29 min (2 h 55.3 min) | 9.5 GB |
+| 5000            | 5000            | 188.88 min (3 h 8.9 min) | 10.06 GB |
+| 5000            | 7500            | 189.51 min (3 h 9.5 min)  | 21.8 GB |
+| 7500            | 5000            | 615.45 min (10 h 15.5 min) | 10.62 GB |
+| 7500            | 7500            | 616.12 min (10 h 16.1 min)  | 22.63 GB |
 
 
 Output:
