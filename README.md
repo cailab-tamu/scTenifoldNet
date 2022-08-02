@@ -272,3 +272,4 @@ A BibTeX entry for LaTeX users is
     url = {https://CRAN.R-project.org/package=scTenifoldNet},
   }
   ```
+©️ The Texas A & M University System. All rights reserved.
