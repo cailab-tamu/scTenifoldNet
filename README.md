@@ -5,6 +5,8 @@ A R/MATLAB/Python package to construct and compare single-cell gene regulatory n
 
 Python version of scTenifoldNet is available at: https://github.com/qwerty239qwe/scTenifoldpy
 
+MATLAB version is available at: https://github.com/jamesjcai/scGEAToolbox
+
 Install:
 -------
 **scTenifoldNet/R** is available through the CRAN repositories, you can install **scTenifoldNet**, using the following command:
