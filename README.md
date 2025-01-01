@@ -1,11 +1,13 @@
 scTenifoldNet
 =============
 
-A R/MATLAB package to construct and compare single-cell gene regulatory networks (scGRNs) using single-cell RNA-seq (scRNA-seq) data collected from different conditions based on machine learning methods. scTenifoldNet uses principal component regression, tensor decomposition, and manifold alignment, to accurately identify even subtly shifted gene expression programs.
+A R/MATLAB/Python package to construct and compare single-cell gene regulatory networks (scGRNs) using single-cell RNA-seq (scRNA-seq) data collected from different conditions based on machine learning methods. scTenifoldNet uses principal component regression, tensor decomposition, and manifold alignment, to accurately identify even subtly shifted gene expression programs.
+
+Python version of scTenifoldNet is available at: https://github.com/qwerty239qwe/scTenifoldpy
 
 Install:
 -------
-**scTenifoldNet** is available through the CRAN repositories, you can install **scTenifoldNet**, using the following command:
+**scTenifoldNet/R** is available through the CRAN repositories, you can install **scTenifoldNet**, using the following command:
 ```{R}
 install.packages('scTenifoldNet')
 library(scTenifoldNet)
