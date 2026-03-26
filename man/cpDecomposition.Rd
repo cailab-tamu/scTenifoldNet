@@ -7,31 +7,42 @@
 cpDecomposition(tnsr, num_components = NULL, max_iter = 25, tol = 1e-05)
 }
 \arguments{
-\item{tnsr}{Tensor with K modes}
+\item{tnsr}{Tensor with K modes.}
 
-\item{num_components}{the number of rank-1 K-Tensors to use in approximation}
+\item{num_components}{The number of rank-1 K-Tensors to use in approximation.}
 
-\item{max_iter}{maximum number of iterations if error stays above \code{tol}}
+\item{max_iter}{Maximum number of iterations if error stays above \code{tol}.}
 
-\item{tol}{relative Frobenius norm error tolerance}
+\item{tol}{Relative Frobenius norm error tolerance.}
 }
 \value{
-a list containing the following \describe{
-\item{\code{lambdas}}{a vector of normalizing constants, one for each component}
-\item{\code{U}}{a list of matrices - one for each mode - each matrix with \code{num_components} columns}
-\item{\code{conv}}{whether or not \code{resid} < \code{tol} by the last iteration}
-\item{\code{norm_percent}}{the percent of Frobenius norm explained by the approximation}
-\item{\code{est}}{estimate of \code{tnsr} after compression}
-\item{\code{fnorm_resid}}{the Frobenius norm of the error \code{fnorm(est-tnsr)}}
-\item{\code{all_resids}}{vector containing the Frobenius norm of error for all the iterations}
+A list containing the following \describe{
+  \item{\code{lambdas}}{A vector of normalizing constants, one for each component.}
+  \item{\code{U}}{A list of matrices, one for each mode, each with \code{num_components} columns.}
+  \item{\code{conv}}{Whether or not \code{resid} < \code{tol} by the last iteration.}
+  \item{\code{norm_percent}}{The percent of Frobenius norm explained by the approximation.}
+  \item{\code{est}}{Estimate of \code{tnsr} after compression.}
+  \item{\code{fnorm_resid}}{The Frobenius norm of the error.}
+  \item{\code{all_resids}}{Vector containing the Frobenius norm of error for all iterations.}
 }
 }
 \description{
-Canonical Polyadic (CP) decomposition of a tensor, aka CANDECOMP/PARAFRAC. Approximate a K-Tensor using a sum of \code{num_components} rank-1 K-Tensors. A rank-1 K-Tensor can be written as an outer product of K vectors. There are a total of \code{num_compoents *tnsr@num_modes} vectors in the output, stored in \code{tnsr@num_modes} matrices, each with \code{num_components} columns. This is an iterative algorithm, with two possible stopping conditions: either relative error in Frobenius norm has gotten below \code{tol}, or the \code{max_iter} number of iterations has been reached. For more details on CP decomposition, consult Kolda and Bader (2009).
+Canonical Polyadic (CP) decomposition of a tensor, aka
+  CANDECOMP/PARAFAC. Approximate a K-Tensor using a sum of
+  \code{num_components} rank-1 K-Tensors. A rank-1 K-Tensor can be written
+  as an outer product of K vectors. There are a total of
+  \code{num_components * tnsr$num_modes} vectors in the output, stored in
+  \code{tnsr$num_modes} matrices, each with \code{num_components} columns.
+  This is an iterative algorithm, with two possible stopping conditions:
+  either relative error in Frobenius norm has gotten below \code{tol}, or
+  the \code{max_iter} number of iterations has been reached. For more details
+  on CP decomposition, consult Kolda and Bader (2009).
 }
 \details{
-Uses the Alternating Least Squares (ALS) estimation procedure. A progress bar is included to help monitor operations on large tensors.
+Uses the Alternating Least Squares (ALS) estimation procedure. A
+  progress bar is included to help monitor operations on large tensors.
 }
 \references{
-T. Kolda, B. Bader, "Tensor decomposition and applications". SIAM Applied Mathematics and Applications 2009.
+T. Kolda, B. Bader, "Tensor decomposition and applications".
+  SIAM Applied Mathematics and Applications 2009.
 }

@@ -1,8 +1,16 @@
 #' @export dRegulation
 #' @importFrom stats dist pchisq p.adjust qqnorm
 #' @importFrom MASS boxcox
-#' @title Evaluates gene differential regulation based on manifold alignment distances. 
-#' @description Using the output of the non-linear manifold alignment, this function computes the Euclidean distance between the coordinates for the same gene in both conditions. Calculated distances are then transformed using Box-Cox power transformation, and standardized to ensure normality. P-values are assigned following the chi-square distribution over the fold-change of the squared distance computed with respect to the expectation. 
+#' @importFrom cli cli_alert_info cli_alert_success
+#' @title Evaluates gene differential regulation based on manifold alignment
+#'   distances.
+#' @description Using the output of the non-linear manifold alignment, this
+#'   function computes the Euclidean distance between the coordinates for the
+#'   same gene in both conditions. Calculated distances are then transformed
+#'   using Box-Cox power transformation, and standardized to ensure normality.
+#'   P-values are assigned following the chi-square distribution over the
+#'   fold-change of the squared distance computed with respect to the
+#'   expectation.
 #' @param manifoldOutput A matrix. The output of the non-linear manifold alignment,  a labeled matrix with two times the number of shared genes as rows (X_ genes followed by Y_ genes in the same order) and \code{d} number of columns.
 #' @return A data frame with 6 columns as follows: \itemize{
 #' \item \code{gene} A character vector with the gene id identified from the \code{manifoldAlignment} output.
@@ -66,64 +74,72 @@
 #' qqline(dcOutput$Z)
 #' }
 
-dRegulation <- function(manifoldOutput){
-  
+dRegulation <- function(manifoldOutput) {
+
   geneList <- rownames(manifoldOutput)
   geneList <- geneList[grepl('^X_', geneList)]
-  geneList <- gsub('^X_','', geneList)
+  geneList <- gsub('^X_', '', geneList)
   nGenes <- length(geneList)
-  
-  eGenes <- nrow(manifoldOutput)/2
-  
+
+  eGenes <- nrow(manifoldOutput) / 2
+
   eGeneList <- rownames(manifoldOutput)
   eGeneList <- eGeneList[grepl('^Y_', eGeneList)]
-  eGeneList <- gsub('^Y_','', eGeneList)
-  
-  if(nGenes != eGenes){
+  eGeneList <- gsub('^Y_', '', eGeneList)
+
+  if (nGenes != eGenes) {
     stop('Number of identified and expected genes are not the same')
   }
-  if(!all(eGeneList == geneList)){
-    stop('Genes are not ordered as expected. X_ genes should be followed by Y_ genes in the same order')
+  if (!all(eGeneList == geneList)) {
+    stop('Genes are not ordered as expected. ',
+         'X_ genes should be followed by Y_ genes in the same order')
   }
-  
-  dMetric <- sapply(seq_len(nGenes), function(G){
-    X <- manifoldOutput[G,]
-    Y <- manifoldOutput[(G+nGenes),]
-    I <- rbind(X,Y)
-    O <- dist(I)
-    O <- as.numeric(O)
-    return(O)
+
+  cli::cli_alert_info("Computing distances for {nGenes} genes")
+
+  dMetric <- sapply(seq_len(nGenes), function(G) {
+    X <- manifoldOutput[G, ]
+    Y <- manifoldOutput[(G + nGenes), ]
+    as.numeric(dist(rbind(X, Y)))
   })
-  
-  ### BOX-COX
-  lambdaValues <- seq(-2,2,length.out = 1000)
+
+  # Box-Cox transformation
+  lambdaValues <- seq(-2, 2, length.out = 1000)
   lambdaValues <- lambdaValues[lambdaValues != 0]
-  BC <- try(MASS::boxcox(dMetric~1, plot=FALSE, lambda = lambdaValues), silent = TRUE)
-  if(class(BC) == 'try-error'){
+  BC <- try(MASS::boxcox(dMetric ~ 1, plot = FALSE, lambda = lambdaValues),
+            silent = TRUE)
+  if (inherits(BC, 'try-error')) {
     nD <- dMetric
   } else {
     BC <- BC$x[which.max(BC$y)]
-    if(BC < 0){
-      nD <- 1/(dMetric ^ BC)
+    if (BC < 0) {
+      nD <- 1 / (dMetric ^ BC)
     } else {
       nD <- dMetric ^ BC
     }
   }
+
   Z <- scale(nD)
   E <- mean(dMetric^2)
-  FC <- dMetric^2/E
-  pValues <- pchisq(q = FC,df = 1,lower.tail = FALSE)
+  FC <- dMetric^2 / E
+  pValues <- pchisq(q = FC, df = 1, lower.tail = FALSE)
   pAdjusted <- p.adjust(pValues, method = 'fdr')
+
   dOut <- data.frame(
-    gene = geneList, 
+    gene = geneList,
     distance = dMetric,
     Z = Z,
     FC = FC,
     p.value = pValues,
     p.adj = pAdjusted
   )
-  dOut <- dOut[order(dOut$p.value),]
+  dOut <- dOut[order(dOut$p.value), ]
   dOut <- as.data.frame.array(dOut)
+
+  nSig <- sum(dOut$p.adj < 0.05)
+  cli::cli_alert_success(
+    "Differential regulation complete: {nSig}/{nGenes} significant genes (FDR < 0.05)"
+  )
   return(dOut)
 }
 

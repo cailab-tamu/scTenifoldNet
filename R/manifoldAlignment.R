@@ -1,8 +1,14 @@
 #' @export manifoldAlignment
 #' @importFrom RSpectra eigs
 #' @importFrom RhpcBLASctl omp_set_num_threads blas_set_num_threads
-#' @title Performs non-linear manifold alignment of two gene regulatory networks. 
-#' @description Build comparable low-dimensional features for two weight-averaged denoised single-cell gene regulatory networks. Using a non-linear network embedding method \code{manifoldAlignment } aligns two gene regulatory networks and finds the structural similarities between them. This function is a wrapper of the \code{Python} code provided by Vu et al., (2012) at https://github.com/all-umass/ManifoldWarping. 
+#' @importFrom cli cli_alert_info cli_alert_success
+#' @title Performs non-linear manifold alignment of two gene regulatory networks.
+#' @description Build comparable low-dimensional features for two weight-averaged
+#'   denoised single-cell gene regulatory networks. Using a non-linear network
+#'   embedding method \code{manifoldAlignment} aligns two gene regulatory networks
+#'   and finds the structural similarities between them. This function is a
+#'   wrapper of the \code{Python} code provided by Vu et al., (2012) at
+#'   https://github.com/all-umass/ManifoldWarping.
 #' @param X A gene regulatory network.
 #' @param Y A gene regulatory network.
 #' @param d The dimension of the low-dimensional feature space.
@@ -69,31 +75,43 @@
 #'        pch = c(16,1), cex = 0.7)
 #' }
 
-manifoldAlignment <- function(X, Y, d = 30, nCores = parallel::detectCores()){
+manifoldAlignment <- function(X, Y, d = 30, nCores = parallel::detectCores()) {
   sharedGenes <- intersect(rownames(X), rownames(Y))
+  n <- length(sharedGenes)
+  cli::cli_alert_info("Manifold alignment: {n} shared genes, d={d}")
+
   X <- X[sharedGenes, sharedGenes]
   Y <- Y[sharedGenes, sharedGenes]
-  L <- diag(length(sharedGenes))
-  wX <- X+1
-  wY <- Y+1
-  wXY <- 0.9 * (sum(wX) + sum(wY)) / (2 * sum(L)) * L
-  W <- rbind(cbind(wX, wXY), cbind(t(wXY), wY))
-  W <- -W
+
+  wX <- X + 1
+  wY <- Y + 1
+  mu <- 0.9 * (sum(wX) + sum(wY)) / (2 * n)
+
+  W <- matrix(0, 2 * n, 2 * n)
+  W[1:n, 1:n] <- wX
+  W[(n + 1):(2 * n), (n + 1):(2 * n)] <- wY
+  offIdx <- seq_len(n)
+  W[cbind(offIdx, offIdx + n)] <- mu
+  W[cbind(offIdx + n, offIdx)] <- mu
   diag(W) <- 0
-  diag(W) <- -apply(W, 2, sum)
-  
+  diag(W) <- colSums(W)
+  W <- -W
+  diag(W) <- -diag(W)
+
   RhpcBLASctl::omp_set_num_threads(nCores)
   RhpcBLASctl::blas_set_num_threads(nCores)
-  
-  E <- suppressWarnings(RSpectra::eigs(W, d*2, 'SR'))
-  E$values <- suppressWarnings(as.numeric(E$values))
-  E$vectors <- suppressWarnings(apply(E$vectors,2,as.numeric))
+
+  E <- suppressWarnings(RSpectra::eigs(W, d * 2, 'SR'))
+  E$values <- Re(E$values)
+  E$vectors <- Re(E$vectors)
   newOrder <- order(E$values)
   E$values <- E$values[newOrder]
-  E$vectors <- E$vectors[,newOrder]
-  E$vectors <- E$vectors[,E$values > 1e-8]
-  alignedNet <- E$vectors[,seq_len(d)]
+  E$vectors <- E$vectors[, newOrder]
+  E$vectors <- E$vectors[, E$values > 1e-8]
+  alignedNet <- E$vectors[, seq_len(d)]
   colnames(alignedNet) <- paste0('NLMA ', seq_len(d))
   rownames(alignedNet) <- c(paste0('X_', sharedGenes), paste0('Y_', sharedGenes))
+
+  cli::cli_alert_success("Manifold alignment complete: {d} dimensions")
   return(alignedNet)
 }

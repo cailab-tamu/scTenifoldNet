@@ -1,7 +1,13 @@
 #' @export scTenifoldNet
 #' @title scTenifoldNet
 #' @importFrom methods as
-#' @description Construct and compare single-cell gene regulatory networks (scGRNs) using single-cell RNA-seq (scRNA-seq) data sets collected from different conditions based on principal component regression, tensor decomposition, and manifold alignment.
+#' @importFrom Rcpp sourceCpp
+#' @importFrom cli cli_h1 cli_alert_info cli_alert_success
+#' @useDynLib scTenifoldNet, .registration = TRUE
+#' @description Construct and compare single-cell gene regulatory networks
+#'   (scGRNs) using single-cell RNA-seq (scRNA-seq) data sets collected from
+#'   different conditions based on principal component regression, tensor
+#'   decomposition, and manifold alignment.
 #' @param X Raw counts matrix with cells as columns and genes (symbols) as rows.
 #' @param Y Raw counts matrix with cells as columns and genes (symbols) as rows.
 #' @param qc A boolean value (TRUE/FALSE), if TRUE, a quality control is applied over the data. 
@@ -157,75 +163,82 @@
 #' legend('bottomright', legend = c('FDR < 0.1'), pch = 16, col = 'red', bty='n', cex = 0.7)
 #' }
 
-scTenifoldNet <- function(X, Y, qc = TRUE, qc_minLibSize = 1000, qc_removeOutlierCells = TRUE,
-                          qc_minPCT = 0.05, qc_maxMTratio = 0.1, nc_nNet = 10,
-                          nc_nCells = 500, nc_nComp = 3, nc_symmetric = FALSE, nc_scaleScores = TRUE,
-                          nc_q = 0.05, td_K = 3, td_nDecimal = 1, td_maxIter = 1e3, td_maxError = 1e-5, 
-                          ma_nDim = 30, nCores = parallel::detectCores()){
- 
-  # Single-cell Quality Control
-  if(isTRUE(qc)){
-    X <- scQC(X, minLibSize = qc_minLibSize, removeOutlierCells = qc_removeOutlierCells, minPCT = qc_minPCT, maxMTratio = qc_maxMTratio)
-    Y <- scQC(Y, minLibSize = qc_minLibSize, removeOutlierCells = qc_removeOutlierCells, minPCT = qc_minPCT, maxMTratio = qc_maxMTratio)
+scTenifoldNet <- function(X, Y, qc = TRUE, qc_minLibSize = 1000,
+                          qc_removeOutlierCells = TRUE, qc_minPCT = 0.05,
+                          qc_maxMTratio = 0.1, nc_nNet = 10, nc_nCells = 500,
+                          nc_nComp = 3, nc_symmetric = FALSE,
+                          nc_scaleScores = TRUE, nc_q = 0.05, td_K = 3,
+                          td_nDecimal = 1, td_maxIter = 1e3, td_maxError = 1e-5,
+                          ma_nDim = 30, nCores = parallel::detectCores()) {
+
+  cli::cli_h1("scTenifoldNet Pipeline")
+
+  # Step 1: Quality Control
+  if (isTRUE(qc)) {
+    cli::cli_alert_info("Step 1/6: Quality control")
+    X <- scQC(X, minLibSize = qc_minLibSize,
+              removeOutlierCells = qc_removeOutlierCells,
+              minPCT = qc_minPCT, maxMTratio = qc_maxMTratio, label = "X")
+    Y <- scQC(Y, minLibSize = qc_minLibSize,
+              removeOutlierCells = qc_removeOutlierCells,
+              minPCT = qc_minPCT, maxMTratio = qc_maxMTratio, label = "Y")
   }
 
-  # Counts per million (CPM) normalization
-  X <- cpmNormalization(X)
-  Y <- cpmNormalization(Y)
+  # Step 2: CPM Normalization
+  cli::cli_alert_info("Step 2/6: CPM normalization")
+  X <- cpmNormalization(X, label = "X")
+  Y <- cpmNormalization(Y, label = "Y")
 
-  # Comparing gene ids.
-  xNames <- rownames(X)
-  yNames <- rownames(Y)
-
-  sharedGenes <- intersect(xNames, yNames)
+  # Step 3: Gene intersection
+  sharedGenes <- intersect(rownames(X), rownames(Y))
   nGenes <- length(sharedGenes)
-  
-  # Filtering out non-shared genes
-  X <- X[sharedGenes,]
-  Y <- Y[sharedGenes,]
-  
-  # Construction of gene-regulatory networks based on principal component regression (pcNet) and random subsampling.
-  set.seed(1)
-  xList <- makeNetworks(X = X, nCells = nc_nCells, nNet = nc_nNet, nComp = nc_nComp, scaleScores = nc_scaleScores, symmetric = nc_symmetric, q = (1-nc_q), nCores = nCores)
-  set.seed(1)
-  yList <- makeNetworks(X = Y, nCells = nc_nCells, nNet = nc_nNet, nComp = nc_nComp, scaleScores = nc_scaleScores, symmetric = nc_symmetric, q = (1-nc_q), nCores = nCores)
+  cli::cli_alert_info("Shared genes: {nGenes}")
+  X <- X[sharedGenes, ]
+  Y <- Y[sharedGenes, ]
 
-  # CANDECOMP/PARAFRAC Tensor Decomposition
-      # for(M in c('I','3d','4d')){
+  # Step 4: Network construction
+  cli::cli_alert_info("Step 3/6: Building gene regulatory networks")
   set.seed(1)
-  tensorOut <- tensorDecomposition(xList, yList, K = td_K, nDecimal = td_nDecimal, maxIter = td_maxIter, maxError = td_maxError)
-      # Matrix::writeMM(tensorOut$X,paste0('X_',id,'_',M,'tensor.mtx'))
-      # Matrix::writeMM(tensorOut$Y,paste0('Y_',id,'_',M,'tensor.mtx'))
-      # writeLines(sharedGenes, paste0('genes_',id,'_',M,'tensor.mtx'))
-  
-  # Split of tensor output
+  xList <- makeNetworks(X = X, nCells = nc_nCells, nNet = nc_nNet,
+                        nComp = nc_nComp, scaleScores = nc_scaleScores,
+                        symmetric = nc_symmetric, q = (1 - nc_q),
+                        nCores = nCores, label = "X")
+  set.seed(1)
+  yList <- makeNetworks(X = Y, nCells = nc_nCells, nNet = nc_nNet,
+                        nComp = nc_nComp, scaleScores = nc_scaleScores,
+                        symmetric = nc_symmetric, q = (1 - nc_q),
+                        nCores = nCores, label = "Y")
+
+  # Step 5: Tensor Decomposition
+  cli::cli_alert_info("Step 4/6: Tensor decomposition")
+  set.seed(1)
+  tensorOut <- tensorDecomposition(xList, yList, K = td_K,
+                                  nDecimal = td_nDecimal, maxIter = td_maxIter,
+                                  maxError = td_maxError)
+
+  # Symmetrize for manifold alignment
   tX <- as.matrix(tensorOut$X)
   tY <- as.matrix(tensorOut$Y)
-  
-  # Making it symmetric to fulfill the requirements of the MA
-  tX <- (tX + t(tX))/2
-  tY <- (tY + t(tY))/2
-  
-  # Non-linear manifold alignment
-      # for(A in c('O','D','P')){
-  set.seed(1)
-  mA <- manifoldAlignment(tX , tY, d = ma_nDim, nCores = nCores)
-  rownames(mA) <- c(paste0('X_', sharedGenes),paste0('y_', sharedGenes))
-      # outFile <-paste0(id,'_',M,'tensor_',A,'alignment.csv')
-      # write.csv(mA, outFile)
-  
-  # Differential regulation testing
-  dR <- dRegulation(manifoldOutput = mA)
-      # write.csv(dC, paste0('dCoex_',id,'_',M,'tensor_',A,'alignment.csv'))
-      # }
-      # }
-  
-  # Return preparation
-  outputResult <- list()
-  outputResult$tensorNetworks <- tensorOut
-  outputResult$manifoldAlignment <- mA
-  outputResult$diffRegulation <- dR
+  tX <- (tX + t(tX)) / 2
+  tY <- (tY + t(tY)) / 2
 
-  # Return
+  # Step 6: Manifold Alignment
+  cli::cli_alert_info("Step 5/6: Manifold alignment")
+  set.seed(1)
+  mA <- manifoldAlignment(tX, tY, d = ma_nDim, nCores = nCores)
+  rownames(mA) <- c(paste0('X_', sharedGenes), paste0('y_', sharedGenes))
+
+  # Step 7: Differential Regulation
+  cli::cli_alert_info("Step 6/6: Differential regulation analysis")
+  dR <- dRegulation(manifoldOutput = mA)
+
+  # Assemble output
+  outputResult <- list(
+    tensorNetworks = tensorOut,
+    manifoldAlignment = mA,
+    diffRegulation = dR
+  )
+
+  cli::cli_alert_success("scTenifoldNet pipeline complete")
   return(outputResult)
 }

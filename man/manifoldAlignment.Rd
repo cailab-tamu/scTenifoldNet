@@ -19,7 +19,12 @@ manifoldAlignment(X, Y, d = 30, nCores = parallel::detectCores())
 A low-dimensional projection for two the two gene regulatory networks used as input. The output is a labeled matrix with two times the number of shared genes as rows ( X_ genes followed by Y_ genes in the same order) and \code{d} number of columns.
 }
 \description{
-Build comparable low-dimensional features for two weight-averaged denoised single-cell gene regulatory networks. Using a non-linear network embedding method \code{manifoldAlignment } aligns two gene regulatory networks and finds the structural similarities between them. This function is a wrapper of the \code{Python} code provided by Vu et al., (2012) at https://github.com/all-umass/ManifoldWarping.
+Build comparable low-dimensional features for two weight-averaged
+  denoised single-cell gene regulatory networks. Using a non-linear network
+  embedding method \code{manifoldAlignment} aligns two gene regulatory networks
+  and finds the structural similarities between them. This function is a
+  wrapper of the \code{Python} code provided by Vu et al., (2012) at
+  https://github.com/all-umass/ManifoldWarping.
 }
 \details{
 Manifold alignment builds connections between two or more disparate data sets by aligning their underlying manifolds and provides knowledge transfer across the data sets. For further information please see: Wang et al., (2009)

@@ -1,7 +1,16 @@
 #' @export makeNetworks
 #' @importFrom Matrix Matrix
-#' @title Computes gene regulatory networks for subsamples of cells based on principal component regression.
-#' @description This function computes \code{nNet} gene regulatory networks for a randomly selected subsample of \code{nCells} cells based on principal component regression (PCR), a technique based on principal component analysis. In PCR, the outcome variable is regressed over a \code{nComp} number of for principal components computed from a set of covariates to estimate the unknown regression coefficients in the model. \code{pcNet} function computes the PCR coefficients for each gene one at a time using all the others as covariates, to construct an all by all gene regulatory network.
+#' @importFrom cli cli_alert_info cli_alert_success cli_progress_bar cli_progress_update cli_progress_done
+#' @title Computes gene regulatory networks for subsamples of cells based on
+#'   principal component regression.
+#' @description This function computes \code{nNet} gene regulatory networks for
+#'   a randomly selected subsample of \code{nCells} cells based on principal
+#'   component regression (PCR), a technique based on principal component
+#'   analysis. In PCR, the outcome variable is regressed over a \code{nComp}
+#'   number of principal components computed from a set of covariates to estimate
+#'   the unknown regression coefficients in the model. \code{pcNet} computes the
+#'   PCR coefficients for each gene one at a time using all the others as
+#'   covariates, to construct an all-by-all gene regulatory network.
 #' @param X A filtered and normlized gene expression matrix with cells as columns and genes as rows.
 #' @param nNet An integer value. The number of networks based on principal components regression to generate.
 #' @param nCells An integer value. The number of cells to subsample each time to generate a network.
@@ -10,6 +19,8 @@
 #' @param symmetric A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, the weights matrix returned will be symmetric.
 #' @param q A decimal value between 0 and 1. Represent the cut-off threshold of top q\% relationships to be returned.
 #' @param nCores An integer value. Defines the number of cores to be used.
+#' @param label Optional character label (e.g. "X", "Y") prepended to
+#'   progress messages when running inside a pipeline.
 #' @return A list with \code{nNet} gene regulatory networks in dgCMatrix format. Each one computed from a randomly selected subsample of \code{nCells} cells.
 #' @references 
 #' \itemize{
@@ -68,27 +79,44 @@
 #' mnOutput[[2]][1:10,1:10]
 #' mnOutput[[3]][1:10,1:10]
 
-makeNetworks <- function(X, nNet = 10, nCells = 500, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0.95, nCores = parallel::detectCores()){
+makeNetworks <- function(X, nNet = 10, nCells = 500, nComp = 3,
+                         scaleScores = TRUE, symmetric = FALSE, q = 0.95,
+                         nCores = parallel::detectCores(), label = NULL) {
   geneList <- rownames(X)
   nGenes <- length(geneList)
   nCol <- ncol(X)
-  if(nGenes > 0){
-    pbapply::pbsapply(seq_len(nNet), function(W){
-      Z <- sample(x = seq_len(nCol), size = nCells, replace = TRUE)
-      Z <- as.matrix(X[,Z])
-      Z <- Z[apply(Z,1,sum) > 0,]
-      if(nComp > 1 & nComp < nGenes){
-        Z <- pcNet(Z, nComp = nComp, scaleScores = scaleScores, symmetric = symmetric, q = q, verbose = FALSE, nCores = nCores)  
-      } else {
-        stop('nComp should be greater or equal than 2 and lower than the total number of genes')
-      }
-      O <- matrix(data = 0, nrow = nGenes, ncol = nGenes)
-      rownames(O) <- colnames(O) <- geneList
-      O[rownames(Z), colnames(Z)] <- as.matrix(Z)
-      O <- as(O, 'dgCMatrix')
-      return(O)
-    })  
-  } else {
+
+  if (nGenes == 0) {
     stop('Gene names are required')
   }
+  if (nComp < 2 || nComp >= nGenes) {
+    stop('nComp should be >= 2 and < total number of genes')
+  }
+
+  tag <- if (!is.null(label)) paste0("[", label, "] ") else ""
+  cli::cli_alert_info(
+    "{tag}Building {nNet} gene regulatory networks ({nCells} cells each)"
+  )
+  id <- cli::cli_progress_bar(
+    paste0(tag, "Networks"), total = nNet
+  )
+
+  networks <- lapply(seq_len(nNet), function(W) {
+    Z <- sample(x = seq_len(nCol), size = nCells, replace = TRUE)
+    Z <- as.matrix(X[, Z])
+    Z <- Z[apply(Z, 1, sum) > 0, ]
+    Z <- pcNet(Z, nComp = nComp, scaleScores = scaleScores,
+               symmetric = symmetric, q = q, verbose = FALSE,
+               nCores = nCores)
+    O <- matrix(data = 0, nrow = nGenes, ncol = nGenes)
+    rownames(O) <- colnames(O) <- geneList
+    O[rownames(Z), colnames(Z)] <- as.matrix(Z)
+    O <- as(O, 'dgCMatrix')
+    cli::cli_progress_update(id = id)
+    return(O)
+  })
+
+  cli::cli_progress_done(id = id)
+  cli::cli_alert_success("{tag}Network construction complete: {nNet} networks")
+  return(networks)
 }

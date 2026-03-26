@@ -2,7 +2,7 @@
 % Please edit documentation in R/pcNet.R
 \name{pcNet}
 \alias{pcNet}
-\title{Computes a gene regulatory network based on principal component regression}
+\title{Principal Component Network Analysis}
 \usage{
 pcNet(
   X,
@@ -10,72 +10,65 @@ pcNet(
   scaleScores = TRUE,
   symmetric = FALSE,
   q = 0,
-  verbose = TRUE,
-  nCores = parallel::detectCores()
+  verbose = FALSE,
+  nCores = 1,
+  useRcpp = TRUE
 )
 }
 \arguments{
-\item{X}{A filtered and normalized gene expression matrix with cells as columns and genes as rows.}
+\item{X}{A matrix with genes as rows and cells/samples as columns.
+Can be a regular matrix or dgCMatrix (sparse).
+Must have positive row sums (quality control applied).}
 
-\item{nComp}{An integer value. The number of principal components in PCA to generate the networks. Should be greater than 2 and lower than the total number of genes.}
+\item{nComp}{Number of principal components to use for regression.
+Must be >= 2 and < number of genes. Default: 3.}
 
-\item{scaleScores}{A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, the weights will be normalized such that the maximum absolute value is 1.}
+\item{scaleScores}{If TRUE (default), scales output network by maximum
+absolute value to normalize edge weights to [-1, 1].}
 
-\item{symmetric}{A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, the weights matrix returned will be symmetric.}
+\item{symmetric}{If TRUE, symmetrizes the network matrix as (A + t(A))/2.
+Default: FALSE.}
 
-\item{q}{A decimal value between 0 and 1. Defines the cut-off threshold of top q\% relationships to be returned.}
+\item{q}{Quantile threshold for filtering edges. Values below this
+quantile are set to zero. Range: [0, 1]. Default: 0 (no filtering).}
 
-\item{verbose}{A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, a progress bar is shown.}
+\item{verbose}{If TRUE, prints progress updates. Default: FALSE.}
 
-\item{nCores}{An integer value. Defines the number of cores to be used.}
+\item{nCores}{Number of cores for parallelization. If > 1, uses future
+backend (multisession). Default: 1 (sequential).}
+
+\item{useRcpp}{If TRUE (default), uses compiled Rcpp backend for faster
+computation. Falls back to pure R if Rcpp backend unavailable.
+Default: TRUE.}
 }
 \value{
-A gene regulatory network in dgCMatrix format.
+A sparse matrix (Matrix::dgCMatrix) representing the gene network.
+        Entry [i,j] contains the regression coefficient from gene i to gene j.
+        Diagonal is always zero (no self-loops).
 }
 \description{
-This function computes a gene regulatory network based on principal component regression (PCR), a technique based on principal component analysis. In PCR, the outcome variable is regressed over a \code{nComp} number of for principal components computed from a set of covariates to estimate the unknown regression coefficients in the model. \code{pcNet} function computes the PCR coefficients for each gene one at a time using all the others as covariates, to construct an all by all gene regulatory network.
+Computes a gene co-expression network using Principal Component Regression.
+Each gene is regressed against principal components derived from all other genes.
 }
 \details{
-Principal component regression may be broadly divided into three major steps: \enumerate{
-\item Perform PCA on the observed covariates data matrix to obtain \code{nComp} number of the principal components.
-\item Regress the observed vector of outcomes on the selected principal components as covariates, using ordinary least squares regression to get a vector of estimated regression coefficients
-\item Transform this vector back to the scale of the actual covariates, using the eigenvectors corresponding to the selected principal components to get the final PCR estimator for estimating the regression coefficients characterizing the original model.
-}
+Algorithm:
+1. Standardize input matrix (center and scale by columns)
+2. For each gene K:
+   a. Extract all other genes as design matrix (Xi)
+   b. Compute truncated SVD of Xi to get nComp principal components
+   c. Project gene K onto these components
+   d. Perform OLS regression to get coefficients
+3. Assemble coefficients into sparse network matrix
+4. Apply optional scaling and filtering
 }
 \examples{
-library(scTenifoldNet)
+\dontrun{
+  # Create sample data
+  X <- matrix(rpois(1000*50, 5), nrow=1000, ncol=50)
+  rownames(X) <- paste0('Gene', 1:1000)
 
-# Simulating of a dataset following a negative binomial distribution with high sparcity (~67\%)
-nCells = 2000
-nGenes = 100
-set.seed(1)
-X <- rnbinom(n = nGenes * nCells, size = 20, prob = 0.98)
-X <- round(X)
-X <- matrix(X, ncol = nCells)
-rownames(X) <- c(paste0('ng', 1:90), paste0('mt-', 1:10))
-
-# Performing Single cell quality control
-qcOutput <- scQC(
-  X = X,
-  minLibSize = 30,
-  removeOutlierCells = TRUE,
-  minPCT = 0.05,
-  maxMTratio = 0.1
-)
-
-# Computing a single-cell gene regulatory network using principal component regression
-# Non-symmetric
-pcnetOutput <- pcNet(X = qcOutput, nComp = 3, scaleScores = TRUE, symmetric = FALSE, q = 0)
-pcnetOutput[1:10,1:10]
-
-# Symmetric
-pcnetOutput <- pcNet(X = qcOutput, nComp = 3, scaleScores = TRUE, symmetric = TRUE, q = 0)
-pcnetOutput[1:5,1:5]
+  # Compute network
+  net <- pcNet(X, nComp=3, nCores=4)
 }
-\references{
-\itemize{
-\item Gill, Ryan, Somnath Datta, and Susmita Datta. "dna: An R package for differential network analysis." Bioinformation 10.4 (2014): 233.
-\item Jolliffe, Ian T. "A note on the use of principal components in regression." Journal of the Royal Statistical Society: Series C (Applied Statistics) 31.3 (1982): 300-303.
-\item Massy, William F. "Principal components regression in exploratory statistical research." Journal of the American Statistical Association 60.309 (1965): 234-256.
-}
+
 }

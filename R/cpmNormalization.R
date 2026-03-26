@@ -1,9 +1,18 @@
 #' @export cpmNormalization
 #' @title Performs counts per million (CPM) data normalization
-#' @description This function normalizes the count data present in a given matrix using counts per million normalization (CPM). Each gene count for each cell is divided by the total counts for that cell and multiplied by 1e6. No log-transformation is applied.
-#' @param X Raw counts matrix with cells as columns and genes (symbols) as rows
-#' @return A dgCMatrix object with the count per million (CPM) normalized values.
-#' @references Vallejos, Catalina A., et al. "Normalizing single-cell RNA sequencing data: challenges and opportunities." Nature methods 14.6 (2017): 565.
+#' @importFrom cli cli_alert_info cli_alert_success
+#' @description This function normalizes the count data present in a given
+#'   matrix using counts per million normalization (CPM). Each gene count for
+#'   each cell is divided by the total counts for that cell and multiplied by
+#'   1e6. No log-transformation is applied.
+#' @param X Raw counts matrix with cells as columns and genes (symbols) as rows.
+#' @param label Optional character label (e.g. "X", "Y") prepended to
+#'   progress messages when running inside a pipeline.
+#' @return A dgCMatrix object with the count per million (CPM) normalized
+#'   values.
+#' @references Vallejos, Catalina A., et al. "Normalizing single-cell RNA
+#'   sequencing data: challenges and opportunities." Nature methods 14.6 (2017):
+#'   565.
 #' @examples 
 #' library(scTenifoldNet)
 #' 
@@ -50,9 +59,14 @@
 #' 
 #' par(oldPar)
 
-cpmNormalization <- function(X){
-  X <- Matrix::t(Matrix::t(X)/Matrix::colSums(X))*1e6
+cpmNormalization <- function(X, label = NULL) {
+  nGenes <- nrow(X)
+  nCells <- ncol(X)
+  tag <- if (!is.null(label)) paste0("[", label, "] ") else ""
+  cli::cli_alert_info("{tag}CPM normalization: {nGenes} genes x {nCells} cells")
+  X <- Matrix::t(Matrix::t(X) / Matrix::colSums(X)) * 1e6
   X <- as(X, 'dgCMatrix')
+  cli::cli_alert_success("{tag}CPM normalization complete")
   return(X)
 }
 

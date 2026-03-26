@@ -4,16 +4,23 @@
 \alias{cpmNormalization}
 \title{Performs counts per million (CPM) data normalization}
 \usage{
-cpmNormalization(X)
+cpmNormalization(X, label = NULL)
 }
 \arguments{
-\item{X}{Raw counts matrix with cells as columns and genes (symbols) as rows}
+\item{X}{Raw counts matrix with cells as columns and genes (symbols) as rows.}
+
+\item{label}{Optional character label (e.g. "X", "Y") prepended to
+progress messages when running inside a pipeline.}
 }
 \value{
-A dgCMatrix object with the count per million (CPM) normalized values.
+A dgCMatrix object with the count per million (CPM) normalized
+  values.
 }
 \description{
-This function normalizes the count data present in a given matrix using counts per million normalization (CPM). Each gene count for each cell is divided by the total counts for that cell and multiplied by 1e6. No log-transformation is applied.
+This function normalizes the count data present in a given
+  matrix using counts per million normalization (CPM). Each gene count for
+  each cell is divided by the total counts for that cell and multiplied by
+  1e6. No log-transformation is applied.
 }
 \examples{
 library(scTenifoldNet)
@@ -62,5 +69,7 @@ plot(
 par(oldPar)
 }
 \references{
-Vallejos, Catalina A., et al. "Normalizing single-cell RNA sequencing data: challenges and opportunities." Nature methods 14.6 (2017): 565.
+Vallejos, Catalina A., et al. "Normalizing single-cell RNA
+  sequencing data: challenges and opportunities." Nature methods 14.6 (2017):
+  565.
 }

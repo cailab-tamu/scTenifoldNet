@@ -30,7 +30,12 @@ tensorDecomposition(
 A list of weight-averaged denoised gene regulatory networks.
 }
 \description{
-Generate weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition. The \code{tensorDecomposition} function takes one or two lists of gene regulatory matrices, if two list are provided, the shared genes are selected and the CP tensor decomposition is performed independently for each list (3d-tensor). The tensor decomposed matrices are then averaged to generate weight-averaged denoised networks.
+Generate weight-averaged denoised gene regulatory networks using
+  CANDECOMP/PARAFAC (CP) Tensor Decomposition. This function takes one or two
+  lists of gene regulatory matrices. If two lists are provided, the shared
+  genes are selected and the CP tensor decomposition is performed
+  independently for each list (3d-tensor). The tensor decomposed matrices are
+  then averaged to generate weight-averaged denoised networks.
 }
 \details{
 CANDECOMP/PARAFRAC (CP) tensor decomposition approximate a K-Tensor using a sum of \code{K} rank-1 K-Tensors. A rank-1 K-Tensor can be written as an outer product of K vectors. This is an iterative algorithm, with two possible stopping conditions: either relative error in Frobenius norm has gotten below \code{maxError}, or the \code{maxIter} number of iterations has been reached. For more details on CP decomposition, consult Kolda and Bader (2009) and Morup (2011).

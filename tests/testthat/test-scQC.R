@@ -7,8 +7,8 @@ test_that("scQC works", {
   X <- round(X)
   X <- matrix(X, ncol = nCells)
   
-  # Warning expected
-  expect_warning(scQC(X, minLibSize = 0, removeOutlierCells = FALSE, minPCT = 0, maxMTratio = 1))
+  # CLI message expected (no MT genes when rownames are not set)
+  expect_message(scQC(X, minLibSize = 0, removeOutlierCells = FALSE, minPCT = 0, maxMTratio = 1))
   
   # Gene names
   rownames(X) <- c(paste0('ng', 1:90), paste0('mt-', 1:10))
