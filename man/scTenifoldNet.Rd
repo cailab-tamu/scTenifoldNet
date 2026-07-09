@@ -18,6 +18,7 @@ scTenifoldNet(
   nc_symmetric = FALSE,
   nc_scaleScores = TRUE,
   nc_q = 0.05,
+  nc_priorNetwork = NULL,
   td_K = 3,
   td_nDecimal = 1,
   td_maxIter = 1000,
@@ -52,6 +53,8 @@ scTenifoldNet(
 \item{nc_scaleScores}{A boolean value (TRUE/FALSE), if TRUE, the weights will be normalized such that the maximum absolute value is 1.}
 
 \item{nc_q}{A decimal value between 0 and 1. Defines the cut-off threshold of top q\% relationships to be returned.}
+
+\item{nc_priorNetwork}{A data.frame containing a prior gene regulatory network. The data.frame must have two columns: `regulators` and `targets`. Default: NULL.}
 
 \item{td_K}{An integer value. Defines the number of rank-one tensors used to approximate the data using CANDECOMP/PARAFAC (CP) Tensor Decomposition.}
 

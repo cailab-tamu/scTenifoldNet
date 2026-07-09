@@ -21,6 +21,7 @@
 #' @param nc_symmetric A boolean value (TRUE/FALSE), if TRUE, the weights matrix returned will be symmetric.
 #' @param nc_scaleScores A boolean value (TRUE/FALSE), if TRUE, the weights will be normalized such that the maximum absolute value is 1.
 #' @param nc_q A decimal value between 0 and 1. Defines the cut-off threshold of top q\% relationships to be returned.
+#' @param nc_priorNetwork A data.frame containing a prior gene regulatory network. The data.frame must have two columns: `regulators` and `targets`. Default: NULL.
 #' @param td_K An integer value. Defines the number of rank-one tensors used to approximate the data using CANDECOMP/PARAFAC (CP) Tensor Decomposition. 
 #' @param td_nDecimal An integer value indicating the number of decimal places to be used.
 #' @param td_maxIter An integer value. Defines the maximum number of iterations if error stay above \code{td_maxError}.
@@ -167,7 +168,8 @@ scTenifoldNet <- function(X, Y, qc = TRUE, qc_minLibSize = 1000,
                           qc_removeOutlierCells = TRUE, qc_minPCT = 0.05,
                           qc_maxMTratio = 0.1, nc_nNet = 10, nc_nCells = 500,
                           nc_nComp = 3, nc_symmetric = FALSE,
-                          nc_scaleScores = TRUE, nc_q = 0.05, td_K = 3,
+                          nc_scaleScores = TRUE, nc_q = 0.05, 
+                          nc_priorNetwork = NULL, td_K = 3,
                           td_nDecimal = 1, td_maxIter = 1e3, td_maxError = 1e-5,
                           ma_nDim = 30, nCores = parallel::detectCores()) {
 
@@ -202,11 +204,13 @@ scTenifoldNet <- function(X, Y, qc = TRUE, qc_minLibSize = 1000,
   xList <- makeNetworks(X = X, nCells = nc_nCells, nNet = nc_nNet,
                         nComp = nc_nComp, scaleScores = nc_scaleScores,
                         symmetric = nc_symmetric, q = (1 - nc_q),
+                        priorNetwork = nc_priorNetwork,
                         nCores = nCores, label = "X")
   set.seed(1)
   yList <- makeNetworks(X = Y, nCells = nc_nCells, nNet = nc_nNet,
                         nComp = nc_nComp, scaleScores = nc_scaleScores,
                         symmetric = nc_symmetric, q = (1 - nc_q),
+                        priorNetwork = nc_priorNetwork,
                         nCores = nCores, label = "Y")
 
   # Step 5: Tensor Decomposition

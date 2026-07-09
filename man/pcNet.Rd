@@ -10,6 +10,7 @@ pcNet(
   scaleScores = TRUE,
   symmetric = FALSE,
   q = 0,
+  priorNetwork = NULL,
   verbose = FALSE,
   nCores = 1,
   useRcpp = TRUE
@@ -31,6 +32,10 @@ Default: FALSE.}
 
 \item{q}{Quantile threshold for filtering edges. Values below this
 quantile are set to zero. Range: [0, 1]. Default: 0 (no filtering).}
+
+\item{priorNetwork}{A data.frame containing a prior gene regulatory network.
+The data.frame must have two columns: `regulators` and `targets`.
+Default: NULL.}
 
 \item{verbose}{If TRUE, prints progress updates. Default: FALSE.}
 

@@ -13,6 +13,7 @@ makeNetworks(
   scaleScores = TRUE,
   symmetric = FALSE,
   q = 0.95,
+  priorNetwork = NULL,
   nCores = parallel::detectCores(),
   label = NULL
 )
@@ -31,6 +32,8 @@ makeNetworks(
 \item{symmetric}{A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, the weights matrix returned will be symmetric.}
 
 \item{q}{A decimal value between 0 and 1. Represent the cut-off threshold of top q\% relationships to be returned.}
+
+\item{priorNetwork}{A data.frame containing a prior gene regulatory network. The data.frame must have two columns: `regulators` and `targets`. Default: NULL.}
 
 \item{nCores}{An integer value. Defines the number of cores to be used.}
 

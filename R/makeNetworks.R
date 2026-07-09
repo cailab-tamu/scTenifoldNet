@@ -18,6 +18,7 @@
 #' @param scaleScores A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, the weights will be normalized such that the maximum absolute value is 1.
 #' @param symmetric A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, the weights matrix returned will be symmetric.
 #' @param q A decimal value between 0 and 1. Represent the cut-off threshold of top q\% relationships to be returned.
+#' @param priorNetwork A data.frame containing a prior gene regulatory network. The data.frame must have two columns: `regulators` and `targets`. Default: NULL.
 #' @param nCores An integer value. Defines the number of cores to be used.
 #' @param label Optional character label (e.g. "X", "Y") prepended to
 #'   progress messages when running inside a pipeline.
@@ -80,8 +81,9 @@
 #' mnOutput[[3]][1:10,1:10]
 
 makeNetworks <- function(X, nNet = 10, nCells = 500, nComp = 3,
-                         scaleScores = TRUE, symmetric = FALSE, q = 0.95,
-                         nCores = parallel::detectCores(), label = NULL) {
+                         scaleScores = TRUE, symmetric = FALSE, q = 0.95, 
+                         priorNetwork = NULL, nCores = parallel::detectCores(), 
+                         label = NULL) {
   geneList <- rownames(X)
   nGenes <- length(geneList)
   nCol <- ncol(X)
@@ -106,8 +108,8 @@ makeNetworks <- function(X, nNet = 10, nCells = 500, nComp = 3,
     Z <- as.matrix(X[, Z])
     Z <- Z[apply(Z, 1, sum) > 0, ]
     Z <- pcNet(Z, nComp = nComp, scaleScores = scaleScores,
-               symmetric = symmetric, q = q, verbose = FALSE,
-               nCores = nCores)
+               symmetric = symmetric, q = q, priorNetwork = priorNetwork,
+               verbose = FALSE, nCores = nCores)
     O <- matrix(data = 0, nrow = nGenes, ncol = nGenes)
     rownames(O) <- colnames(O) <- geneList
     O[rownames(Z), colnames(Z)] <- as.matrix(Z)

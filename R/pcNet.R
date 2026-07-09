@@ -19,6 +19,10 @@
 #' @param q Quantile threshold for filtering edges. Values below this
 #'          quantile are set to zero. Range: [0, 1]. Default: 0 (no filtering).
 #'
+#' @param priorNetwork A data.frame containing a prior gene regulatory network.
+#'   The data.frame must have two columns: `regulators` and `targets`.
+#'   Default: NULL.
+#'
 #' @param verbose If TRUE, prints progress updates. Default: FALSE.
 #'
 #' @param nCores Number of cores for parallelization. If > 1, uses future
@@ -64,6 +68,7 @@
 #' @importFrom cli cli_inform
 #' @importFrom cli cli_alert_info
 #' @importFrom cli cli_alert_success
+#' @importFrom cli cli_abort
 #'
 #' @export
 pcNet <- function(X,
@@ -71,6 +76,7 @@ pcNet <- function(X,
                   scaleScores = TRUE,
                   symmetric = FALSE,
                   q = 0, 
+                  priorNetwork = NULL,
                   verbose = FALSE,
                   nCores = 1,
                   useRcpp = TRUE) {
@@ -95,19 +101,37 @@ pcNet <- function(X,
   
   # Check nComp parameter
   n_genes <- nrow(X)
+  
+  # Get gene_names
+  gene_names <- rownames(X)
+  
   if (nComp < 2) {
     stop("nComp must be >= 2. Got: ", nComp)
   }
   if (nComp >= n_genes) {
     stop("nComp must be < number of genes (", n_genes, "). Got: ", nComp)
+  } 
+  
+  # Validate prior network
+  if(!is.null(priorNetwork)){
+    if(ncol(priorNetwork) != 2){
+      cli::cli_abort('Prior network needs to be a two column data.frame with regulators and targets')
+    } else {
+      priorNetwork <- priorNetwork[priorNetwork[[1]] %in% gene_names,]
+      priorNetwork <- priorNetwork[priorNetwork[[2]] %in% gene_names,]
+      priorGRN <- Matrix::sparseMatrix(
+        i = factor(priorNetwork[[1]], gene_names),
+        j = factor(priorNetwork[[2]], gene_names),
+        x = 1,
+        dims = c(n_genes, n_genes), 
+        dimnames = list(gene_names, gene_names)
+      )
+    }
   }
   
   # ============================================================================
   # DATA PREPARATION
   # ============================================================================
-  
-  # Store gene names for later
-  gene_names <- rownames(X)
   
   # Standardize: transpose to (samples x genes), then center and scale
   X_std <- scale(Matrix::t(X))
@@ -276,11 +300,24 @@ pcNet <- function(X,
     }
   }
   
+
   # Filtering: remove weak edges below quantile threshold
   if (q > 0 && q < 1) {
     abs_network <- abs(network)
     threshold <- stats::quantile(abs_network, q, na.rm = TRUE)
+    
+    # Get prior network coefficients
+    if(!is.null(priorNetwork)){
+      priorGRN <- priorGRN * network
+    }
+    
+    # Filtering
     network[abs_network < threshold] <- 0
+    
+    # Soft constraining the filtering
+    if(!is.null(priorNetwork)){
+      network <- (network * as.matrix(priorGRN == 0) + priorGRN)
+    }
   }
   
   # Force diagonal to zero (no self-loops)
