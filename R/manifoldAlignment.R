@@ -88,8 +88,8 @@ manifoldAlignment <- function(X, Y, d = 30, nCores = parallel::detectCores()) {
   mu <- 0.9 * (sum(wX) + sum(wY)) / (2 * n)
 
   W <- matrix(0, 2 * n, 2 * n)
-  W[1:n, 1:n] <- wX
-  W[(n + 1):(2 * n), (n + 1):(2 * n)] <- wY
+  W[seq_len(n), seq_len(n)] <- as.matrix(wX)
+  W[(n + 1):(2 * n), (n + 1):(2 * n)] <- as.matrix(wY)
   offIdx <- seq_len(n)
   W[cbind(offIdx, offIdx + n)] <- mu
   W[cbind(offIdx + n, offIdx)] <- mu
