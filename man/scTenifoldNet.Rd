@@ -24,7 +24,8 @@ scTenifoldNet(
   td_maxIter = 1000,
   td_maxError = 1e-05,
   ma_nDim = 30,
-  nCores = parallel::detectCores()
+  nCores = parallel::detectCores(),
+  seed = 1
 )
 }
 \arguments{
@@ -67,6 +68,8 @@ scTenifoldNet(
 \item{ma_nDim}{An integer value. Defines the number of dimensions of the low-dimensional feature space to be returned from the non-linear manifold alignment.}
 
 \item{nCores}{An integer value. Defines the number of cores to be used.}
+
+\item{seed}{An integer value. The RNG is set to this seed before each random stage (network construction, tensor decomposition and manifold alignment), so results are reproducible and independent of the caller's RNG state; the caller's RNG state is restored on exit. Use different values to assess run-to-run variability. If \code{NULL}, the RNG is never reseeded and the caller's RNG state (e.g. a previous \code{set.seed()}) drives all random stages. Default: 1.}
 }
 \value{
 A list with 3 slots as follows: 

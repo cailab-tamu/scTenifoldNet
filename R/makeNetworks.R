@@ -19,7 +19,7 @@
 #' @param symmetric A boolean value (\code{TRUE/FALSE}), if \code{TRUE}, the weights matrix returned will be symmetric.
 #' @param q A decimal value between 0 and 1. Represent the cut-off threshold of top q\% relationships to be returned.
 #' @param priorNetwork A data.frame containing a prior gene regulatory network. The data.frame must have two columns: `regulators` and `targets`. Default: NULL.
-#' @param nCores An integer value. Defines the number of cores to be used.
+#' @param nCores An integer value. Not used for network construction: each network is built on a single core, which avoids spawning worker processes for every network. Call \code{pcNet} with \code{nCores} to parallelize a single large network.
 #' @param label Optional character label (e.g. "X", "Y") prepended to
 #'   progress messages when running inside a pipeline.
 #' @return A list with \code{nNet} gene regulatory networks in dgCMatrix format. Each one computed from a randomly selected subsample of \code{nCells} cells.
@@ -109,7 +109,7 @@ makeNetworks <- function(X, nNet = 10, nCells = 500, nComp = 3,
     Z <- Z[apply(Z, 1, sum) > 0, ]
     Z <- pcNet(Z, nComp = nComp, scaleScores = scaleScores,
                symmetric = symmetric, q = q, priorNetwork = priorNetwork,
-               verbose = FALSE, nCores = nCores)
+               verbose = FALSE, nCores = 1)
     O <- matrix(data = 0, nrow = nGenes, ncol = nGenes)
     rownames(O) <- colnames(O) <- geneList
     O[rownames(Z), colnames(Z)] <- as.matrix(Z)

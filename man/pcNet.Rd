@@ -17,63 +17,88 @@ pcNet(
 )
 }
 \arguments{
-\item{X}{A matrix with genes as rows and cells/samples as columns.
-Can be a regular matrix or dgCMatrix (sparse).
-Must have positive row sums (quality control applied).}
+\item{X}{Expression matrix with genes in rows and cells (or samples) in
+columns. Either a base `matrix` or a sparse `dgCMatrix`. Genes with the
+same value in every cell (for example, all zeros) carry no information:
+they are left out of the regressions and get no edges.}
 
-\item{nComp}{Number of principal components to use for regression.
-Must be >= 2 and < number of genes. Default: 3.}
+\item{nComp}{Number of principal components used in each regression.
+Must be at least 2 and smaller than the number of non-constant genes.
+Default: 3.}
 
-\item{scaleScores}{If TRUE (default), scales output network by maximum
-absolute value to normalize edge weights to [-1, 1].}
+\item{scaleScores}{If `TRUE` (default), divides the network by its largest
+absolute value so that edge weights lie in \[-1, 1\].}
 
-\item{symmetric}{If TRUE, symmetrizes the network matrix as (A + t(A))/2.
-Default: FALSE.}
+\item{symmetric}{If `TRUE`, replaces the network `A` by `(A + t(A)) / 2`.
+Default: `FALSE`.}
 
-\item{q}{Quantile threshold for filtering edges. Values below this
-quantile are set to zero. Range: [0, 1]. Default: 0 (no filtering).}
+\item{q}{Quantile used to drop weak edges. Edges whose absolute weight is
+below this quantile are set to zero. Must be in \[0, 1\]; values of 0 or 1
+disable filtering. Default: 0.}
 
-\item{priorNetwork}{A data.frame containing a prior gene regulatory network.
-The data.frame must have two columns: `regulators` and `targets`.
-Default: NULL.}
+\item{priorNetwork}{Optional prior gene regulatory network: a data.frame
+with two columns, regulators and targets. When `q` filters edges, edges
+in the prior network keep their weight. Default: `NULL`.}
 
-\item{verbose}{If TRUE, prints progress updates. Default: FALSE.}
+\item{verbose}{If `TRUE`, prints progress messages. Default: `FALSE`.}
 
-\item{nCores}{Number of cores for parallelization. If > 1, uses future
-backend (multisession). Default: 1 (sequential).}
+\item{nCores}{Number of cores. With more than one core, the genes are split
+into blocks that are processed in parallel (forked processes through
+`parallel::mclapply`, or a PSOCK cluster on Windows). If R uses a
+multithreaded BLAS (OpenBLAS, Accelerate, MKL), keep `nCores = 1` and let
+the BLAS use the cores instead: combining both runs too many threads.
+Default: 1.}
 
-\item{useRcpp}{If TRUE (default), uses compiled Rcpp backend for faster
-computation. Falls back to pure R if Rcpp backend unavailable.
-Default: TRUE.}
+\item{useRcpp}{Ignored. Kept so that existing calls keep working.}
 }
 \value{
-A sparse matrix (Matrix::dgCMatrix) representing the gene network.
-        Entry [i,j] contains the regression coefficient from gene i to gene j.
-        Diagonal is always zero (no self-loops).
+A sparse `dgCMatrix` with all input genes in rows and columns.
+  Entry `[i, j]` is the coefficient of gene `j` in the regression of gene
+  `i`. The diagonal is always zero, and so are the rows and columns of
+  constant genes.
 }
 \description{
-Computes a gene co-expression network using Principal Component Regression.
-Each gene is regressed against principal components derived from all other genes.
+Builds a gene co-expression network with principal component regression.
+Every gene is regressed on the leading principal components of all the
+other genes, and the regression coefficients become the edge weights.
 }
 \details{
-Algorithm:
-1. Standardize input matrix (center and scale by columns)
-2. For each gene K:
-   a. Extract all other genes as design matrix (Xi)
-   b. Compute truncated SVD of Xi to get nComp principal components
-   c. Project gene K onto these components
-   d. Perform OLS regression to get coefficients
-3. Assemble coefficients into sparse network matrix
-4. Apply optional scaling and filtering
+**What is computed.** The expression matrix is standardized so that each
+gene has mean 0 and standard deviation 1. For each gene `k`, let `y` be its
+expression and `A` the matrix of all other genes. The coefficients are
+
+`beta_k = V diag(1 / s) U' y`
+
+where `U`, `s` and `V` are the leading `nComp` singular vectors and values
+of `A`. This is ordinary least squares on the top principal components,
+mapped back to gene space.
+
+**How it is computed.** Running one SVD per gene is slow. Instead, note
+that removing gene `k` changes the cell-by-cell Gram matrix by a single
+rank-one term: `A A' = X X' - y y'`. The function therefore:
+
+1. Eigendecomposes one Gram matrix, `X X' = Q D Q'`, working in whichever
+   of the cell or gene dimensions is smaller.
+2. For each gene, finds the top `nComp` eigenvalues of `D - z z'`, where
+   `z = Q' y`. These are the roots of a scalar equation (the "secular
+   equation"), solved for all genes at once. The matching eigenvectors
+   have a closed form, so no per-gene SVD is needed.
+3. Obtains all coefficients from a single matrix product.
+
+The result equals the per-gene SVD approach up to floating point error.
+
+**Constant genes.** A gene with the same value in every cell cannot be
+standardized (its standard deviation is 0). Such genes are removed before
+the steps above, including scaling and quantile filtering, and are added
+back at the end as rows and columns of zeros. The network among the other
+genes is therefore the same as if the constant genes had been removed from
+`X` beforehand.
 }
 \examples{
 \dontrun{
-  # Create sample data
-  X <- matrix(rpois(1000*50, 5), nrow=1000, ncol=50)
-  rownames(X) <- paste0('Gene', 1:1000)
-
-  # Compute network
-  net <- pcNet(X, nComp=3, nCores=4)
+  X <- matrix(rpois(1000 * 50, 5), nrow = 1000, ncol = 50)
+  rownames(X) <- paste0("Gene", 1:1000)
+  net <- pcNet(X, nComp = 3)
 }
 
 }

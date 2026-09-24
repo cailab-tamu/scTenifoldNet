@@ -25,6 +25,8 @@ To install the development version from GitHub:
 remotes::install_github("cailab-tamu/scTenifoldNet")
 ```
 
+The package is written in R only, so installing from source needs no compiler.
+
 ## Pipeline Overview
 
 The `scTenifoldNet()` function orchestrates a six-step pipeline. Each step reports progress to the console via the [cli](https://cli.r-lib.org/) package, with sample-level labels (`[X]` / `[Y]`) so that operations on each condition are clearly distinguishable.
@@ -33,7 +35,7 @@ The `scTenifoldNet()` function orchestrates a six-step pipeline. Each step repor
 |:----:|:---------|:------------|
 | 1 | `scQC` | Quality control — filters cells by library size, outlier detection, minimum gene expression fraction, and mitochondrial read ratio |
 | 2 | `cpmNormalization` | Counts-per-million (CPM) normalization |
-| 3 | `makeNetworks` | Constructs gene regulatory networks from subsampled cells using principal component regression (`pcNet`) |
+| 3 | `makeNetworks` | Constructs gene regulatory networks from subsampled cells using principal component regression (`pcNet`). All the per-gene regressions come from one eigendecomposition, which gives the same networks as fitting each gene separately |
 | 4 | `tensorDecomposition` | CANDECOMP/PARAFAC (CP) tensor decomposition for network denoising |
 | 5 | `manifoldAlignment` | Non-linear manifold alignment of the two denoised networks |
 | 6 | `dRegulation` | Differential regulation testing via Box-Cox transformation and chi-square statistics |
@@ -60,20 +62,26 @@ The required input is a **raw counts matrix** with genes as rows and cells (barc
   - `p.value`: P-value from the chi-square distribution with one degree of freedom.
   - `p.adj`: Adjusted p-value (Benjamini & Hochberg FDR correction).
 
+## Reproducibility
+
+Network construction subsamples cells at random, so results depend on the random seed. The `seed` argument (default `1`) is set before each random step. The same input and parameters therefore give the same result on every run, whatever the caller's RNG state, and that state is restored when the function returns.
+
+- Use different values (`seed = 1`, `seed = 2`, ...) to see how much results vary between runs.
+- Use `seed = NULL` to let a `set.seed()` call made before the function control the result.
+
+`tensorDecomposition()` accepts the same `seed` argument.
+
 ## Running Time
 
-Running time is largely determined by the network construction step and scales with the number of cells and genes. Representative benchmarks:
+Running time grows mainly with the number of genes. The number of cells matters little, because each network is built from a fixed-size subsample of cells (`nc_nCells`). Benchmarks with the default parameters (10 networks of 500 cells) on simulated counts, measured on an Apple M2 Pro (16 GB RAM) with R 4.5 and its reference BLAS. Memory is peak resident memory.
 
 | Cells | Genes | Time | Memory |
 |------:|------:|-----:|-------:|
-| 300 | 1,000 | 3.5 min | 0.4 GB |
-| 1,000 | 1,000 | 4.3 min | 0.4 GB |
-| 1,000 | 5,000 | 2 h 52 min | 9.2 GB |
-| 2,500 | 5,000 | 2 h 55 min | 9.5 GB |
-| 5,000 | 5,000 | 3 h 9 min | 10.1 GB |
-| 5,000 | 7,500 | 3 h 10 min | 21.8 GB |
-| 7,500 | 5,000 | 10 h 16 min | 10.6 GB |
-| 7,500 | 7,500 | 10 h 16 min | 22.6 GB |
+| 300 | 1,000 | 35 s | 1.4 GB |
+| 1,000 | 1,000 | 33 s | 2.0 GB |
+| 1,000 | 5,000 | 8.4 min | 6.4 GB |
+| 2,500 | 5,000 | 7.9 min | 5.8 GB |
+| 5,000 | 5,000 | 8.0 min | 6.0 GB |
 
 ## Example
 

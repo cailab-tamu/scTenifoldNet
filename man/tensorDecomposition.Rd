@@ -10,7 +10,8 @@ tensorDecomposition(
   nDecimal = 1,
   K = 5,
   maxError = 1e-05,
-  maxIter = 1000
+  maxIter = 1000,
+  seed = 1
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ tensorDecomposition(
 \item{maxError}{A decimal value between 0 and 1. Defines the relative Frobenius norm error tolerance}
 
 \item{maxIter}{An integer value. Defines the maximum number of iterations if error stay above \code{maxError}.}
+
+\item{seed}{An integer value. The RNG is set to this seed before each CP decomposition, so results are reproducible and independent of the caller's RNG state; the caller's RNG state is restored on exit. If \code{NULL}, the RNG is not reseeded and the caller's RNG state (e.g. a previous \code{set.seed()}) drives the decomposition. Default: 1.}
 }
 \value{
 A list of weight-averaged denoised gene regulatory networks.

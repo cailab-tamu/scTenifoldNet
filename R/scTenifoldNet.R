@@ -1,9 +1,7 @@
 #' @export scTenifoldNet
 #' @title scTenifoldNet
 #' @importFrom methods as
-#' @importFrom Rcpp sourceCpp
 #' @importFrom cli cli_h1 cli_alert_info cli_alert_success
-#' @useDynLib scTenifoldNet, .registration = TRUE
 #' @description Construct and compare single-cell gene regulatory networks
 #'   (scGRNs) using single-cell RNA-seq (scRNA-seq) data sets collected from
 #'   different conditions based on principal component regression, tensor
@@ -28,6 +26,7 @@
 #' @param td_maxError A decimal value between 0 and 1. Defines the relative Frobenius norm error tolerance.
 #' @param ma_nDim An integer value. Defines the number of dimensions of the low-dimensional feature space to be returned from the non-linear manifold alignment.
 #' @param nCores An integer value. Defines the number of cores to be used.
+#' @param seed An integer value. The RNG is set to this seed before each random stage (network construction, tensor decomposition and manifold alignment), so results are reproducible and independent of the caller's RNG state; the caller's RNG state is restored on exit. Use different values to assess run-to-run variability. If \code{NULL}, the RNG is never reseeded and the caller's RNG state (e.g. a previous \code{set.seed()}) drives all random stages. Default: 1.
 #' @return A list with 3 slots as follows: 
 #' \itemize{
 #' \item{tensorNetworks:} The generated weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition.
@@ -171,9 +170,15 @@ scTenifoldNet <- function(X, Y, qc = TRUE, qc_minLibSize = 1000,
                           nc_scaleScores = TRUE, nc_q = 0.05, 
                           nc_priorNetwork = NULL, td_K = 3,
                           td_nDecimal = 1, td_maxIter = 1e3, td_maxError = 1e-5,
-                          ma_nDim = 30, nCores = parallel::detectCores()) {
+                          ma_nDim = 30, nCores = parallel::detectCores(),
+                          seed = 1) {
 
   cli::cli_h1("scTenifoldNet Pipeline")
+
+  if (!is.null(seed)) {
+    oldSeed <- get0(".Random.seed", envir = globalenv(), inherits = FALSE)
+    on.exit(restoreSeed(oldSeed), add = TRUE)
+  }
 
   # Step 1: Quality Control
   if (isTRUE(qc)) {
@@ -200,13 +205,13 @@ scTenifoldNet <- function(X, Y, qc = TRUE, qc_minLibSize = 1000,
 
   # Step 4: Network construction
   cli::cli_alert_info("Step 3/6: Building gene regulatory networks")
-  set.seed(1)
+  if (!is.null(seed)) set.seed(seed)
   xList <- makeNetworks(X = X, nCells = nc_nCells, nNet = nc_nNet,
                         nComp = nc_nComp, scaleScores = nc_scaleScores,
                         symmetric = nc_symmetric, q = (1 - nc_q),
                         priorNetwork = nc_priorNetwork,
                         nCores = nCores, label = "X")
-  set.seed(1)
+  if (!is.null(seed)) set.seed(seed)
   yList <- makeNetworks(X = Y, nCells = nc_nCells, nNet = nc_nNet,
                         nComp = nc_nComp, scaleScores = nc_scaleScores,
                         symmetric = nc_symmetric, q = (1 - nc_q),
@@ -215,10 +220,11 @@ scTenifoldNet <- function(X, Y, qc = TRUE, qc_minLibSize = 1000,
 
   # Step 5: Tensor Decomposition
   cli::cli_alert_info("Step 4/6: Tensor decomposition")
-  set.seed(1)
+  if (!is.null(seed)) set.seed(seed)
   tensorOut <- tensorDecomposition(xList, yList, K = td_K,
                                   nDecimal = td_nDecimal, maxIter = td_maxIter,
-                                  maxError = td_maxError)
+                                  maxError = td_maxError,
+                                  seed = seed)
 
   # Symmetrize for manifold alignment
   tX <- as.matrix(tensorOut$X)
@@ -228,7 +234,7 @@ scTenifoldNet <- function(X, Y, qc = TRUE, qc_minLibSize = 1000,
 
   # Step 6: Manifold Alignment
   cli::cli_alert_info("Step 5/6: Manifold alignment")
-  set.seed(1)
+  if (!is.null(seed)) set.seed(seed)
   mA <- manifoldAlignment(tX, tY, d = ma_nDim, nCores = nCores)
   rownames(mA) <- c(paste0('X_', sharedGenes), paste0('y_', sharedGenes))
 

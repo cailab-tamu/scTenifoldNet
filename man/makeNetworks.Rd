@@ -35,7 +35,7 @@ makeNetworks(
 
 \item{priorNetwork}{A data.frame containing a prior gene regulatory network. The data.frame must have two columns: `regulators` and `targets`. Default: NULL.}
 
-\item{nCores}{An integer value. Defines the number of cores to be used.}
+\item{nCores}{An integer value. Not used for network construction: each network is built on a single core, which avoids spawning worker processes for every network. Call \code{pcNet} with \code{nCores} to parallelize a single large network.}
 
 \item{label}{Optional character label (e.g. "X", "Y") prepended to
 progress messages when running inside a pipeline.}

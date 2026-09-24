@@ -14,6 +14,7 @@
 #' @param K The number of rank-one tensors used to approximate the data using CANDECOMP/PARAFAC (CP) Tensor Decomposition,
 #' @param maxError A decimal value between 0 and 1. Defines the relative Frobenius norm error tolerance
 #' @param maxIter An integer value. Defines the maximum number of iterations if error stay above \code{maxError}.
+#' @param seed An integer value. The RNG is set to this seed before each CP decomposition, so results are reproducible and independent of the caller's RNG state; the caller's RNG state is restored on exit. If \code{NULL}, the RNG is not reseeded and the caller's RNG state (e.g. a previous \code{set.seed()}) drives the decomposition. Default: 1.
 #' @return A list of weight-averaged denoised gene regulatory networks.
 #' @author This is an adaptation of the code provided by Li, J., Bien, J., & Wells, M. T. (2018)
 #' @references 
@@ -68,7 +69,11 @@
 
 
 tensorDecomposition <- function(xList, yList = NULL, nDecimal = 1, K = 5,
-                                maxError = 1e-5, maxIter = 1e3) {
+                                maxError = 1e-5, maxIter = 1e3, seed = 1) {
+  if (!is.null(seed)) {
+    oldSeed <- get0(".Random.seed", envir = globalenv(), inherits = FALSE)
+    on.exit(restoreSeed(oldSeed), add = TRUE)
+  }
   xNets <- length(xList)
   if (!is.null(yList)) {
     yNets <- length(yList)
@@ -114,7 +119,7 @@ tensorDecomposition <- function(xList, yList = NULL, nDecimal = 1, K = 5,
   cli::cli_alert_info(
     "[X] Tensor: {nGenes} x {nGenes} x {nNet} (K={K})"
   )
-  set.seed(1)
+  if (!is.null(seed)) set.seed(seed)
   tensorX <- as.tensor(tensorX)
   tensorX <- cpDecomposition(
     tnsr = tensorX, num_components = K, max_iter = maxIter, tol = maxError
@@ -137,7 +142,7 @@ tensorDecomposition <- function(xList, yList = NULL, nDecimal = 1, K = 5,
     cli::cli_alert_info(
       "[Y] Tensor: {nGenes} x {nGenes} x {nNet} (K={K})"
     )
-    set.seed(1)
+    if (!is.null(seed)) set.seed(seed)
     tensorY <- as.tensor(tensorY)
     tensorY <- cpDecomposition(
       tnsr = tensorY, num_components = K, max_iter = maxIter, tol = maxError
