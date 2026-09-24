@@ -29,7 +29,7 @@
 #' @param seed An integer value. The RNG is set to this seed before each random stage (network construction, tensor decomposition and manifold alignment), so results are reproducible and independent of the caller's RNG state; the caller's RNG state is restored on exit. Use different values to assess run-to-run variability. If \code{NULL}, the RNG is never reseeded and the caller's RNG state (e.g. a previous \code{set.seed()}) drives all random stages. Default: 1.
 #' @return A list with 3 slots as follows: 
 #' \itemize{
-#' \item{tensorNetworks:} The generated weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition.
+#' \item{tensorNetworks:} The generated weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition, with the diagonal (self-loops) set to zero.
 #' \item{manifoldAlignment:} The generated low-dimensional features result of the non-linear manifold alignment.
 #' \item{diffRegulation} The results of the differential regulation analysis.
 #' }
@@ -242,6 +242,13 @@ scTenifoldNet <- function(X, Y, qc = TRUE, qc_minLibSize = 1000,
   # Step 7: Differential Regulation
   cli::cli_alert_info("Step 6/6: Differential regulation analysis")
   dR <- dRegulation(manifoldOutput = mA)
+
+  # The CP decomposition can produce non-zero self-loops; the alignment
+  # already ignores them, so drop them from the returned networks
+  diag(tensorOut$X) <- 0
+  diag(tensorOut$Y) <- 0
+  tensorOut$X <- Matrix::drop0(tensorOut$X)
+  tensorOut$Y <- Matrix::drop0(tensorOut$Y)
 
   # Assemble output
   outputResult <- list(

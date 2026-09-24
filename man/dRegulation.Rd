@@ -27,7 +27,11 @@ Using the output of the non-linear manifold alignment, this
   using Box-Cox power transformation, and standardized to ensure normality.
   P-values are assigned following the chi-square distribution over the
   fold-change of the squared distance computed with respect to the
-  expectation.
+  expectation. Genes whose distance is at the level of floating-point noise
+  (at most \code{sqrt(.Machine$double.eps)} times the largest absolute
+  coordinate) did not move between conditions and get a p-value of 1; if
+  this applies to every gene, for example when a network is compared with
+  itself, a warning is raised.
 }
 \examples{
 library(scTenifoldNet)

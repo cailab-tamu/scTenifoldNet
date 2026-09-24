@@ -74,7 +74,7 @@ scTenifoldNet(
 \value{
 A list with 3 slots as follows: 
 \itemize{
-\item{tensorNetworks:} The generated weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition.
+\item{tensorNetworks:} The generated weight-averaged denoised gene regulatory networks using CANDECOMP/PARAFAC (CP) Tensor Decomposition, with the diagonal (self-loops) set to zero.
 \item{manifoldAlignment:} The generated low-dimensional features result of the non-linear manifold alignment.
 \item{diffRegulation} The results of the differential regulation analysis.
 }

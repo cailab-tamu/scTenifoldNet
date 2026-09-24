@@ -53,6 +53,8 @@ The required input is a **raw counts matrix** with genes as rows and cells (barc
 - **`tensorNetworks`** — Weight-averaged denoised gene regulatory networks after CP tensor decomposition, containing:
   - `X`: The network for sample *X* (sparse matrix of class `dgCMatrix`).
   - `Y`: The network for sample *Y* (sparse matrix of class `dgCMatrix`).
+
+  The diagonal (self-loops) of both networks is set to zero. The CP decomposition can produce non-zero values there, but they are not used by the manifold alignment.
 - **`manifoldAlignment`** — A data frame of low-dimensional features from the non-linear manifold alignment, with 2 × *n* genes rows and *d* columns (default *d* = 30).
 - **`diffRegulation`** — A data frame with six columns:
   - `gene`: Gene identifier.

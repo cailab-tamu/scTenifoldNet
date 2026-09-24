@@ -10,7 +10,11 @@
 #'   using Box-Cox power transformation, and standardized to ensure normality.
 #'   P-values are assigned following the chi-square distribution over the
 #'   fold-change of the squared distance computed with respect to the
-#'   expectation.
+#'   expectation. Genes whose distance is at the level of floating-point noise
+#'   (at most \code{sqrt(.Machine$double.eps)} times the largest absolute
+#'   coordinate) did not move between conditions and get a p-value of 1; if
+#'   this applies to every gene, for example when a network is compared with
+#'   itself, a warning is raised.
 #' @param manifoldOutput A matrix. The output of the non-linear manifold alignment,  a labeled matrix with two times the number of shared genes as rows (X_ genes followed by Y_ genes in the same order) and \code{d} number of columns.
 #' @return A data frame with 6 columns as follows: \itemize{
 #' \item \code{gene} A character vector with the gene id identified from the \code{manifoldAlignment} output.
@@ -123,6 +127,16 @@ dRegulation <- function(manifoldOutput) {
   E <- mean(dMetric^2)
   FC <- dMetric^2 / E
   pValues <- pchisq(q = FC, df = 1, lower.tail = FALSE)
+
+  # Distances at the level of floating-point noise mean the gene did not move
+  # between conditions; ranking them against each other would flag noise
+  noiseLevel <- sqrt(.Machine$double.eps) * max(abs(manifoldOutput))
+  isNoise <- dMetric <= noiseLevel
+  pValues[isNoise] <- 1
+  if (all(isNoise)) {
+    warning("No gene differs between the two conditions beyond numerical noise; ",
+            "all p-values were set to 1")
+  }
   pAdjusted <- p.adjust(pValues, method = 'fdr')
 
   dOut <- data.frame(
