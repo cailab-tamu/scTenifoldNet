@@ -73,15 +73,31 @@ Network construction subsamples cells at random, so results depend on the random
 
 ## Running Time
 
-Running time grows mainly with the number of genes. The number of cells matters little, because each network is built from a fixed-size subsample of cells (`nc_nCells`). Benchmarks with the default parameters (10 networks of 500 cells) on simulated counts, measured on an Apple M2 Pro (16 GB RAM) with R 4.5 and its reference BLAS. Memory is peak resident memory.
+Running time grows mainly with the number of genes. The number of cells matters little, because each network is built from a fixed-size subsample of cells (`nc_nCells`). Benchmarks with the default parameters (10 networks of 500 cells) on simulated counts, measured on an Apple M2 Pro (16 GB RAM) with R 4.5 and its reference BLAS:
 
-| Cells | Genes | Time | Memory |
-|------:|------:|-----:|-------:|
-| 300 | 1,000 | 35 s | 1.4 GB |
-| 1,000 | 1,000 | 33 s | 2.0 GB |
-| 1,000 | 5,000 | 8.4 min | 6.4 GB |
-| 2,500 | 5,000 | 7.9 min | 5.8 GB |
-| 5,000 | 5,000 | 8.0 min | 6.0 GB |
+| Cells | Genes | Time |
+|------:|------:|-----:|
+| 300 | 1,000 | 35 s |
+| 1,000 | 1,000 | 33 s |
+| 1,000 | 5,000 | 8.4 min |
+| 2,500 | 5,000 | 7.9 min |
+| 5,000 | 5,000 | 8.0 min |
+
+Before version 1.4.1, networks were built by fitting one SVD per gene, and the earlier benchmarks in this README (measured on a different machine) reported about 3 hours for 5,000 genes.
+
+### Memory
+
+Peak memory grows with the square of the number of genes, because the networks are stacked into a tensor of genes x genes x `nc_nNet` entries. Estimated peak memory with 10 networks:
+
+| Genes | Peak memory |
+|------:|------------:|
+| 1,000 | 0.8 GB |
+| 2,000 | 2.2 GB |
+| 5,000 | 11.8 GB |
+| 10,000 | 46 GB |
+| 15,000 | 103 GB |
+
+`scTenifoldNet()` compares this estimate with the memory available after quality control and warns, before building the networks, when it does not fit, reporting the largest number of genes that does. The estimate can also be checked beforehand with `scTenifoldNet::checkMemory(nGenes, nNet = 10, nConditions = 2)`.
 
 ## Example
 

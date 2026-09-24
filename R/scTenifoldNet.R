@@ -202,6 +202,7 @@ scTenifoldNet <- function(X, Y, qc = TRUE, qc_minLibSize = 1000,
   cli::cli_alert_info("Shared genes: {nGenes}")
   X <- X[sharedGenes, ]
   Y <- Y[sharedGenes, ]
+  checkMemory(nGenes, nNet = nc_nNet, nConditions = 2)
 
   # Step 4: Network construction
   cli::cli_alert_info("Step 3/6: Building gene regulatory networks")
