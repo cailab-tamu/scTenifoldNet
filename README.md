@@ -1,5 +1,6 @@
 # scTenifoldNet
 
+[![R-CMD-check](https://github.com/cailab-tamu/scTenifoldNet/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cailab-tamu/scTenifoldNet/actions/workflows/R-CMD-check.yaml)
 [![CRAN](https://www.r-pkg.org/badges/version/scTenifoldNet)](https://CRAN.R-project.org/package=scTenifoldNet)
 [![License: GPL (>=2)](https://img.shields.io/badge/License-GPL%20%28%3E%3D2%29-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
